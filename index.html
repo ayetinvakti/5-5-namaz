@@ -53,10 +53,31 @@
         .back-btn { background: none; border: none; color: #1e293b; font-size: 1.5rem; cursor: pointer; text-decoration: none; font-weight: bold; }
         .app-title { font-size: 0.95rem; font-weight: 700; color: #1e293b; font-family: 'Georgia', serif; text-align: center; }
 
+        /* MANEVİ SÖZLER PANELİ */
+        #spiritQuote { 
+            min-height: 36px; 
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 6px 10px;
+            margin-bottom: -4px; 
+            font-style: italic; 
+            font-size: 0.8rem; 
+            color: #065f46; 
+            text-align: center; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.4s; 
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
         /* YÜZEN ADA TARLA ALANI */
         .island-viewport {
             width: 100%;
-            height: 300px;
+            height: 270px;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -113,7 +134,7 @@
         }
 
         .farm-crop-item {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
@@ -188,6 +209,9 @@
         <div style="width: 24px;"></div>
     </header>
 
+    <!-- Manevi Sözler Paneli -->
+    <div id="spiritQuote">"Bismillah de, tarlanı ekmeye başla..."</div>
+
     <!-- 3D YÜZEN ADA TARLA ALANI -->
     <div class="island-viewport">
         <div class="cloud c1"></div>
@@ -244,7 +268,7 @@
         
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="updateDayData()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="handleIbadetChange(0, '🌅 Sabahın bereketi üzerine olsun, tarlaya ilk nur düştü.')">
                 <div class="ibadet-text-group">
                     <span class="ibadet-name">🌅 Sabah Namazı</span>
                     <span class="ibadet-desc">Günün bereketli ilk tohumu</span>
@@ -253,7 +277,7 @@
         </label>
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="updateDayData()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="handleIbadetChange(1, '☀️ Öğle vaktinde kalbin nurla, tarlan suyla doldu.')">
                 <div class="ibadet-text-group">
                     <span class="ibadet-name">☀️ Öğle Namazı</span>
                     <span class="ibadet-desc">Gündüzün orta yerinde tarlayı sulama</span>
@@ -262,7 +286,7 @@
         </label>
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="updateDayData()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="handleIbadetChange(2, '🌤️ İkindi vakti, amellerin kıymet vaktidir.')">
                 <div class="ibadet-text-group">
                     <span class="ibadet-name">🌤️ İkindi Namazı</span>
                     <span class="ibadet-desc">Ömrün ikindisinde sebat</span>
@@ -271,7 +295,7 @@
         </label>
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="updateDayData()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="handleIbadetChange(3, '🌇 Akşam, günün hasadına yaklaşılan huzur vaktidir.')">
                 <div class="ibadet-text-group">
                     <span class="ibadet-name">🌇 Akşam Namazı</span>
                     <span class="ibadet-desc">Hüznü geride bırakıp ürüne yöneliş</span>
@@ -280,7 +304,7 @@
         </label>
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="updateDayData()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="handleIbadetChange(4, '🌙 Yatsı, gece sükunetinde tarlanın korumasıdır.')">
                 <div class="ibadet-text-group">
                     <span class="ibadet-name">🌙 Yatsı Namazı</span>
                     <span class="ibadet-desc">Gece sükunetinde tarlanın koruması</span>
@@ -289,7 +313,7 @@
         </label>
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="updateDayData()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="handleIbadetChange(5, '✨📿 Zirve Evre: Zikirle kalbin parladı, tarla altın başaklara büründü!')">
                 <div class="ibadet-text-group">
                     <span class="ibadet-name">📿 Günlük Zikir & Dua</span>
                     <span class="ibadet-desc">"Sübhanallahi ve bihamdihi" ile tarlayı yeşertme</span>
@@ -362,10 +386,22 @@
         updateFarmCropsVisual(savedData);
     }
 
-    function updateDayData() {
+    function handleIbadetChange(index, quoteText) {
         const checkboxes = document.querySelectorAll('.ibadet-checkbox');
         let data = [];
         checkboxes.forEach(cb => data.push(cb.checked));
+
+        const qEl = document.getElementById('spiritQuote');
+        if (checkboxes[index].checked) {
+            // Eğer zikir (index 5) seçildiyse ve hepsi tamsa özel tebrik
+            if (index === 5 && data.filter(Boolean).length === 6) {
+                qEl.innerText = "Maşallah! Zirve evreye ulaştın, tarlan bereket nurlarıyla doldu! ✨🌾";
+            } else {
+                qEl.innerText = quoteText;
+            }
+        } else {
+            qEl.innerText = "Tarlanı büyütmek için ibadetlerini tamamla...";
+        }
 
         const key = `manevi_tarla_${currentMonth}_${selectedDay}`;
         localStorage.setItem(key, JSON.stringify(data));
@@ -381,15 +417,15 @@
         const container = document.getElementById('fieldCropsContainer');
         container.innerHTML = '';
 
-        // Kademeli evrim: Toprak (0) -> Filiz (1-2) -> Gelişen Ekin (3-5) -> Bereketli Başak (6)
+        // Kademeli evrim: Toprak (0) -> Filiz (1-2) -> Gelişen Ekin (3-5) -> Zirve Başak (6 - Zikir Dahil)
         let cropEmoji = "🟤"; 
         if (completedCount === 0) cropEmoji = "🟤";
         else if (completedCount <= 2) cropEmoji = "🌱";
         else if (completedCount < 6) cropEmoji = "🌿";
-        else cropEmoji = "🌾";
+        else cropEmoji = "✨🌾"; // En mükemmel evre: Zikirle beraber gelen altın başaklar
 
         for (let i = 0; i < 4; i++) {
-            container.innerHTML += `<div class="farm-crop-item" style="${completedCount === 6 ? 'filter: drop-shadow(0 0 8px #facc15); transform: scale(1.15);' : ''}">${cropEmoji}</div>`;
+            container.innerHTML += `<div class="farm-crop-item" style="${completedCount === 6 ? 'filter: drop-shadow(0 0 10px #facc15); transform: scale(1.2);' : ''}">${cropEmoji}</div>`;
         }
     }
 
