@@ -7,7 +7,6 @@
     <title>Manevi Tarla | 5-5 Namaz</title>
     <meta name="theme-color" content="#10b981">
     
-    <!-- Kayıtlı tema ve özel renkleri sayfa yüklenmeden uygula -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -47,16 +46,55 @@
         .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
         .section-title { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; }
 
-        /* Tarla Alanı Stili */
-        .farm-screen { background: linear-gradient(180deg, #3b82f6 0%, #1e3a8a 50%, #14532d 50%, #064e3b 100%); border-radius: 16px; padding: 24px; text-align: center; color: #fff; position: relative; overflow: hidden; border: 1px solid var(--border-color); }
-        .farm-visual { font-size: 3.5rem; margin: 10px 0; transition: transform 0.3s ease; }
-        .farm-status { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
-        .farm-desc { font-size: 0.85rem; opacity: 0.85; }
+        /* Gelişmiş Tarla Ekranı & Animasyonlar */
+        .farm-screen { 
+            background: linear-gradient(135deg, #1e3a8a 0%, #065f46 100%); 
+            border-radius: 20px; 
+            padding: 24px; 
+            text-align: center; 
+            color: #fff; 
+            position: relative; 
+            overflow: hidden; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.5s ease;
+        }
 
-        /* Namaz ve İbadet Listesi */
-        .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: 0.2s; }
-        .ibadet-item:hover { border-color: var(--accent-color); }
-        .ibadet-info { display: flex; align-items: center; gap: 12px; }
+        .farm-visual { 
+            font-size: 4rem; 
+            margin: 12px 0; 
+            animation: bounceSlow 3s infinite ease-in-out;
+        }
+
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .farm-status { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.3px; }
+        .farm-desc { font-size: 0.85rem; opacity: 0.9; margin-bottom: 14px; }
+
+        /* Hasat / İlerleme Çubuğu */
+        .progress-bar-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #facc15;
+            border-radius: 10px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* İbadet Listesi */
+        .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .ibadet-item:hover { border-color: var(--accent-color); transform: translateY(-1px); }
+        .ibadet-info { display: flex; align-items: center; gap: 14px; }
         .ibadet-checkbox { width: 22px; height: 22px; accent-color: var(--accent-color); cursor: pointer; }
         .ibadet-name { font-weight: 600; font-size: 0.95rem; }
         
@@ -72,15 +110,18 @@
     <header class="navbar">
         <div class="nav-left">
             <a href="https://ayetinvakti.github.io/settings" class="back-btn">←</a>
-            <span class="app-title">🌾 Manevi Tarla (5-5 Namaz)</span>
+            <span class="app-title">🌾 Manevi Tarla & Hasat</span>
         </div>
     </header>
 
     <!-- TARLA / HASAT GÖRSEL ALANI -->
     <div class="farm-screen" id="farmScreen">
-        <div class="farm-visual" id="farmVisual">🟫 🌱</div>
-        <div class="farm-status" id="farmStatus">Toprak Sürüldü, Tohum Bekleniyor</div>
-        <div class="farm-desc" id="farmDesc">İbadetlerini tamamla, tarlanı yeşert ve hasada başla!</div>
+        <div class="farm-visual" id="farmVisual">🏜️</div>
+        <div class="farm-status" id="farmStatus">Kurak Toprak</div>
+        <div class="farm-desc" id="farmDesc">İbadetlerini tamamla, tarlanı can suyuyla yeşert.</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
     </div>
 
     <!-- İBADETLERİ İŞARETLEME KARTI -->
@@ -89,42 +130,42 @@
         
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id=" sabah" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-id="sabah" onchange="updateFarm()">
                 <span class="ibadet-name">🌅 Sabah Namazı</span>
             </div>
         </label>
 
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id=" ogle" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-id="ogle" onchange="updateFarm()">
                 <span class="ibadet-name">☀️ Öğle Namazı</span>
             </div>
         </label>
 
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id=" ikindi" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-id="ikindi" onchange="updateFarm()">
                 <span class="ibadet-name">🌤️ İkindi Namazı</span>
             </div>
         </label>
 
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id=" aksam" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-id="aksam" onchange="updateFarm()">
                 <span class="ibadet-name">🌇 Akşam Namazı</span>
             </div>
         </label>
 
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id=" yatsi" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-id="yatsi" onchange="updateFarm()">
                 <span class="ibadet-name">🌙 Yatsı Namazı</span>
             </div>
         </label>
 
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id=" zikir" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-id="zikir" onchange="updateFarm()">
                 <span class="ibadet-name">📿 Günlük Zikir & Dua</span>
             </div>
         </label>
@@ -137,6 +178,7 @@
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.ibadet-checkbox');
         let completedCount = 0;
+        const total = checkboxes.length;
         
         checkboxes.forEach((cb, index) => {
             if (cb.checked) completedCount++;
@@ -146,31 +188,35 @@
         const visual = document.getElementById('farmVisual');
         const status = document.getElementById('farmStatus');
         const desc = document.getElementById('farmDesc');
+        const progressFill = document.getElementById('progressFill');
+
+        // Yüzde hesapla
+        const percentage = (completedCount / total) * 100;
+        progressFill.style.width = percentage + '%';
 
         if (completedCount === 0) {
-            visual.innerText = "🟫 🏜️";
-            status.innerText = "Kurak Toprak - Can Suyu Bekliyor";
-            desc.innerText = "İbadetlerini işaretleyerek tarlana ilk can suyunu ver.";
-        } else if (completedCount <= 2) {
-            visual.innerText = "🌱 💧";
-            status.innerText = "Filizleniyor...";
-            desc.innerText = "Maşallah! Tohumlar çatladı, filizler baş göstermeye başladı.";
-        } else if (completedCount <= 4) {
-            visual.innerText = "🌿 🪴 ☀️";
-            status.innerText = "Yeşeren Tarla";
-            desc.innerText = "Gayretin artıyor, tarlan yemyeşil bir bahçeye dönüştü.";
+            visual.innerText = "🏜️";
+            status.innerText = "Kurak Toprak";
+            desc.innerText = "Tohum ekilmeyi ve can suyu bekliyor...";
+        } else if (completedCount === 1) {
+            visual.innerText = "🌱💧";
+            status.innerText = "İlk Can Suyu Verildi";
+            desc.innerText = "Maşallah! İlk adım atıldı, filizler uyanıyor.";
+        } else if (completedCount <= 3) {
+            visual.innerText = "🌿🪴";
+            status.innerText = "Filizler Büyüyor";
+            desc.innerText = "Gayretinle tarlan yeşillenmeye ve kök salmaya başladı.";
         } else if (completedCount < 6) {
-            visual.innerText = "🌳 🍎 ✨";
-            status.innerText = "Meyve Vakti Yaklaşıyor";
-            desc.innerText = "Neredeyse tamamladın! Ağaçlar meyve vermeye başladı.";
+            visual.innerText = "🌳🍏✨";
+            status.innerText = "Meyve Bahçesi";
+            desc.innerText = "Çok az kaldı! Dallar meyveyle dolmak üzere.";
         } else {
-            visual.innerText = "🌾 🚜 🏆";
-            status.innerText = "Muazzam Hasat! (Tebrikler)";
-            desc.innerText = "Bugünkü tüm ibadetler tamamlandı, altın başaklar derlendi!";
+            visual.innerText = "🌾🚜🏆";
+            status.innerText = "Altın Hasat Vakti!";
+            desc.innerText = "Elhamdülillah, tarlanın bereketi zirvede! Harika iş çıkardın.";
         }
     }
 
-    // Sayfa açıldığında kayıtlı durumları yükle
     document.addEventListener('DOMContentLoaded', () => {
         const checkboxes = document.querySelectorAll('.ibadet-checkbox');
         checkboxes.forEach((cb, index) => {
