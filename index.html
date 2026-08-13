@@ -4,7 +4,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yüzen Ada Manevi Tarla | Ayetin Vakti</title>
+    <title>Yüzen Tarla & İbadet Takvimi | Ayetin Vakti</title>
     <meta name="theme-color" content="#10b981">
     
     <script>
@@ -46,17 +46,17 @@
             padding: 16px; 
             transition: 0.3s; 
         }
-        .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 16px; }
+        .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 14px; }
         
         /* Navbar */
-        .navbar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 8px 4px; }
+        .navbar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 6px 4px; }
         .back-btn { background: none; border: none; color: #1e293b; font-size: 1.5rem; cursor: pointer; text-decoration: none; font-weight: bold; }
-        .app-title { font-size: 1.1rem; font-weight: 700; color: #1e293b; font-family: 'Georgia', serif; }
+        .app-title { font-size: 1rem; font-weight: 700; color: #1e293b; font-family: 'Georgia', serif; text-align: center; }
 
-        /* YÜZEN ADA 3D ANİMASYON ALANI */
+        /* YÜZEN ADA TARLA ALANI */
         .island-viewport {
             width: 100%;
-            height: 380px;
+            height: 330px;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -66,25 +66,19 @@
             perspective: 1000px;
         }
 
-        /* Yavaşça hareket eden bulutlar */
+        /* Bulutlar */
         .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.85);
             border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             animation: floatClouds 12s infinite alternate ease-in-out;
         }
-        .cloud::before, .cloud::after {
-            content: '';
-            position: absolute;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 50%;
-        }
-        .c1 { width: 90px; height: 32px; top: 30px; left: 20px; animation-duration: 10s; }
+        .cloud::before, .cloud::after { content: ''; position: absolute; background: rgba(255, 255, 255, 0.85); border-radius: 50%; }
+        .c1 { width: 90px; height: 32px; top: 20px; left: 20px; }
         .c1::before { width: 45px; height: 45px; top: -22px; left: 12px; }
         .c1::after { width: 35px; height: 35px; top: -15px; left: 45px; }
 
-        .c2 { width: 110px; height: 38px; top: 20px; right: 25px; animation-duration: 14s; animation-delay: 1s; }
+        .c2 { width: 110px; height: 38px; top: 15px; right: 25px; animation-delay: 1s; }
         .c2::before { width: 55px; height: 55px; top: -28px; left: 15px; }
         .c2::after { width: 40px; height: 40px; top: -18px; left: 55px; }
 
@@ -93,97 +87,87 @@
             100% { transform: translateX(15px); }
         }
 
-        /* Yüzen Ada Ana Gövdesi (Hafifçe Aşağı Yukarı Süzülür) */
         .floating-island {
-            width: 260px;
-            height: 200px;
+            width: 270px;
+            height: 190px;
             position: relative;
             animation: floatIsland 4s infinite ease-in-out;
-            transform-style: preserve-3d;
         }
 
         @keyframes floatIsland {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(1deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
         }
 
-        /* Ada SVG Çizimi (Yeşil Üst Katman + Kahverengi Low-Poly Alt Kaya) */
         .island-svg {
             width: 100%;
             height: 100%;
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2));
         }
 
-        /* Ada Üzerindeki Canlı Büyüyen Bitki / Ağaç */
-        .plant-container {
+        /* ADA ÜZERİNDEKİ TARLA VE BİTKİLER */
+        .field-crops-container {
             position: absolute;
-            bottom: 75px;
+            top: 52px;
             left: 50%;
             transform: translateX(-50%);
-            width: 70px;
-            height: 90px;
+            width: 180px;
+            height: 60px;
             display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            z-index: 5;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        /* Gün Seçici Yatay Butonlar (Görseldeki gibi altta 4 ikon) */
-        .days-nav-bar {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            padding: 10px 0;
-            margin-top: -10px;
-        }
-
-        .day-icon-btn {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            display: flex;
-            flex-direction: column;
+            justify-content: space-around;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.3s;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 5;
         }
 
-        .day-icon-btn.active {
-            background: #ffffff;
-            border-color: #eab308;
-            box-shadow: 0 0 15px rgba(234, 179, 8, 0.5);
+        .farm-crop-item {
+            font-size: 1.6rem;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
-        .day-icon-btn span { font-size: 0.75rem; font-weight: 700; color: #334155; }
-        .day-icon-btn .lock-icon { font-size: 0.9rem; margin-top: 2px; }
+        /* Ay ve Gün Seçici Alanı */
+        .selector-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        select { background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
+
+        /* Günlük Grid Takvimi */
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; max-height: 140px; overflow-y: auto; }
+        .day-box { background: rgba(255, 255, 255, 0.7); border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 2px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .day-box:hover { border-color: var(--accent-color); }
+        .day-box.active { border-color: #eab308; background: #ffffff; box-shadow: 0 0 8px rgba(234, 179, 8, 0.4); }
+        .day-num { font-size: 0.75rem; font-weight: 700; color: #1e293b; }
+        .day-dot { width: 5px; height: 5px; border-radius: 50%; background: #cbd5e1; }
+        .day-dot.completed { background: #10b981; box-shadow: 0 0 4px #10b981; }
 
         /* İbadetler Kartı */
         .card { 
             background: rgba(255, 255, 255, 0.9); 
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.6); 
-            border-radius: 20px; 
-            padding: 16px; 
+            border-radius: 18px; 
+            padding: 14px; 
             display: flex; 
             flex-direction: column; 
-            gap: 12px; 
+            gap: 10px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
-        .section-title { font-size: 0.85rem; font-weight: 700; color: #334155; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .section-title { font-size: 0.8rem; font-weight: 700; color: #334155; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
 
-        .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: 0.2s; user-select: none; }
         .ibadet-item:hover { border-color: var(--accent-color); }
-        .ibadet-info { display: flex; align-items: center; gap: 12px; }
-        .ibadet-checkbox { width: 22px; height: 22px; accent-color: var(--accent-color); cursor: pointer; }
-        .ibadet-name { font-weight: 600; font-size: 0.95rem; color: #1e293b; }
+        .ibadet-info { display: flex; align-items: center; gap: 10px; }
+        .ibadet-checkbox { width: 20px; height: 20px; accent-color: var(--accent-color); cursor: pointer; }
+        .ibadet-name { font-weight: 600; font-size: 0.9rem; color: #1e293b; }
 
-        .footer { margin: 10px 0 20px 0; text-align: center; font-size: 0.8rem; color: #475569; }
+        .footer { margin: 5px 0 15px 0; text-align: center; font-size: 0.75rem; color: #475569; }
         .footer span { color: #047857; font-weight: 700; }
 
         body.light-mode { --bg-gradient: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); }
@@ -195,184 +179,180 @@
     <!-- Navbar (Ana Menü Bağlantısı: http://ayetinvakti.github.io) -->
     <header class="navbar">
         <a href="http://ayetinvakti.github.io" class="back-btn">‹</a>
-        <span class="app-title" id="navTitle">1. Gün Namazları</span>
+        <span class="app-title" id="navTitle">🌾 Yüzen Tarla & İbadet Takvimi</span>
         <div style="width: 24px;"></div>
     </header>
 
-    <!-- 3D YÜZEN ADA VE CANLI ANİMASYON ALANI -->
+    <!-- 3D YÜZEN ADA VE TARLA ANİMASYON ALANI -->
     <div class="island-viewport">
-        <!-- Hareketli Bulutlar -->
         <div class="cloud c1"></div>
         <div class="cloud c2"></div>
 
-        <!-- Yüzen Ada Yapısı -->
         <div class="floating-island">
+            <!-- 3D Low-Poly Tarla Adası ve Karık Çizgileri -->
             <svg class="island-svg" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
-                <!-- Kaya Alt Kısım (Low-Poly 3D Efekt) -->
+                <!-- Kahverengi Kaya Alt Kısım -->
                 <polygon points="30,65 100,50 170,65 190,95 140,135 100,145 60,135 10,95" fill="#523a28"/>
                 <polygon points="30,65 100,50 100,145 60,135 10,95" fill="#3d2a1d"/>
                 <polygon points="100,50 170,65 190,95 140,135 100,145" fill="#694c35"/>
                 <polygon points="10,95 60,135 100,145 100,50" fill="#2c1d13"/>
                 
-                <!-- Üst Çim Katmanı -->
-                <ellipse cx="100" cy="55" rx="75" ry="18" fill="#4ade80"/>
-                <ellipse cx="100" cy="52" rx="70" ry="14" fill="#22c55e"/>
+                <!-- Üst Kahverengi Ekilebilir Tarla Toprağı -->
+                <ellipse cx="100" cy="55" rx="72" ry="17" fill="#653613"/>
+                <ellipse cx="100" cy="52" rx="66" ry="13" fill="#844214"/>
                 
-                <!-- Ada Üstündeki Dekoratif Minik Taşlar -->
-                <polygon points="50,53 58,48 62,54 52,56" fill="#cbd5e1"/>
-                <polygon points="135,50 142,46 148,52 138,55" fill="#94a3b8"/>
+                <!-- Tarlanın Karık Çizgileri (Tarla Yatakları) -->
+                <path d="M45,52 Q100,42 155,52" stroke="#4a250a" stroke-width="2.5" fill="none" opacity="0.7"/>
+                <path d="M52,56 Q100,47 148,56" stroke="#4a250a" stroke-width="2.5" fill="none" opacity="0.7"/>
+                <path d="M60,60 Q100,52 140,60" stroke="#4a250a" stroke-width="2.5" fill="none" opacity="0.7"/>
             </svg>
 
-            <!-- Ada Üzerinde Canlı Büyüyen Bitki / Ağaç (SVG) -->
-            <div class="plant-container" id="plantContainer">
+            <!-- Tarlanın Üzerindeki Canlı Büyüyen Mahsuller (Sıralı Ekinler) -->
+            <div class="field-crops-container" id="fieldCropsContainer">
                 <!-- Javascript ile dinamik dolacak -->
             </div>
         </div>
     </div>
 
-    <!-- Alt Gün Butonları (Görseldeki Gibi 4'lü Seçici) -->
-    <div class="days-nav-bar" id="daysNavBar">
-        <div class="day-icon-btn active" onclick="selectDayTab(1)">
-            <span id="tab1Text">1.Gün</span>
-            <span class="lock-icon" id="icon1">🌱</span>
+    <!-- AY VE GÜN SEÇİCİ (TARİH KISMI DÜZELTİLDİ) -->
+    <div class="card" style="padding: 10px 14px;">
+        <div class="selector-box" style="background:transparent; border:none; padding:0;">
+            <select id="monthSelect" onchange="changeMonth()">
+                <option value="0">Ocak</option><option value="1">Şubat</option><option value="2">Mart</option>
+                <option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option>
+                <option value="6">Temmuz</option><option value="7" selected>Ağustos</option><option value="8">Eylül</option>
+                <option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
+            </select>
+            <span id="selectedDateText" style="font-size: 0.85rem; font-weight: 700; color: #334155;"></span>
         </div>
-        <div class="day-icon-btn" onclick="selectDayTab(2)">
-            <span>2.Gün</span>
-            <span class="lock-icon" id="icon2">🔒</span>
-        </div>
-        <div class="day-icon-btn" onclick="selectDayTab(3)">
-            <span>3.Gün</span>
-            <span class="lock-icon" id="icon3">🔒</span>
-        </div>
-        <div class="day-icon-btn" onclick="selectDayTab(4)">
-            <span>4.Gün</span>
-            <span class="lock-icon" id="icon4">🔒</span>
-        </div>
+        <div class="days-grid" id="daysGrid"></div>
     </div>
 
     <!-- GÜNLÜK İBADETLER LİSTESİ -->
     <div class="card">
         <div class="section-title">
-            <span id="cardHeaderTitle">Günlük İbadet Takibi</span>
-            <span id="completionRate" style="color: var(--accent-color);">0/5</span>
+            <span id="dailyCardTitle">Günün İbadetleri</span>
+            <span id="completionRate" style="color: var(--accent-color);">0/6</span>
         </div>
         
         <label class="ibadet-item">
-            <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="saveAndAnimate()">
-                <span class="ibadet-name">🌅 Sabah Namazı</span>
-            </div>
+            <div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="updateDayData()"><span class="ibadet-name">🌅 Sabah Namazı</span></div>
         </label>
         <label class="ibadet-item">
-            <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="saveAndAnimate()">
-                <span class="ibadet-name">☀️ Öğle Namazı</span>
-            </div>
+            <div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="updateDayData()"><span class="ibadet-name">☀️ Öğle Namazı</span></div>
         </label>
         <label class="ibadet-item">
-            <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="saveAndAnimate()">
-                <span class="ibadet-name">🌤️ İkindi Namazı</span>
-            </div>
+            <div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="updateDayData()"><span class="ibadet-name">🌤️ İkindi Namazı</span></div>
         </label>
         <label class="ibadet-item">
-            <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="saveAndAnimate()">
-                <span class="ibadet-name">🌇 Akşam Namazı</span>
-            </div>
+            <div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="updateDayData()"><span class="ibadet-name">🌇 Akşam Namazı</span></div>
         </label>
         <label class="ibadet-item">
-            <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="saveAndAnimate()">
-                <span class="ibadet-name">🌙 Yatsı Namazı</span>
-            </div>
+            <div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="updateDayData()"><span class="ibadet-name">🌙 Yatsı Namazı</span></div>
+        </label>
+        <label class="ibadet-item">
+            <div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="updateDayData()"><span class="ibadet-name">📿 Günlük Zikir & Dua</span></div>
         </label>
     </div>
 </div>
 
-<div class="footer">Ayetin Vakti Ekosistemi • <span>3D Manevi Ada Deneyimi</span></div>
+<div class="footer">Ayetin Vakti Ekosistemi • <span>3D Yüzen Tarla Takibi</span></div>
 
 <script>
-    let activeDay = 1;
+    let currentMonth = parseInt(document.getElementById('monthSelect').value);
+    let selectedDay = new Date().getDate();
+    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    function selectDayTab(day) {
-        activeDay = day;
-        document.querySelectorAll('.day-icon-btn').forEach((btn, idx) => {
-            if ((idx + 1) === day) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-        document.getElementById('navTitle').innerText = `${day}. Gün Namazları`;
+    function initCalendar() {
+        const grid = document.getElementById('daysGrid');
+        grid.innerHTML = '';
+        const totalDays = monthDays[currentMonth];
+        if (selectedDay > totalDays) selectedDay = totalDays;
+
+        for (let d = 1; d <= totalDays; d++) {
+            const dayBox = document.createElement('div');
+            dayBox.className = 'day-box' + (d === selectedDay ? ' active' : '');
+            
+            const key = `tarla_ibadet_${currentMonth}_${d}`;
+            const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
+            const completedCount = savedData.filter(Boolean).length;
+
+            dayBox.innerHTML = `
+                <span class="day-num">${d}</span>
+                <div class="day-dot ${completedCount > 0 ? 'completed' : ''}" style="opacity: ${completedCount > 0 ? 1 : 0.4}"></div>
+            `;
+
+            dayBox.onclick = () => {
+                selectedDay = d;
+                initCalendar();
+                loadDayData();
+            };
+            grid.appendChild(dayBox);
+        }
         loadDayData();
     }
 
-    function loadDayData() {
-        const key = `floating_island_day_${activeDay}`;
-        const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false];
-        
-        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
-        checkboxes.forEach((cb, idx) => {
-            cb.checked = savedData[idx];
-        });
-
-        updatePlantAnimation(savedData);
+    function changeMonth() {
+        currentMonth = parseInt(document.getElementById('monthSelect').value);
+        initCalendar();
     }
 
-    function saveAndAnimate() {
+    function loadDayData() {
+        const key = `tarla_ibadet_${currentMonth}_${selectedDay}`;
+        const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
+        
+        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
+        checkboxes.forEach((cb, idx) => cb.checked = savedData[idx]);
+
+        const monthName = document.getElementById('monthSelect').options[currentMonth].text;
+        document.getElementById('selectedDateText').innerText = `${selectedDay} ${monthName}`;
+        document.getElementById('dailyCardTitle').innerText = `${selectedDay} ${monthName} İbadetleri`;
+        
+        updateFarmCropsVisual(savedData);
+    }
+
+    function updateDayData() {
         const checkboxes = document.querySelectorAll('.ibadet-checkbox');
         let data = [];
         checkboxes.forEach(cb => data.push(cb.checked));
 
-        const key = `floating_island_day_${activeDay}`;
+        const key = `tarla_ibadet_${currentMonth}_${selectedDay}`;
         localStorage.setItem(key, JSON.stringify(data));
 
-        updatePlantAnimation(data);
-        updateDayIcons();
+        initCalendar();
+        updateFarmCropsVisual(data);
     }
 
-    function updatePlantAnimation(data) {
-        const completed = data.filter(Boolean).length;
-        document.getElementById('completionRate').innerText = `${completed}/5`;
+    function updateFarmCropsVisual(data) {
+        const completedCount = data.filter(Boolean).length;
+        document.getElementById('completionRate').innerText = `${completedCount}/6`;
 
-        const container = document.getElementById('plantContainer');
-        
-        // Namaz kılındıkça adadaki bitkinin büyüme aşamaları (SVG)
-        if (completed === 0) {
-            // Sadece minik bir toprak filizi
-            container.innerHTML = `<svg viewBox="0 0 50 50" style="width:35px; height:35px;"><circle cx="25" cy="42" r="3" fill="#3d2a1d"/><path d="M25 42 Q25 32 20 25" stroke="#16a34a" stroke-width="3" fill="none"/></svg>`;
-        } else if (completed <= 2) {
-            // Filizlenmeye başlayan küçük ağaç/bitki (gönderdiğin görseldeki gibi)
-            container.innerHTML = `<svg viewBox="0 0 60 70" style="width:48px; height:56px;"><path d="M30 60 L30 35" stroke="#78350f" stroke-width="4" stroke-linecap="round"/><circle cx="22" cy="28" r="9" fill="#22c55e"/><circle cx="38" cy="28" r="9" fill="#22c55e"/><circle cx="30" cy="20" r="10" fill="#4ade80"/></svg>`;
-        } else if (completed < 5) {
-            // Boy atan gür yeşil ağaç
-            container.innerHTML = `<svg viewBox="0 0 80 90" style="width:64px; height:72px;"><path d="M40 80 L40 40" stroke="#78350f" stroke-width="5" stroke-linecap="round"/><circle cx="28" cy="38" r="15" fill="#16a34a"/><circle cx="52" cy="38" r="15" fill="#16a34a"/><circle cx="40" cy="24" r="18" fill="#22c55e"/><circle cx="40" cy="15" r="12" fill="#4ade80"/></svg>`;
+        const container = document.getElementById('fieldCropsContainer');
+        container.innerHTML = '';
+
+        let cropEmoji = "🟤"; // Kurak / Tohum
+        if (completedCount === 0) {
+            cropEmoji = "🟤";
+        } else if (completedCount <= 2) {
+            cropEmoji = "🌱"; // Filiz
+        } else if (completedCount < 6) {
+            cropEmoji = "🌿"; // Yeşeren bitki
         } else {
-            // 5/5 Tamamlandığında parlayan altın başak / bereket ağacı
-            container.innerHTML = `<svg viewBox="0 0 80 90" style="width:70px; height:80px; filter: drop-shadow(0 0 10px #facc15);"><path d="M40 80 L40 35" stroke="#b45309" stroke-width="5" stroke-linecap="round"/><ellipse cx="40" cy="25" rx="16" ry="22" fill="#facc15"/><ellipse cx="32" cy="28" rx="8" ry="14" fill="#fde047"/><ellipse cx="48" cy="28" rx="8" ry="14" fill="#fde047"/></svg>`;
+            cropEmoji = "🌾"; // Altın Başak Hasat
         }
-    }
 
-    function updateDayIcons() {
-        for (let i = 1; i <= 4; i++) {
-            const data = JSON.parse(localStorage.getItem(`floating_island_day_${i}`)) || [false, false, false, false, false];
-            const completed = data.filter(Boolean).length;
-            const iconSpan = document.getElementById(`icon${i}`);
-            
-            if (completed === 5) {
-                iconSpan.innerText = "⭐";
-            } else if (completed > 0) {
-                iconSpan.innerText = "🌱";
-            } else {
-                iconSpan.innerText = i === 1 ? "🌱" : "🔒";
-            }
+        // Tarlanın karıklarına 4 adet canlı mahsul dizelim
+        for (let i = 0; i < 4; i++) {
+            container.innerHTML += `<div class="farm-crop-item" style="${completedCount === 6 ? 'filter: drop-shadow(0 0 8px #facc15); transform: scale(1.15);' : ''}">${cropEmoji}</div>`;
         }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        loadDayData();
-        updateDayIcons();
+        const now = new Date();
+        currentMonth = now.getMonth();
+        selectedDay = now.getDate();
+        document.getElementById('monthSelect').value = currentMonth;
+        initCalendar();
     });
 </script>
 </body>
