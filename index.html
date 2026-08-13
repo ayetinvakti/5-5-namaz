@@ -33,6 +33,7 @@
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
+            --soil-color: #3b281a;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px; transition: 0.3s; }
@@ -46,29 +47,71 @@
         .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
         .section-title { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Gelişmiş Gerçekçi Tarla Ekranı */
+        /* Gerçekçi CSS Tarla ve Animasyon Alanı */
         .farm-screen { 
-            background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%); 
+            background: var(--soil-color); 
             border-radius: 20px; 
             padding: 24px; 
             text-align: center; 
             color: #fff; 
             position: relative; 
             overflow: hidden; 
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 3px solid #271a10;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            transition: background 1s ease;
         }
 
-        .farm-animation-box {
-            font-size: 3.8rem;
-            margin: 10px 0;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Büyüyen Bitki Çubuğu */
+        .plant-stalk {
+            width: 24px;
+            height: 0%;
+            background: var(--accent-color);
+            border-radius: 12px 12px 0 0;
+            transition: height 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s ease;
+            position: relative;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
         }
 
-        .farm-status { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
-        .farm-desc { font-size: 0.82rem; opacity: 0.85; margin-bottom: 12px; }
+        /* Hasat Altın Işıltı Efekti */
+        .plant-stalk::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -18px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(250,204,21,0.6) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            border-radius: 50%;
+        }
+        .farm-screen.harvested .plant-stalk::after {
+            opacity: 1;
+        }
 
-        .progress-bar-container { width: 100%; background: rgba(255, 255, 255, 0.15); border-radius: 10px; height: 10px; overflow: hidden; }
+        .farm-info-overlay {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 14px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+        }
+
+        .farm-status { font-size: 0.95rem; font-weight: 700; color: #f8fafc; }
+        .farm-desc { font-size: 0.75rem; color: #cbd5e1; }
+
+        .progress-bar-container { width: 100%; background: rgba(255, 255, 255, 0.15); border-radius: 10px; height: 6px; overflow: hidden; margin-top: 6px; }
         .progress-bar-fill { height: 100%; width: 0%; background: #facc15; border-radius: 10px; transition: width 0.5s ease; }
 
         /* Ay ve Gün Seçici Bölümü */
@@ -81,7 +124,8 @@
         .day-box:hover { border-color: var(--accent-color); transform: translateY(-2px); }
         .day-box.active { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.15); }
         .day-num { font-size: 0.85rem; font-weight: 700; }
-        .day-status-icon { font-size: 0.9rem; }
+        .day-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-color); transition: 0.2s; }
+        .day-dot.completed { background: var(--accent-color); box-shadow: 0 0 6px var(--accent-color); }
 
         /* İbadet Listesi */
         .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: 0.2s; user-select: none; }
@@ -93,7 +137,7 @@
         .footer { margin: 20px 0; text-align: center; font-size: 0.85rem; color: var(--text-muted); }
         .footer span { color: var(--accent-color); font-weight: 600; }
 
-        body.light-mode { --bg-color: #f8fafc; --card-bg: #ffffff; --text-color: #0f172a; --text-muted: #64748b; --border-color: #e2e8f0; }
+        body.light-mode { --bg-color: #f8fafc; --card-bg: #ffffff; --text-color: #0f172a; --text-muted: #64748b; --border-color: #e2e8f0; --soil-color: #d7ccc8; }
     </style>
 </head>
 <body>
@@ -106,14 +150,22 @@
         </div>
     </header>
 
-    <!-- TARLA / HASAT GÖRSEL ALANI -->
-    <div class="farm-screen">
-        <div class="farm-animation-box" id="farmVisual">🏜️</div>
-        <div class="farm-status" id="farmStatus">Seçilen Gün: Kurak Toprak</div>
-        <div class="farm-desc" id="farmDesc">İbadetlerini tamamla, o günün tarlasını yeşert.</div>
-        <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="progressFill"></div>
+    <!-- GERÇEKÇİ CSS TARLA ALANI -->
+    <div class="farm-screen" id="farmScreen">
+        <div class="farm-info-overlay">
+            <div>
+                <div class="farm-status" id="farmStatus">Kurak Toprak</div>
+                <div class="farm-desc" id="farmDesc">Tohum bekleniyor</div>
+            </div>
+            <div style="width: 100px;">
+                <div style="font-size: 0.7rem; text-align: right; margin-bottom: 2px;" id="progressText">%0</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressFill"></div>
+                </div>
+            </div>
         </div>
+        <!-- Büyüyen Bitki -->
+        <div class="plant-stalk" id="plantStalk"></div>
     </div>
 
     <!-- AY VE GÜN SEÇİCİ -->
@@ -191,7 +243,7 @@
 
 <script>
     let currentMonth = parseInt(document.getElementById('monthSelect').value);
-    let selectedDay = new Date().getDate(); // Varsayılan bugün
+    let selectedDay = new Date().getDate();
 
     const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -200,26 +252,20 @@
         grid.innerHTML = '';
         const totalDays = monthDays[currentMonth];
 
-        // Eğer seçilen gün o ayın gün sınırını aşarsa sabitle
         if (selectedDay > totalDays) selectedDay = totalDays;
 
         for (let d = 1; d <= totalDays; d++) {
             const dayBox = document.createElement('div');
             dayBox.className = 'day-box' + (d === selectedDay ? ' active' : '');
             
-            // O günün kayıtlı verisini kontrol et
             const key = `ibadet_${currentMonth}_${d}`;
             const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const completedCount = savedData.filter(Boolean).length;
-
-            let icon = '🏜️';
-            if (completedCount > 0 && completedCount <= 2) icon = '🌱';
-            else if (completedCount > 2 && completedCount < 6) icon = '🌿';
-            else if (completedCount === 6) icon = '🌾';
+            const isFullyCompleted = completedCount === 6;
 
             dayBox.innerHTML = `
                 <span class="day-num">${d}</span>
-                <span class="day-status-icon">${icon}</span>
+                <div class="day-dot ${isFullyCompleted ? 'completed' : (completedCount > 0 ? 'completed' : '')}" style="opacity: ${completedCount > 0 ? 1 : 0.3}"></div>
             `;
 
             dayBox.onclick = () => {
@@ -260,46 +306,54 @@
         const key = `ibadet_${currentMonth}_${selectedDay}`;
         localStorage.setItem(key, JSON.stringify(data));
 
-        initCalendar(); // Grid ikonlarını anında güncellemek için
+        initCalendar();
         updateFarmVisual(data);
     }
 
     function updateFarmVisual(data) {
         const completedCount = data.filter(Boolean).length;
         const total = data.length;
-        const percentage = (completedCount / total) * 100;
+        const percentage = Math.round((completedCount / total) * 100);
 
         document.getElementById('progressFill').style.width = percentage + '%';
+        document.getElementById('progressText').innerText = `%${percentage}`;
 
-        const visual = document.getElementById('farmVisual');
+        const farmScreen = document.getElementById('farmScreen');
+        const plantStalk = document.getElementById('plantStalk');
         const status = document.getElementById('farmStatus');
         const desc = document.getElementById('farmDesc');
 
+        // Gerçekçi yükseklik ve renk değişimi
+        plantStalk.style.height = percentage + '%';
+
         if (completedCount === 0) {
-            visual.innerText = "🏜️";
-            status.innerText = `${selectedDay} Gün: Kurak Toprak`;
-            desc.innerText = "Bu güne ait henüz ibaret işareti yapılmadı.";
-        } else if (completedCount <= 2) {
-            visual.innerText = "🌱💧";
-            status.innerText = `${selectedDay} Gün: Filizleniyor`;
-            desc.innerText = "Can suyu verildi, tohumlar uyanıyor.";
-        } else if (completedCount <= 4) {
-            visual.innerText = "🌿🪴";
-            status.innerText = `${selectedDay} Gün: Yeşeren Tarla`;
-            desc.innerText = "İbadetler arttıkça tarlan canlanıyor.";
+            farmScreen.style.background = "#3b281a";
+            plantStalk.style.background = "var(--accent-color)";
+            farmScreen.classList.remove('harvested');
+            status.innerText = "Kurak Toprak";
+            desc.innerText = "Can suyu bekleniyor";
+        } else if (completedCount <= 3) {
+            farmScreen.style.background = "#283824";
+            plantStalk.style.background = "#34d399";
+            farmScreen.classList.remove('harvested');
+            status.innerText = "Filizlenen Tarla";
+            desc.innerText = "Kökler güçleniyor";
         } else if (completedCount < 6) {
-            visual.innerText = "🌳🍏✨";
-            status.innerText = `${selectedDay} Gün: Meyve Bahçesi`;
-            desc.innerText = "Zirveye çok az kaldı, gayretin daim olsun!";
+            farmScreen.style.background = "#1b4332";
+            plantStalk.style.background = "#10b981";
+            farmScreen.classList.remove('harvested');
+            status.innerText = "Yeşeren Bahçe";
+            desc.innerText = "Hasada çok az kaldı";
         } else {
-            visual.innerText = "🌾🚜🏆";
-            status.innerText = `${selectedDay} Gün: Altın Hasat!`;
-            desc.innerText = "Elhamdülillah, bu günün tüm bereketi toplandı.";
+            farmScreen.style.background = "#0f5132";
+            plantStalk.style.background = "#facc15";
+            farmScreen.classList.add('harvested');
+            status.innerText = "Altın Hasat Vakti!";
+            desc.innerText = "Berekete ulaşıldı!";
         }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Otomatik olarak bugünün ayını ve gününü seç
         const now = new Date();
         currentMonth = now.getMonth();
         selectedDay = now.getDate();
