@@ -40,24 +40,24 @@
         
         .navbar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; }
         .nav-left { display: flex; align-items: center; gap: 12px; }
-        .back-btn { background: none; border: none; color: var(--text-color); font-size: 1.25rem; cursor: pointer; text-decoration: none; }
+        .back-btn { background: none; border: none; color: var(--text-color); font-size: 1.25rem; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: width; }
         .app-title { font-size: 1.1rem; font-weight: 700; color: var(--accent-color); text-decoration: none; font-family: 'Georgia', serif; }
 
         .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
         .section-title { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
 
-        /* GERÇEKÇİ TARLA GÖRSEL ALANI */
+        /* PERSPEKTİFLİ GERÇEKÇİ TARLA GÖRSEL ALANI (İstediğin Tarzda) */
         .farm-screen { 
-            background: linear-gradient(180deg, #1e293b 0%, #291b11 50%, #1f130b 100%); 
+            background: linear-gradient(180deg, #38bdf8 0%, #bae6fd 50%, #84cc16 60%, #582f0e 100%); 
             border-radius: 20px; 
-            padding: 20px; 
+            padding: 16px; 
             text-align: center; 
             color: #fff; 
             position: relative; 
             overflow: hidden; 
             border: 1px solid var(--border-color);
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            min-height: 220px;
+            height: 230px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -67,88 +67,75 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(15, 23, 42, 0.75);
             padding: 8px 12px;
             border-radius: 12px;
             backdrop-filter: blur(4px);
-            z-index: 2;
+            z-index: 10;
         }
 
         .farm-status { font-size: 0.95rem; font-weight: 700; color: #f8fafc; text-align: left; }
         .farm-desc { font-size: 0.75rem; color: #cbd5e1; text-align: left; }
 
-        .progress-bar-container { width: 90px; background: rgba(255, 255, 255, 0.15); border-radius: 10px; height: 6px; overflow: hidden; margin-top: 4px; }
+        .progress-bar-container { width: 90px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; height: 6px; overflow: hidden; margin-top: 4px; }
         .progress-bar-fill { height: 100%; width: 0%; background: #facc15; border-radius: 10px; transition: width 0.5s ease; }
 
-        /* DETAYLI TARLA SAHNESİ (GÖRSEL ANİMASYON) */
-        .field-landscape {
-            position: relative;
-            height: 110px;
-            width: 100%;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            margin-top: 10px;
-        }
-
-        /* Toprak Katmanı (Zemin) */
-        .soil-ground {
+        /* VEKTÖREL TARLA ÇİZGİLERİ VE KARIKLAR (CSS İllüstrasyon) */
+        .vector-field {
             position: absolute;
             bottom: 0;
+            left: 0;
             width: 100%;
-            height: 35px;
-            background: linear-gradient(180deg, #3d2817 0%, #27170c 100%);
-            border-radius: 0 0 16px 16px;
-            border-top: 3px solid #573a21;
-            z-index: 1;
+            height: 150px;
+            background: #653613; /* Toprak rengi */
+            overflow: hidden;
+            border-top: 4px solid #4a250a;
         }
 
-        /* Bitki Evreleri Görselleri / Elementleri */
-        .crop-stage {
+        /* Perspektif Karık Yatakları (Çizgiler) */
+        .furrow-lines {
             position: absolute;
-            bottom: 25px;
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 2;
+            width: 200%;
+            height: 100%;
+            left: -50%;
+            background: repeating-linear-gradient(
+                90deg,
+                #4a250a,
+                #4a250a 15px,
+                #783f15 15px,
+                #783f15 35px
+            );
+            transform: perspective(120px) rotateX(60deg);
+            transform-origin: bottom;
+            bottom: -30px;
         }
 
-        .plant-item {
+        /* Tarlanın Üzerindeki Mahsuller / Ekin Sıraları */
+        .crop-rows {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 3;
+            padding: 0 10px;
+        }
+
+        .crop-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            transform-origin: bottom;
-            transition: transform 0.5s ease, opacity 0.5s ease;
+            gap: 6px;
+            transition: transform 0.5s ease;
         }
 
-        /* Aşama 0: Kurak/Boş */
-        .stage-0 .plant-item { opacity: 0.3; transform: scale(0.5); }
-        
-        /* Aşama 1-2: Filiz (Küçük yeşillikler) */
-        .stage-1 .sprout-leaf { width: 8px; height: 16px; background: #34d399; border-radius: 8px 8px 0 0; }
-        
-        /* Aşama 3-4: Gelişmiş Bitki */
-        .stage-2 .stem { width: 6px; height: 45px; background: #059669; border-radius: 3px; position: relative; }
-        .stage-2 .stem::before, .stage-2 .stem::after {
-            content: ''; position: absolute; width: 14px; height: 10px; background: #10b981; border-radius: 10px 0; top: 10px;
-        }
-        .stage-2 .stem::before { left: -12px; transform: rotate(-30deg); }
-        .stage-2 .stem::after { right: -12px; transform: rotate(30deg); }
-
-        /* Aşama 5-6: Hasat / Altın Başaklar */
-        .stage-3 .mature-stalk { width: 8px; height: 75px; background: #b45309; border-radius: 4px; position: relative; box-shadow: 0 0 15px rgba(250,204,21,0.4); }
-        .stage-3 .wheat-head {
-            position: absolute; top: -20px; left: -10px; width: 28px; height: 35px;
-            background: radial-gradient(circle, #facc15 30%, #d97706 80%);
-            border-radius: 50% 50% 30% 30%;
-            box-shadow: 0 0 20px #facc15;
-            animation: pulseGlow 2s infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            0% { transform: scale(1); filter: brightness(1); }
-            100% { transform: scale(1.08); filter: brightness(1.2); }
+        /* Bitki Görselleri (Evrelere Göre) */
+        .plant-sprite {
+            font-size: 1.8rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         /* Ay ve Gün Seçici Bölümü */
@@ -182,12 +169,12 @@
 <div class="container">
     <header class="navbar">
         <div class="nav-left">
-            <a href="https://ayetinvakti.github.io/settings" class="back-btn">←</a>
+            <a href="http://ayetinvakti.github.io" class="back-btn">←</a>
             <span class="app-title">🌾 Yıllık Tarla & İbadet Takvimi</span>
         </div>
     </header>
 
-    <!-- GERÇEKÇİ TARLA SAHNESİ -->
+    <!-- GERÇEKÇİ PERSPEKTİFLİ TARLA SAHNESİ -->
     <div class="farm-screen" id="farmScreen">
         <div class="farm-header-row">
             <div>
@@ -202,14 +189,16 @@
             </div>
         </div>
 
-        <!-- Görsel Doğa Alanı -->
-        <div class="field-landscape">
-            <div class="soil-ground"></div>
-            <div class="crop-stage stage-0" id="cropStageBox">
-                <!-- 3'lü Doğa Grubu -->
-                <div class="plant-item"><div class="sprout-leaf" id="p1"></div></div>
-                <div class="plant-item" style="transform: scale(1.2);"><div class="sprout-leaf" id="p2"></div></div>
-                <div class="plant-item"><div class="sprout-leaf" id="p3"></div></div>
+        <!-- Vektörel Karıklı Tarla Arka Planı -->
+        <div class="vector-field">
+            <div class="furrow-lines"></div>
+            <!-- Sıralı Ekinler -->
+            <div class="crop-rows" id="cropRowsContainer">
+                <div class="crop-group"><div class="plant-sprite" id="c1">🟤</div></div>
+                <div class="crop-group"><div class="plant-sprite" id="c2" style="transform: scale(1.2);">🟤</div></div>
+                <div class="crop-group"><div class="plant-sprite" id="c3">🟤</div></div>
+                <div class="crop-group"><div class="plant-sprite" id="c4" style="transform: scale(1.2);">🟤</div></div>
+                <div class="crop-group"><div class="plant-sprite" id="c5">🟤</div></div>
             </div>
         </div>
     </div>
@@ -365,31 +354,24 @@
 
         const status = document.getElementById('farmStatus');
         const desc = document.getElementById('farmDesc');
-        const cropStageBox = document.getElementById('cropStageBox');
-
-        // HTML elemanlarını evreye göre biçimlendiriyoruz
-        const plants = cropStageBox.querySelectorAll('.plant-item');
+        const plants = document.querySelectorAll('.plant-sprite');
 
         if (completedCount === 0) {
-            cropStageBox.className = "crop-stage stage-0";
             status.innerText = "Kurak Toprak";
             desc.innerText = "Henüz tohum ekilmedi.";
-            plants.forEach(p => p.innerHTML = '<div style="width:6px; height:6px; background:#573a21; border-radius:50%;"></div>');
+            plants.forEach(p => p.innerText = "🟤");
         } else if (completedCount <= 2) {
-            cropStageBox.className = "crop-stage stage-1";
             status.innerText = "Filizlenme Evresi";
             desc.innerText = "Can suyu verildi, filizler baş gösteriyor.";
-            plants.forEach(p => p.innerHTML = '<div style="width:8px; height:18px; background:#34d399; border-radius:6px 6px 0 0;"></div>');
+            plants.forEach(p => p.innerText = "🌱");
         } else if (completedCount < 6) {
-            cropStageBox.className = "crop-stage stage-2";
             status.innerText = "Yeşeren Tarla";
             desc.innerText = "Bitkiler boy atıyor, gayretin daim olsun.";
-            plants.forEach(p => p.innerHTML = '<div style="width:8px; height:45px; background:#059669; border-radius:4px;"></div>');
+            plants.forEach(p => p.innerText = "🌿");
         } else {
-            cropStageBox.className = "crop-stage stage-3";
             status.innerText = "Altın Hasat Vakti!";
             desc.innerText = "Elhamdülillah, tarlanın bereketi toplandı!";
-            plants.forEach(p => p.innerHTML = '<div style="width:10px; height:65px; background:#b45309; border-radius:4px; position:relative;"><div style="position:absolute; top:-16px; left:-8px; width:26px; height:28px; background:#facc15; border-radius:50%; box-shadow:0 0 12px #facc15;"></div></div>');
+            plants.forEach(p => p.innerText = "🌾");
         }
     }
 
