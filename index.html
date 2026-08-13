@@ -317,14 +317,15 @@
         updateFarmCropsVisual(data);
     }
 
+    // BU KISMI SENİN İÇİN ENTEGRE ETTİM
     function updateFarmCropsVisual(data) {
         const count = data.filter(Boolean).length;
         document.getElementById('completionRate').innerText = `${count}/6`;
         const container = document.getElementById('fieldCropsContainer');
         container.innerHTML = '';
         
-        // Kademeli evrim listesi
-        const stages = ["🟤", "🌱", "🌿", "🎋", "🌾", "🌻", "✨🌾"];
+        // Buğday evreleri: 0-6 arası
+        const stages = ["🟤", "🌱", "🌿", "🎋", "🌾", "🌾", "✨🌾"];
         let currentEmoji = stages[count]; 
 
         for (let i = 0; i < 4; i++) {
