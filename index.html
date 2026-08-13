@@ -4,7 +4,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manevi Tarla | 5-5 Namaz</title>
+    <title>Manevi Tarla ve Hasat Takvimi | 5-5 Namaz</title>
     <meta name="theme-color" content="#10b981">
     
     <script>
@@ -36,19 +36,19 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px; transition: 0.3s; }
-        .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 16px; }
+        .container { width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 16px; }
         
         .navbar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; }
         .nav-left { display: flex; align-items: center; gap: 12px; }
         .back-btn { background: none; border: none; color: var(--text-color); font-size: 1.25rem; cursor: pointer; text-decoration: none; }
-        .app-title { font-size: 1.15rem; font-weight: 700; color: var(--accent-color); text-decoration: none; font-family: 'Georgia', serif; }
+        .app-title { font-size: 1.1rem; font-weight: 700; color: var(--accent-color); text-decoration: none; font-family: 'Georgia', serif; }
 
         .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-        .section-title { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; }
+        .section-title { font-size: 0.85rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Gelişmiş Tarla Ekranı & Animasyonlar */
+        /* Gelişmiş Gerçekçi Tarla Ekranı */
         .farm-screen { 
-            background: linear-gradient(135deg, #1e3a8a 0%, #065f46 100%); 
+            background: linear-gradient(135deg, #0f172a 0%, #064e3b 100%); 
             border-radius: 20px; 
             padding: 24px; 
             text-align: center; 
@@ -56,48 +56,40 @@
             position: relative; 
             overflow: hidden; 
             border: 1px solid var(--border-color);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            transition: all 0.5s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
 
-        .farm-visual { 
-            font-size: 4rem; 
-            margin: 12px 0; 
-            animation: bounceSlow 3s infinite ease-in-out;
+        .farm-animation-box {
+            font-size: 3.8rem;
+            margin: 10px 0;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes bounceSlow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
+        .farm-status { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+        .farm-desc { font-size: 0.82rem; opacity: 0.85; margin-bottom: 12px; }
 
-        .farm-status { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.3px; }
-        .farm-desc { font-size: 0.85rem; opacity: 0.9; margin-bottom: 14px; }
+        .progress-bar-container { width: 100%; background: rgba(255, 255, 255, 0.15); border-radius: 10px; height: 10px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background: #facc15; border-radius: 10px; transition: width 0.5s ease; }
 
-        /* Hasat / İlerleme Çubuğu */
-        .progress-bar-container {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            height: 10px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: #facc15;
-            border-radius: 10px;
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        /* Ay ve Gün Seçici Bölümü */
+        .selector-row { display: flex; gap: 10px; }
+        select { flex: 1; background: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px; border-radius: 12px; font-size: 0.9rem; cursor: pointer; font-weight: 600; }
+
+        /* Günlük Grid Takvimi */
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; max-height: 220px; overflow-y: auto; padding-right: 4px; }
+        .day-box { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 4px; text-align: center; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .day-box:hover { border-color: var(--accent-color); transform: translateY(-2px); }
+        .day-box.active { border-color: var(--accent-color); background: rgba(16, 185, 129, 0.15); }
+        .day-num { font-size: 0.85rem; font-weight: 700; }
+        .day-status-icon { font-size: 0.9rem; }
 
         /* İbadet Listesi */
-        .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 14px; cursor: pointer; transition: 0.2s; user-select: none; }
-        .ibadet-item:hover { border-color: var(--accent-color); transform: translateY(-1px); }
-        .ibadet-info { display: flex; align-items: center; gap: 14px; }
-        .ibadet-checkbox { width: 22px; height: 22px; accent-color: var(--accent-color); cursor: pointer; }
-        .ibadet-name { font-weight: 600; font-size: 0.95rem; }
-        
+        .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; transition: 0.2s; user-select: none; }
+        .ibadet-item:hover { border-color: var(--accent-color); }
+        .ibadet-info { display: flex; align-items: center; gap: 12px; }
+        .ibadet-checkbox { width: 20px; height: 20px; accent-color: var(--accent-color); cursor: pointer; }
+        .ibadet-name { font-weight: 600; font-size: 0.9rem; }
+
         .footer { margin: 20px 0; text-align: center; font-size: 0.85rem; color: var(--text-muted); }
         .footer span { color: var(--accent-color); font-weight: 600; }
 
@@ -110,62 +102,85 @@
     <header class="navbar">
         <div class="nav-left">
             <a href="https://ayetinvakti.github.io/settings" class="back-btn">←</a>
-            <span class="app-title">🌾 Manevi Tarla & Hasat</span>
+            <span class="app-title">🌾 Yıllık Tarla & İbadet Takvimi</span>
         </div>
     </header>
 
     <!-- TARLA / HASAT GÖRSEL ALANI -->
-    <div class="farm-screen" id="farmScreen">
-        <div class="farm-visual" id="farmVisual">🏜️</div>
-        <div class="farm-status" id="farmStatus">Kurak Toprak</div>
-        <div class="farm-desc" id="farmDesc">İbadetlerini tamamla, tarlanı can suyuyla yeşert.</div>
+    <div class="farm-screen">
+        <div class="farm-animation-box" id="farmVisual">🏜️</div>
+        <div class="farm-status" id="farmStatus">Seçilen Gün: Kurak Toprak</div>
+        <div class="farm-desc" id="farmDesc">İbadetlerini tamamla, o günün tarlasını yeşert.</div>
         <div class="progress-bar-container">
             <div class="progress-bar-fill" id="progressFill"></div>
         </div>
     </div>
 
-    <!-- İBADETLERİ İŞARETLEME KARTI -->
+    <!-- AY VE GÜN SEÇİCİ -->
     <div class="card">
-        <div class="section-title">Bugünkü İbadetlerim</div>
+        <div class="section-title">
+            <span>Ay Seçimi ve Günlük Takvim</span>
+            <span id="selectedDateText" style="font-size:0.75rem; color:var(--text-muted);"></span>
+        </div>
+        
+        <div class="selector-row">
+            <select id="monthSelect" onchange="changeMonth()">
+                <option value="0">Ocak</option>
+                <option value="1">Şubat</option>
+                <option value="2">Mart</option>
+                <option value="3">Nisan</option>
+                <option value="4">Mayıs</option>
+                <option value="5">Haziran</option>
+                <option value="6">Temmuz</option>
+                <option value="7" selected>Ağustos</option>
+                <option value="8">Eylül</option>
+                <option value="9">Ekim</option>
+                <option value="10">Kasım</option>
+                <option value="11">Aralık</option>
+            </select>
+        </div>
+
+        <!-- Günlerin Kutucukları (Grid) -->
+        <div class="days-grid" id="daysGrid"></div>
+    </div>
+
+    <!-- SEÇİLEN GÜNÜN İBADETLERİ -->
+    <div class="card">
+        <div class="section-title" id="dailyCardTitle">Seçilen Günün İbadetleri</div>
         
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id="sabah" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="updateDayData()">
                 <span class="ibadet-name">🌅 Sabah Namazı</span>
             </div>
         </label>
-
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id="ogle" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="updateDayData()">
                 <span class="ibadet-name">☀️ Öğle Namazı</span>
             </div>
         </label>
-
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id="ikindi" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="updateDayData()">
                 <span class="ibadet-name">🌤️ İkindi Namazı</span>
             </div>
         </label>
-
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id="aksam" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="updateDayData()">
                 <span class="ibadet-name">🌇 Akşam Namazı</span>
             </div>
         </label>
-
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id="yatsi" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="updateDayData()">
                 <span class="ibadet-name">🌙 Yatsı Namazı</span>
             </div>
         </label>
-
         <label class="ibadet-item">
             <div class="ibadet-info">
-                <input type="checkbox" class="ibadet-checkbox" data-id="zikir" onchange="updateFarm()">
+                <input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="updateDayData()">
                 <span class="ibadet-name">📿 Günlük Zikir & Dua</span>
             </div>
         </label>
@@ -175,55 +190,121 @@
 <div class="footer">Ayetin Vakti Ekosistemi • <span>5-5 Namaz Takibi</span></div>
 
 <script>
-    function updateFarm() {
-        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
-        let completedCount = 0;
-        const total = checkboxes.length;
+    let currentMonth = parseInt(document.getElementById('monthSelect').value);
+    let selectedDay = new Date().getDate(); // Varsayılan bugün
+
+    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    function initCalendar() {
+        const grid = document.getElementById('daysGrid');
+        grid.innerHTML = '';
+        const totalDays = monthDays[currentMonth];
+
+        // Eğer seçilen gün o ayın gün sınırını aşarsa sabitle
+        if (selectedDay > totalDays) selectedDay = totalDays;
+
+        for (let d = 1; d <= totalDays; d++) {
+            const dayBox = document.createElement('div');
+            dayBox.className = 'day-box' + (d === selectedDay ? ' active' : '');
+            
+            // O günün kayıtlı verisini kontrol et
+            const key = `ibadet_${currentMonth}_${d}`;
+            const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
+            const completedCount = savedData.filter(Boolean).length;
+
+            let icon = '🏜️';
+            if (completedCount > 0 && completedCount <= 2) icon = '🌱';
+            else if (completedCount > 2 && completedCount < 6) icon = '🌿';
+            else if (completedCount === 6) icon = '🌾';
+
+            dayBox.innerHTML = `
+                <span class="day-num">${d}</span>
+                <span class="day-status-icon">${icon}</span>
+            `;
+
+            dayBox.onclick = () => {
+                selectedDay = d;
+                initCalendar();
+                loadDayData();
+            };
+            grid.appendChild(dayBox);
+        }
+        loadDayData();
+    }
+
+    function changeMonth() {
+        currentMonth = parseInt(document.getElementById('monthSelect').value);
+        initCalendar();
+    }
+
+    function loadDayData() {
+        const key = `ibadet_${currentMonth}_${selectedDay}`;
+        const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         
-        checkboxes.forEach((cb, index) => {
-            if (cb.checked) completedCount++;
-            localStorage.setItem('ibadet_' + index, cb.checked);
+        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
+        checkboxes.forEach((cb, idx) => {
+            cb.checked = savedData[idx];
         });
+
+        document.getElementById('selectedDateText').innerText = `${selectedDay} ${document.getElementById('monthSelect').options[currentMonth].text}`;
+        document.getElementById('dailyCardTitle').innerText = `${selectedDay} ${document.getElementById('monthSelect').options[currentMonth].text} İbadetleri`;
+        
+        updateFarmVisual(savedData);
+    }
+
+    function updateDayData() {
+        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
+        let data = [];
+        checkboxes.forEach(cb => data.push(cb.checked));
+
+        const key = `ibadet_${currentMonth}_${selectedDay}`;
+        localStorage.setItem(key, JSON.stringify(data));
+
+        initCalendar(); // Grid ikonlarını anında güncellemek için
+        updateFarmVisual(data);
+    }
+
+    function updateFarmVisual(data) {
+        const completedCount = data.filter(Boolean).length;
+        const total = data.length;
+        const percentage = (completedCount / total) * 100;
+
+        document.getElementById('progressFill').style.width = percentage + '%';
 
         const visual = document.getElementById('farmVisual');
         const status = document.getElementById('farmStatus');
         const desc = document.getElementById('farmDesc');
-        const progressFill = document.getElementById('progressFill');
-
-        // Yüzde hesapla
-        const percentage = (completedCount / total) * 100;
-        progressFill.style.width = percentage + '%';
 
         if (completedCount === 0) {
             visual.innerText = "🏜️";
-            status.innerText = "Kurak Toprak";
-            desc.innerText = "Tohum ekilmeyi ve can suyu bekliyor...";
-        } else if (completedCount === 1) {
+            status.innerText = `${selectedDay} Gün: Kurak Toprak`;
+            desc.innerText = "Bu güne ait henüz ibaret işareti yapılmadı.";
+        } else if (completedCount <= 2) {
             visual.innerText = "🌱💧";
-            status.innerText = "İlk Can Suyu Verildi";
-            desc.innerText = "Maşallah! İlk adım atıldı, filizler uyanıyor.";
-        } else if (completedCount <= 3) {
+            status.innerText = `${selectedDay} Gün: Filizleniyor`;
+            desc.innerText = "Can suyu verildi, tohumlar uyanıyor.";
+        } else if (completedCount <= 4) {
             visual.innerText = "🌿🪴";
-            status.innerText = "Filizler Büyüyor";
-            desc.innerText = "Gayretinle tarlan yeşillenmeye ve kök salmaya başladı.";
+            status.innerText = `${selectedDay} Gün: Yeşeren Tarla`;
+            desc.innerText = "İbadetler arttıkça tarlan canlanıyor.";
         } else if (completedCount < 6) {
             visual.innerText = "🌳🍏✨";
-            status.innerText = "Meyve Bahçesi";
-            desc.innerText = "Çok az kaldı! Dallar meyveyle dolmak üzere.";
+            status.innerText = `${selectedDay} Gün: Meyve Bahçesi`;
+            desc.innerText = "Zirveye çok az kaldı, gayretin daim olsun!";
         } else {
             visual.innerText = "🌾🚜🏆";
-            status.innerText = "Altın Hasat Vakti!";
-            desc.innerText = "Elhamdülillah, tarlanın bereketi zirvede! Harika iş çıkardın.";
+            status.innerText = `${selectedDay} Gün: Altın Hasat!`;
+            desc.innerText = "Elhamdülillah, bu günün tüm bereketi toplandı.";
         }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
-        checkboxes.forEach((cb, index) => {
-            const savedState = localStorage.getItem('ibadet_' + index) === 'true';
-            cb.checked = savedState;
-        });
-        updateFarm();
+        // Otomatik olarak bugünün ayını ve gününü seç
+        const now = new Date();
+        currentMonth = now.getMonth();
+        selectedDay = now.getDate();
+        document.getElementById('monthSelect').value = currentMonth;
+        initCalendar();
     });
 </script>
 </body>
