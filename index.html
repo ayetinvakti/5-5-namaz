@@ -81,41 +81,44 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            perspective: 1000px;
         }
 
         .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.85);
             border-radius: 50px;
-            animation: floatClouds 12s infinite alternate ease-in-out;
+            animation: floatClouds 10s infinite alternate ease-in-out;
         }
         .cloud::before, .cloud::after { content: ''; position: absolute; background: rgba(255, 255, 255, 0.85); border-radius: 50%; }
         .c1 { width: 90px; height: 32px; top: 15px; left: 15px; }
         .c1::before { width: 45px; height: 45px; top: -22px; left: 12px; }
         .c1::after { width: 35px; height: 35px; top: -15px; left: 45px; }
 
-        .c2 { width: 110px; height: 38px; top: 10px; right: 20px; animation-delay: 1s; }
+        .c2 { width: 110px; height: 38px; top: 10px; right: 20px; animation-delay: 1.5s; animation-duration: 14s; }
         .c2::before { width: 55px; height: 55px; top: -28px; left: 15px; }
         .c2::after { width: 40px; height: 40px; top: -18px; left: 55px; }
 
         @keyframes floatClouds {
-            0% { transform: translateX(-12px); }
-            100% { transform: translateX(12px); }
+            0% { transform: translateX(-15px) scale(0.98); }
+            100% { transform: translateX(15px) scale(1.02); }
         }
 
         .floating-island {
             width: 280px;
             height: 190px;
             position: relative;
-            animation: floatIsland 4s infinite ease-in-out;
+            transform-style: preserve-3d;
+            animation: floatIsland 5s infinite ease-in-out;
+            transition: transform 0.2s ease-out;
         }
 
         @keyframes floatIsland {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
+            0%, 100% { transform: translateY(0px) rotateX(4deg) rotateY(0deg); }
+            50% { transform: translateY(-8px) rotateX(7deg) rotateY(2deg); }
         }
 
-        .island-svg { width: 100%; height: 100%; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3)); }
+        .island-svg { width: 100%; height: 100%; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.35)); }
 
         .field-crops-container {
             position: absolute;
@@ -132,8 +135,19 @@
 
         .farm-crop-item {
             font-size: 1.5rem;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.4));
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        }
+
+        /* Yeni Canlı Büyüme Efekti Sınıfı */
+        .pop-animation {
+            animation: cropPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4) forwards;
+        }
+
+        @keyframes cropPop {
+            0% { transform: scale(0.4) translateY(15px); opacity: 0; }
+            70% { transform: scale(1.25) translateY(-6px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
         }
 
         .compact-date-card {
@@ -204,12 +218,11 @@
 
     <div id="spiritQuote">"Bismillah de, tarlanı ekmeye başla..."</div>
 
-    <div class="island-viewport">
+    <div class="island-viewport" id="viewport">
         <div class="cloud c1"></div>
         <div class="cloud c2"></div>
 
-        <div class="floating-island">
-            <!-- Gönderdiğiniz Resimdeki 3D / İzometrik Tarla Düzeni Tasarımı -->
+        <div class="floating-island" id="floatingIsland">
             <svg class="island-svg" viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="groundSoil" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -222,7 +235,7 @@
                     </linearGradient>
                 </defs>
 
-                <!-- Ön Taş / Beton Sınır Duvarı (Resimdeki alt zemin havuz duvarı efekti) -->
+                <!-- Ön Taş Duvar / Havuz Kısmı -->
                 <path d="M25,145 L235,145 L235,165 L25,165 Z" fill="#94a3b8" stroke="#64748b" stroke-width="1"/>
                 <line x1="60" y1="145" x2="60" y2="165" stroke="#64748b" stroke-width="1"/>
                 <line x1="95" y1="145" x2="95" y2="165" stroke="#64748b" stroke-width="1"/>
@@ -230,28 +243,25 @@
                 <line x1="165" y1="145" x2="165" y2="165" stroke="#64748b" stroke-width="1"/>
                 <line x1="200" y1="145" x2="200" y2="165" stroke="#64748b" stroke-width="1"/>
 
-                <!-- 3D İzometrik Tarla Ana Platform Gövdesi -->
+                <!-- 3D Platform Ana Gövde -->
                 <path d="M30,70 L230,70 L245,135 L15,135 Z" fill="url(#groundSoil)" stroke="#1a0d05" stroke-width="2"/>
                 
-                <!-- Sol ve Sağ Blok Yan Derinlikleri -->
+                <!-- Yan Derinlikler -->
                 <path d="M15,135 L45,150 L45,85 L30,70 Z" fill="url(#sideWall)"/>
                 <path d="M235,135 L205,150 L205,85 L230,70 Z" fill="#4a2814"/>
 
-                <!-- Resimdeki Gibi Bölümlenmiş Tarla Yüzeyleri (Bloklar) -->
-                <!-- Sol Yan Tarla Bloğu -->
+                <!-- Tarla Blokları -->
                 <rect x="35" y="78" width="55" height="48" fill="#4a3018" rx="3" stroke="#2c1a0c"/>
-                <!-- Orta Dikey Hasat / Mahsul Yolu (Sizin Emojilerin Oturduğu Yer) -->
                 <rect x="98" y="76" width="64" height="52" fill="#36220f" rx="3" stroke="#211306"/>
-                <!-- Sağ Yan Tarla Bloğu -->
                 <rect x="170" y="78" width="55" height="48" fill="#4a3018" rx="3" stroke="#2c1a0c"/>
 
-                <!-- Ortadaki Tarlanın Sürülmüş Çizgileri (Karıklar) -->
+                <!-- Karık Çizgileri -->
                 <line x1="108" y1="84" x2="152" y2="84" stroke="#4d3319" stroke-width="2"/>
                 <line x1="108" y1="94" x2="152" y2="94" stroke="#4d3319" stroke-width="2"/>
                 <line x1="108" y1="104" x2="152" y2="104" stroke="#4d3319" stroke-width="2"/>
                 <line x1="108" y1="114" x2="152" y2="114" stroke="#4d3319" stroke-width="2"/>
 
-                <!-- Sol ve Sağ Bloklardaki Sembolik Ağaç Gövdeleri / Yeşillikler -->
+                <!-- Ağaç Tepeleri -->
                 <circle cx="62" cy="102" r="14" fill="#166534" opacity="0.85"/>
                 <circle cx="62" cy="98" r="10" fill="#22c55e" opacity="0.7"/>
                 <circle cx="198" cy="102" r="14" fill="#14532d" opacity="0.85"/>
@@ -305,6 +315,21 @@
     const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
 
+    // Fare hareketine duyarlı 3D Parallax Efekti
+    const viewport = document.getElementById('viewport');
+    const island = document.getElementById('floatingIsland');
+
+    viewport.addEventListener('mousemove', (e) => {
+        const rect = viewport.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        island.style.transform = `rotateX(${-y / 8}deg) rotateY(${x / 8}deg) translateY(-4px)`;
+    });
+
+    viewport.addEventListener('mouseleave', () => {
+        island.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0px)`;
+    });
+
     function toggleCalendarDrawer() {
         const drawer = document.getElementById('calendarDrawer');
         const arrow = document.getElementById('drawerArrow');
@@ -342,7 +367,7 @@
         checkboxes.forEach((cb, idx) => cb.checked = savedData[idx]);
         document.getElementById('selectedDateText').innerText = `${selectedDay} ${monthNames[currentMonth]} 2026`;
         document.getElementById('dailyCardTitle').innerText = `${selectedDay} ${monthNames[currentMonth]} Amelleri`;
-        updateFarmCropsVisual(savedData);
+        updateFarmCropsVisual(savedData, false);
     }
 
     function handleIbadetChange(index, quoteText) {
@@ -351,10 +376,10 @@
         document.getElementById('spiritQuote').innerText = checkboxes[index].checked ? quoteText : "Tarlanı büyütmek için ibadetlerini tamamla...";
         localStorage.setItem(`manevi_tarla_${currentMonth}_${selectedDay}`, JSON.stringify(data));
         initCalendar();
-        updateFarmCropsVisual(data);
+        updateFarmCropsVisual(data, true); // Animasyonu tetikle
     }
 
-    function updateFarmCropsVisual(data) {
+    function updateFarmCropsVisual(data, animate = false) {
         const count = data.filter(Boolean).length;
         document.getElementById('completionRate').innerText = `${count}/6`;
         const container = document.getElementById('fieldCropsContainer');
@@ -364,7 +389,14 @@
         let currentEmoji = stages[count]; 
 
         for (let i = 0; i < 3; i++) {
-            container.innerHTML += `<div class="farm-crop-item" style="${count === 6 ? 'transform: scale(1.35) translateY(-4px); filter: drop-shadow(0 0 12px rgba(234, 179, 8, 0.8));' : ''}">${currentEmoji}</div>`;
+            const item = document.createElement('div');
+            item.className = 'farm-crop-item' + (animate ? ' pop-animation' : '');
+            if (count === 6) {
+                item.style.transform = 'scale(1.35) translateY(-4px)';
+                item.style.filter = 'drop-shadow(0 0 12px rgba(234, 179, 8, 0.8))';
+            }
+            item.innerText = currentEmoji;
+            container.appendChild(item);
         }
     }
 
