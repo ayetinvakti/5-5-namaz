@@ -36,7 +36,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ULTRA GERÇEKÇİ DİNAMİK GÖKYÜZÜ ARKA PLANI */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
             background: linear-gradient(135deg, #a5f3fc 0%, #38bdf8 35%, #818cf8 70%, #c084fc 100%);
@@ -59,7 +58,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Arka Plan Atmosferik Işık Süzmeleri (Glow Efektleri) */
         .ambient-light {
             position: absolute;
             top: -50px;
@@ -115,7 +113,6 @@
             perspective: 1000px;
         }
 
-        /* Gelişmiş Derinlikli Bulutlar */
         .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.9);
@@ -138,7 +135,7 @@
         }
 
         .floating-island {
-            width: 280px;
+            width: 290px;
             height: 190px;
             position: relative;
             transform-style: preserve-3d;
@@ -147,18 +144,18 @@
         }
 
         @keyframes floatIsland {
-            0%, 100% { transform: translateY(0px) rotateX(4deg) rotateY(0deg); }
-            50% { transform: translateY(-8px) rotateX(7deg) rotateY(2deg); }
+            0%, 100% { transform: translateY(0px) rotateX(8deg) rotateY(0deg); }
+            50% { transform: translateY(-8px) rotateX(12deg) rotateY(2deg); }
         }
 
         .island-svg { width: 100%; height: 100%; filter: drop-shadow(0 25px 35px rgba(0,0,0,0.3)); }
 
         .field-crops-container {
             position: absolute;
-            top: 70px;
+            top: 75px;
             left: 50%;
             transform: translateX(-50%);
-            width: 160px;
+            width: 170px;
             height: 55px;
             display: flex;
             justify-content: space-around;
@@ -167,7 +164,7 @@
         }
 
         .farm-crop-item {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.4);
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
         }
@@ -259,47 +256,29 @@
         <div class="floating-island" id="floatingIsland">
             <svg class="island-svg" viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="groundSoil" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#5c3818"/>
-                        <stop offset="100%" stop-color="#2a170a"/>
+                    <linearGradient id="grassTop" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#4ade80"/>
+                        <stop offset="100%" stop-color="#16a34a"/>
                     </linearGradient>
-                    <linearGradient id="sideWall" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stop-color="#201007"/>
-                        <stop offset="100%" stop-color="#3d2110"/>
+                    <linearGradient id="soilLayer" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#78350f"/>
+                        <stop offset="100%" stop-color="#3b1d06"/>
                     </linearGradient>
                 </defs>
 
-                <!-- Ön Taş Duvar -->
-                <path d="M25,145 L235,145 L235,165 L25,165 Z" fill="#94a3b8" stroke="#64748b" stroke-width="1"/>
-                <line x1="60" y1="145" x2="60" y2="165" stroke="#64748b" stroke-width="1"/>
-                <line x1="95" y1="145" x2="95" y2="165" stroke="#64748b" stroke-width="1"/>
-                <line x1="130" y1="145" x2="130" y2="165" stroke="#64748b" stroke-width="1"/>
-                <line x1="165" y1="145" x2="165" y2="165" stroke="#64748b" stroke-width="1"/>
-                <line x1="200" y1="145" x2="200" y2="165" stroke="#64748b" stroke-width="1"/>
-
-                <!-- 3D Platform Ana Gövde -->
-                <path d="M30,70 L230,70 L245,135 L15,135 Z" fill="url(#groundSoil)" stroke="#1a0d05" stroke-width="2"/>
+                <!-- Fotoğraftakine Benzer 3D Çim ve Toprak Blok Platformu -->
+                <!-- Toprak Katmanı (Alt Gövde) -->
+                <path d="M25,110 L235,110 L245,150 L15,150 Z" fill="url(#soilLayer)" stroke="#261203" stroke-width="2"/>
                 
-                <!-- Yan Derinlikler -->
-                <path d="M15,135 L45,150 L45,85 L30,70 Z" fill="url(#sideWall)"/>
-                <path d="M235,135 L205,150 L205,85 L230,70 Z" fill="#4a2814"/>
+                <!-- Toprak Yan Kesit Gölgeleri -->
+                <path d="M15,150 L35,160 L35,120 L25,110 Z" fill="#200e02"/>
+                <path d="M235,110 L245,120 L245,160 L235,150 Z" fill="#4d2208"/>
 
-                <!-- Tarla Blokları -->
-                <rect x="35" y="78" width="55" height="48" fill="#4a3018" rx="3" stroke="#2c1a0c"/>
-                <rect x="98" y="76" width="64" height="52" fill="#36220f" rx="3" stroke="#211306"/>
-                <rect x="170" y="78" width="55" height="48" fill="#4a3018" rx="3" stroke="#2c1a0c"/>
-
-                <!-- Karık Çizgileri -->
-                <line x1="108" y1="84" x2="152" y2="84" stroke="#4d3319" stroke-width="2"/>
-                <line x1="108" y1="94" x2="152" y2="94" stroke="#4d3319" stroke-width="2"/>
-                <line x1="108" y1="104" x2="152" y2="104" stroke="#4d3319" stroke-width="2"/>
-                <line x1="108" y1="114" x2="152" y2="114" stroke="#4d3319" stroke-width="2"/>
-
-                <!-- Ağaç Tepeleri -->
-                <circle cx="62" cy="102" r="14" fill="#166534" opacity="0.85"/>
-                <circle cx="62" cy="98" r="10" fill="#22c55e" opacity="0.7"/>
-                <circle cx="198" cy="102" r="14" fill="#14532d" opacity="0.85"/>
-                <circle cx="198" cy="98" r="10" fill="#16a34a" opacity="0.7"/>
+                <!-- Üst Çim Tabakası (Pofuduk / Canlı Yeşil Doku) -->
+                <path d="M20,105 Q60,95 130,102 Q200,95 240,105 L235,115 L25,115 Z" fill="url(#grassTop)" stroke="#15803d" stroke-width="1.5"/>
+                
+                <!-- Çim Üstü Detay Çeltikleri / Çimen Dokusu -->
+                <path d="M35,106 L38,98 M55,104 L57,96 M75,106 L78,97 M95,103 L97,95 M115,105 L118,96 M135,104 L138,95 M155,105 L158,97 M175,103 L178,94 M195,105 L198,96 M215,104 L218,97" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
             <div class="field-crops-container" id="fieldCropsContainer"></div>
         </div>
@@ -332,11 +311,11 @@
             <span id="completionRate" style="color: var(--accent-color);">0/6</span>
         </div>
         
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="handleIbadetChange(0, '🌅 Sabahın bereketi üzerine olsun, tarlaya tohumlar atıldı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌅 Sabah Namazı</span><span class="ibadet-desc">Günün ilk tohumu</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="handleIbadetChange(1, '☀️ Öğle vaktinde tarlan can suyuyla buluştu.')"><div class="ibadet-text-group"><span class="ibadet-name">☀️ Öğle Namazı</span><span class="ibadet-desc">Gündüzün orta yerinde sulama</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="handleIbadetChange(2, '🌤️ İkindi vakti, fideler güneşe karşı filizlenmeye başladı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌤️ İkindi Namazı</span><span class="ibadet-desc">Ömrün ikindisinde sebat</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="handleIbadetChange(3, '🌇 Akşam, tarlada yeşil yapraklar ve saplar boy attı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌇 Akşam Namazı</span><span class="ibadet-desc">Hüznü geride bırakıp ürüne yöneliş</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="handleIbadetChange(4, '🌙 Yatsı, başaklar dolgunlaşarak olgunlaşma evresine girdi.')"><div class="ibadet-text-group"><span class="ibadet-name">🌙 Yatsı Namazı</span><span class="ibadet-desc">Gece sükunetinde tarlanın koruması</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="handleIbadetChange(0, '🌅 Sabahın bereketiyle çimler sulandı, ilk filizler yeşerdi.')"><div class="ibadet-text-group"><span class="ibadet-name">🌅 Sabah Namazı</span><span class="ibadet-desc">Günün ilk tohumu</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="handleIbadetChange(1, '☀️ Öğle vaktinde tarlan can suyuyla tazelendi.')"><div class="ibadet-text-group"><span class="ibadet-name">☀️ Öğle Namazı</span><span class="ibadet-desc">Gündüzün orta yerinde sulama</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="handleIbadetChange(2, '🌤️ İkindi vakti, fideler güneşe karşı boy attı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌤️ İkindi Namazı</span><span class="ibadet-desc">Ömrün ikindisinde sebat</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="handleIbadetChange(3, '🌇 Akşam, tarlada rengarenk çiçekler açtı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌇 Akşam Namazı</span><span class="ibadet-desc">Hüznü geride bırakıp ürüne yöneliş</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="handleIbadetChange(4, '🌙 Yatsı, başaklar dolgunlaşarak olgunlaştı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌙 Yatsı Namazı</span><span class="ibadet-desc">Gece sükunetinde tarlanın koruması</span></div></div></label>
         <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="handleIbadetChange(5, '✨📿 Zirve Hasat: Zikirle tarlan altın sarısı berekete ulaştı!')"><div class="ibadet-text-group"><span class="ibadet-name">📿 Günlük Zikir & Dua</span><span class="ibadet-desc">"Sübhanallahi ve bihamdihi" ile bereket</span></div></div></label>
     </div>
 </div>
@@ -418,11 +397,13 @@
         const container = document.getElementById('fieldCropsContainer');
         container.innerHTML = '';
         
+        // Fotoğraftaki çim bloğun üzerinde büyüyecek evreler
         const farmStages = [
-            "🟤", "🌱", "🌿", "☘️", "🎋", "🌾", "🌟🌾"
+            "🌱", "🌿", "☘️", "🌷", "🎋", "🌾", "🌟🌾"
         ];
         
-        let currentVisual = farmStages[count];
+        let currentVisual = farmStages[count > 0 ? count - 1 : 0];
+        if(count === 0) currentVisual = ""; // Hiç ibadet yoksa sadece çim görünür
 
         for (let i = 0; i < 3; i++) {
             const item = document.createElement('div');
