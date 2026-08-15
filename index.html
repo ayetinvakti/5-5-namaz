@@ -1,98 +1,66 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manevi Tarım & İbadet Takvimi | Ayetin Vakti</title>
-    <meta name="theme-color" content="#10b981">
-    
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') document.documentElement.classList.add('light-mode');
-            
-            const customAccent = localStorage.getItem('custom_accent');
-            const customText = localStorage.getItem('custom_text');
-            const customBg = localStorage.getItem('custom_bg');
-
-            if (customAccent) document.documentElement.style.setProperty('--accent-color', customAccent);
-            if (customText) document.documentElement.style.setProperty('--text-color', customText);
-            if (customBg) {
-                document.documentElement.style.setProperty('--bg-color', customBg);
-                document.documentElement.style.setProperty('--card-bg', customBg);
-            }
-        })();
-    </script>
-
+    <title>Manevi Tarım & İzometrik Çiftlik Simülasyonu</title>
     <style>
         :root {
-            --card-bg: #1e293b;
-            --accent-color: #10b981;
-            --text-color: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #cbd5e1;
+            --primary: #059669;
+            --primary-light: #10b981;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --border-glass: rgba(255, 255, 255, 0.15);
+            --text-color: #f8fafc;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #fef08a 0%, #a7f3d0 50%, #38bdf8 100%);
-            background-size: 300% 300%;
-            animation: skyAnim 15s ease infinite;
-            color: var(--text-color); 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 14px; 
-            transition: 0.3s; 
-            position: relative;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
             overflow-x: hidden;
         }
 
-        @keyframes skyAnim {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .container {
+            width: 100%;
+            max-width: 460px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
-        .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 12px; z-index: 2; }
-        
-        .navbar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 4px 2px; }
-        .back-btn { background: rgba(255,255,255,0.7); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.9); color: #0f172a; font-size: 1.4rem; cursor: pointer; text-decoration: none; font-weight: bold; backdrop-filter: blur(5px); }
-        .app-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; font-family: 'Georgia', serif; text-align: center; text-shadow: 0 2px 4px rgba(255,255,255,0.4); }
-
-        #spiritQuote { 
-            min-height: 38px; 
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            padding: 6px 12px;
-            font-style: italic; 
-            font-size: 0.8rem; 
-            color: #065f46; 
-            text-align: center; 
+        header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: 0.4s; 
-            font-weight: 600;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            justify-content: space-between;
+            padding: 4px 8px;
         }
 
-        /* İzometrik 3D Çiftlik Sahnesi */
-        .farm-viewport {
+        .app-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 3D İzometrik Sahne Kutusu */
+        .scene-container {
             width: 100%;
-            height: 270px;
+            height: 290px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 24px;
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
             position: relative;
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(8px);
-            border-radius: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -100,318 +68,336 @@
             perspective: 1000px;
         }
 
-        .isometric-island {
-            width: 320px;
-            height: 220px;
+        /* İzometrik Ada Dünyası */
+        .isometric-world {
+            width: 300px;
+            height: 200px;
             position: relative;
             transform-style: preserve-3d;
             transform: rotateX(55deg) rotateZ(-45deg);
-            transition: transform 0.4s ease;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Çiftlik Katmanları ve Alanları */
-        .farm-tile {
+        /* Zemin Tabanı */
+        .world-base {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            background: #27272a;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: background 0.6s ease;
+        }
+
+        /* Bölmeler */
+        .plot {
             position: absolute;
             border-radius: 8px;
-            transition: 0.4s;
-        }
-
-        /* Toprak/Çimen Zemin Tabanı */
-        .base-ground {
-            width: 280px;
-            height: 280px;
-            background: #d4d4d8;
-            border-radius: 16px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 6px;
             transition: 0.5s;
         }
 
-        /* Etkileşimli Ekin Tarlaları */
-        .plot-1 { width: 110px; height: 65px; top: 20px; left: 20px; background: #a18053; border: 2px dashed #785834; }
-        .plot-2 { width: 110px; height: 65px; top: 105px; left: 20px; background: #a18053; border: 2px dashed #785834; }
-        
-        /* Çiftlik Evi ve Ağaç Bölgesi */
+        .plot-left { width: 100px; height: 60px; top: 15px; left: 15px; background: #3f2e18; border: 2px dashed #5c4022; }
+        .plot-right { width: 100px; height: 60px; top: 90px; left: 15px; background: #3f2e18; border: 2px dashed #5c4022; }
+
+        /* Çiftlik Evi */
         .farm-house {
             position: absolute;
-            top: 25px;
-            right: 25px;
-            width: 75px;
-            height: 60px;
-            background: #ef4444;
+            top: 15px;
+            right: 15px;
+            width: 70px;
+            height: 55px;
+            background: #dc2626;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.8rem;
-            box-shadow: -5px 5px 15px rgba(0,0,0,0.3);
+            box-shadow: -6px 6px 20px rgba(0,0,0,0.4);
         }
 
-        /* Ağaçlar ve Çocuk Alanı */
-        .tree-zone {
+        /* Ağaç & Aktivite Alanı */
+        .activity-zone {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             width: 110px;
-            height: 100px;
+            height: 90px;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             justify-content: center;
         }
 
-        .farm-element {
+        .entity {
             font-size: 1.5rem;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.4);
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.4));
         }
 
-        .pop-anim {
-            animation: elementPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4) forwards;
+        .pop-effect {
+            animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        @keyframes elementPop {
-            0% { transform: scale(0.2) translateZ(20px); opacity: 0; }
-            70% { transform: scale(1.3) translateZ(40px); opacity: 1; }
-            100% { transform: scale(1) translateZ(10px); opacity: 1; }
+        @keyframes bounceIn {
+            0% { transform: scale(0) translateZ(30px); opacity: 0; }
+            70% { transform: scale(1.2) translateZ(50px); opacity: 1; }
+            100% { transform: scale(1) translateZ(15px); opacity: 1; }
         }
 
-        .compact-date-card {
-            background: rgba(255, 255, 255, 0.9);
+        /* Bilgi / Motivasyon Kutusu */
+        .quote-box {
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            text-align: center;
+            font-style: italic;
+            color: #34d399;
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        /* Takvim Paneli */
+        .calendar-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
             border-radius: 14px;
             padding: 10px 14px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            flex-direction: column;
+            gap: 8px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.04);
         }
-        .date-display-info { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; color: #0f172a; }
-        
-        .calendar-drawer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 0 0 14px 14px;
-            padding: 0 14px;
-        }
-        .calendar-drawer.open { max-height: 180px; padding: 10px 14px 14px 14px; border-top: 1px solid #e2e8f0; }
-        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; max-height: 120px; overflow-y: auto; }
-        .day-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px 2px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .day-box.active { border-color: #eab308; background: #fffbeb; box-shadow: 0 0 6px rgba(234, 179, 8, 0.4); }
-        .day-num { font-size: 0.7rem; font-weight: 700; color: #334155; }
-        .day-dot { width: 4px; height: 4px; border-radius: 50%; background: #cbd5e1; }
-        .day-dot.completed { background: #10b981; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.9rem; }
+        .drawer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .drawer.open { max-height: 160px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-height: 110px; overflow-y: auto; }
+        .day-cell { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px; text-align: center; font-size: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .day-cell.active { background: rgba(16, 185, 129, 0.2); border-color: #10b981; }
+        .dot { width: 4px; height: 4px; border-radius: 50%; background: #64748b; }
+        .dot.done { background: #34d399; }
 
-        .card { 
-            background: rgba(255, 255, 255, 0.92); 
+        /* Görev Listesi */
+        .tasks-card {
+            background: var(--card-bg);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8); 
-            border-radius: 16px; 
-            padding: 12px 14px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .section-title { font-size: 0.75rem; font-weight: 700; color: #475569; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .tasks-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; display: flex; justify-content: space-between; font-weight: 700; }
 
-        .ibadet-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; background: rgba(248, 250, 252, 0.8); border: 1px solid #e2e8f0; border-radius: 10px; cursor: pointer; transition: 0.2s; user-select: none; }
-        .ibadet-item:hover { border-color: var(--accent-color); background: #ffffff; }
-        .ibadet-info { display: flex; align-items: center; gap: 10px; width: 100%; }
-        .ibadet-checkbox { width: 18px; height: 18px; accent-color: var(--accent-color); cursor: pointer; }
-        .ibadet-text-group { display: flex; flex-direction: column; gap: 2px; width: 100%; }
-        .ibadet-name { font-weight: 600; font-size: 0.88rem; color: #0f172a; }
-        .ibadet-desc { font-size: 0.72rem; color: #64748b; font-weight: 500; }
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .task-item:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--primary-light); }
+        .task-info { display: flex; align-items: center; gap: 10px; width: 100%; }
+        .task-checkbox { width: 18px; height: 18px; accent-color: var(--primary-light); cursor: pointer; }
+        .task-texts { display: flex; flex-direction: column; gap: 2px; width: 100%; }
+        .task-name { font-weight: 600; font-size: 0.88rem; color: #f1f5f9; }
+        .task-desc { font-size: 0.72rem; color: #94a3b8; }
 
-        .footer { margin: 2px 0 10px 0; text-align: center; font-size: 0.72rem; color: #334155; font-weight: 500; text-shadow: 0 1px 2px rgba(255,255,255,0.5); }
-        .footer span { color: #047857; font-weight: 700; }
+        footer { text-align: center; font-size: 0.72rem; color: #64748b; margin-top: 4px; }
+        footer span { color: #34d399; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header class="navbar">
-        <a href="http://ayetinvakti.github.io" class="back-btn">‹</a>
-        <span class="app-title">🌱 Manevi Tarım & İbadet</span>
-        <div style="width: 36px;"></div>
+    <header>
+        <span class="app-title">🌿 Manevi Çiftlik Simülasyonu</span>
+        <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
-    <div id="spiritQuote">"Bismillah de, kurak tarlanı canlandırmaya başla..."</div>
+    <div class="quote-box" id="quoteBox">"Çiftliğin tamamen kurak ve boş... İbadetlerini tamamlayarak can suyu ver."</div>
 
-    <!-- İzometrik 3D Çiftlik Sahnesi -->
-    <div class="farm-viewport">
-        <div class="isometric-island" id="isometricIsland">
-            <!-- Zemin Tabanı (İbadete göre sarıdan canlı yeşile döner) -->
-            <div class="base-ground" id="baseGround"></div>
-
-            <!-- Sol Üst Tarlalar -->
-            <div class="farm-tile plot-1" id="plot1Container" style="display: flex; align-items: center; justify-content: space-around; padding: 5px;"></div>
-            <div class="farm-tile plot-2" id="plot2Container" style="display: flex; align-items: center; justify-content: space-around; padding: 5px;"></div>
-
-            <!-- Çiftlik Evi -->
+    <!-- 3D İzometrik Sahne Alanı -->
+    <div class="scene-container" id="sceneContainer">
+        <div class="isometric-world" id="isoWorld">
+            <div class="world-base" id="worldBase"></div>
+            <div class="plot plot-left" id="plot1"></div>
+            <div class="plot plot-right" id="plot2"></div>
             <div class="farm-house" id="farmHouse">🏠</div>
-
-            <!-- Sağ Alt Ağaçlar ve Çocukların Oyun Alanı -->
-            <div class="tree-zone" id="treeZoneContainer"></div>
+            <div class="activity-zone" id="activityZone"></div>
         </div>
     </div>
 
-    <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.8);">
-        <div class="compact-date-card" onclick="toggleCalendarDrawer()">
-            <div class="date-display-info">
-                <span>📅</span>
-                <span id="selectedDateText">Ağustos 2026</span>
-            </div>
-            <span style="font-size: 0.8rem; color: #64748b;" id="drawerArrow">▼ Takvimi Aç</span>
+    <!-- Takvim Seçici -->
+    <div class="calendar-card" onclick="toggleDrawer()">
+        <div class="calendar-header">
+            <span id="currentDateLabel">📅 15 Ağustos 2026</span>
+            <span style="font-size: 0.75rem; color: #94a3b8;" id="drawerIcon">▼ Takvimi Aç</span>
         </div>
-        <div class="calendar-drawer" id="calendarDrawer">
-            <div style="margin-bottom: 8px; display: flex; justify-content: flex-end;">
-                <select id="monthSelect" onchange="changeMonth()" style="padding: 3px 8px; font-size: 0.78rem; border-radius: 6px; border: 1px solid #cbd5e1; background:#f1f5f9;">
-                    <option value="0">Ocak</option><option value="1">Şubat</option><option value="2">Mart</option>
-                    <option value="3">Nisan</option><option value="4">Mayıs</option><option value="5">Haziran</option>
-                    <option value="6">Temmuz</option><option value="7" selected>Ağustos</option><option value="8">Eylül</option>
-                    <option value="9">Ekim</option><option value="10">Kasım</option><option value="11">Aralık</option>
-                </select>
-            </div>
+        <div class="drawer" id="calendarDrawer">
             <div class="days-grid" id="daysGrid"></div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="section-title">
-            <span id="dailyCardTitle">Günün Amelleri</span>
-            <span id="completionRate" style="color: var(--accent-color);">0/6</span>
+    <!-- Görev Listesi -->
+    <div class="tasks-card">
+        <div class="tasks-title">
+            <span>Günün Manevi Amelleri</span>
+            <span style="color: #34d399;" id="completionPercent">%0</span>
         </div>
-        
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="handleIbadetChange(0, '🌅 Sabah serinliğiyle kurak toprak can suyu aldı, ilk filizler yeşerdi.')"><div class="ibadet-text-group"><span class="ibadet-name">🌅 Sabah Namazı</span><span class="ibadet-desc">Günün ilk tohumu</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="handleIbadetChange(1, '☀️ Öğle vaktinde tarladaki ekinler boy atmaya başladı.')"><div class="ibadet-text-group"><span class="ibadet-name">☀️ Öğle Namazı</span><span class="ibadet-desc">Gündüzün orta yerinde sulama</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="handleIbadetChange(2, '🌤️ İkindi vakti minik meyve ağaçları filizlenip büyüdü.')"><div class="ibadet-text-group"><span class="ibadet-name">🌤️ İkindi Namazı</span><span class="ibadet-desc">Ömrün ikindisinde sebat</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="handleIbadetChange(3, '🌇 Akşam huzuruyla ev şenlendi, çocuklar bahçede oynamaya başladı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌇 Akşam Namazı</span><span class="ibadet-desc">Hüznü geride bırakıp ürüne yöneliş</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="handleIbadetChange(4, '🌙 Yatsı sükunetinde ağaçlar meyveyle doldu, tarlalar başak verdi.')"><div class="ibadet-text-group"><span class="ibadet-name">🌙 Yatsı Namazı</span><span class="ibadet-desc">Gece sükunetinde tarlanın koruması</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="handleIbadetChange(5, '✨📿 Zirve Hasat: Zikir bereketiyle tüm çiftlik altın sarısı berekete ve neşeye boğuldu!')"><div class="ibadet-text-group"><span class="ibadet-name">📿 Günlük Zikir & Dua</span><span class="ibadet-desc">"Sübhanallahi ve bihamdihi" ile bereket</span></div></div></label>
+
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Kurak toprağa ilk can suyu verildi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Tarlada yeşermeler başladı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Meyve ağaçları filizlendi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Çiftlik evi şenlendi, çocuklar oynamaya başladı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Ağaçlar meyveyle doldu, tarlalar başak verdi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Altın sarısı zirve hasat ve neşe bereketi</span></div></div></label>
     </div>
 </div>
 
-<div class="footer">Ayetin Vakti Ekosistemi • <span>Adım Adım Manevi Hasat</span></div>
+<footer>Ayetin Vakti Ekosistemi • <span>İnteraktif 3D Çiftlik Deneyimi</span></footer>
 
 <script>
-    let currentMonth = new Date().getMonth();
-    let selectedDay = new Date().getDate();
-    const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+    let activeDay = 15;
+    let activeMonth = 7; // Ağustos
 
-    function toggleCalendarDrawer() {
+    // Fare hareketiyle 3D adayı döndürme efekti
+    const scene = document.getElementById('sceneContainer');
+    const world = document.getElementById('isoWorld');
+    
+    scene.addEventListener('mousemove', (e) => {
+        const rect = scene.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        world.style.transform = `rotateX(${55 - y / 12}deg) rotateZ(${-45 + x / 12}deg)`;
+    });
+
+    scene.addEventListener('mouseleave', () => {
+        world.style.transform = `rotateX(55deg) rotateZ(-45deg)`;
+    });
+
+    function toggleDrawer() {
         const drawer = document.getElementById('calendarDrawer');
-        const arrow = document.getElementById('drawerArrow');
+        const icon = document.getElementById('drawerIcon');
         drawer.classList.toggle('open');
-        arrow.innerText = drawer.classList.contains('open') ? "▲ Kapat" : "▼ Takvimi Aç";
+        icon.innerText = drawer.classList.contains('open') ? "▲ Kapat" : "▼ Takvimi Aç";
     }
 
     function initCalendar() {
         const grid = document.getElementById('daysGrid');
         grid.innerHTML = '';
-        const totalDays = monthDays[currentMonth];
-        for (let d = 1; d <= totalDays; d++) {
-            const dayBox = document.createElement('div');
-            dayBox.className = 'day-box' + (d === selectedDay ? ' active' : '');
-            const key = `manevi_tarla_${currentMonth}_${d}`;
-            const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
-            const completedCount = savedData.filter(Boolean).length;
-            dayBox.innerHTML = `<span class="day-num">${d}</span><div class="day-dot ${completedCount > 0 ? 'completed' : ''}" style="opacity: ${completedCount > 0 ? 1 : 0.3}"></div>`;
-            dayBox.onclick = () => { selectedDay = d; initCalendar(); loadDayData(); };
-            grid.appendChild(dayBox);
+        for (let d = 1; d <= 31; d++) {
+            const cell = document.createElement('div');
+            cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
+            const key = `farm_day_${activeMonth}_${d}`;
+            const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
+            const count = data.filter(Boolean).length;
+            
+            cell.innerHTML = `<span>${d}</span><div class="dot ${count > 0 ? 'done' : ''}"></div>`;
+            cell.onclick = () => { activeDay = d; initCalendar(); loadDay(); };
+            grid.appendChild(cell);
         }
-        loadDayData();
+        loadDay();
     }
 
-    function changeMonth() {
-        currentMonth = parseInt(document.getElementById('monthSelect').value);
-        selectedDay = 1;
+    function loadDay() {
+        document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
+        const key = `farm_day_${activeMonth}_${activeDay}`;
+        const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+        checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
+        renderFarm(data, false);
+    }
+
+    function updateFarm() {
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+        const data = Array.from(checkboxes).map(cb => cb.checked);
+        const key = `farm_day_${activeMonth}_${activeDay}`;
+        localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
+        renderFarm(data, true);
     }
 
-    function loadDayData() {
-        const key = `manevi_tarla_${currentMonth}_${selectedDay}`;
-        const savedData = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
-        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
-        checkboxes.forEach((cb, idx) => cb.checked = savedData[idx]);
-        document.getElementById('selectedDateText').innerText = `${selectedDay} ${monthNames[currentMonth]} 2026`;
-        document.getElementById('dailyCardTitle').innerText = `${selectedDay} ${monthNames[currentMonth]} Amelleri`;
-        updateIsometricFarm(savedData, false);
-    }
-
-    function handleIbadetChange(index, quoteText) {
-        const checkboxes = document.querySelectorAll('.ibadet-checkbox');
-        let data = Array.from(checkboxes).map(cb => cb.checked);
-        document.getElementById('spiritQuote').innerText = checkboxes[index].checked ? quoteText : "Tarlanı canlandırmak için ibadetlerini tamamla...";
-        localStorage.setItem(`manevi_tarla_${currentMonth}_${selectedDay}`, JSON.stringify(data));
-        initCalendar();
-        updateIsometricFarm(data, true);
-    }
-
-    function updateIsometricFarm(data, animate = false) {
+    function renderFarm(data, animate = true) {
         const count = data.filter(Boolean).length;
-        document.getElementById('completionRate').innerText = `${count}/6`;
+        document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
+        document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
 
-        // Zemin rengi: 0'da sararmış/kurak toprak, arttıkça canlı çim yeşiline dönüyor
-        const baseGround = document.getElementById('baseGround');
-        if (count === 0) {
-            baseGround.style.background = '#e7e5e4'; // Sararmış kurak zemin
-        } else if (count < 4) {
-            baseGround.style.background = '#84cc16'; // Filizlenen yeşil
-        } else {
-            baseGround.style.background = '#22c55e'; // Canlı bereketli yeşil
-        }
+        // Zemin renk değişimi (Kuraktan canlı çim yeşiline)
+        const base = document.getElementById('worldBase');
+        if (count === 0) base.style.background = '#3f3f46'; // Kurak toprak
+        else if (count < 4) base.style.background = '#65a30d'; // Filizlenen yeşil
+        else base.style.background = '#16a34a'; // Canlı bereketli yeşil
 
-        // Tarlalar (1 ve 2. plot)
-        const plot1 = document.getElementById('plot1Container');
-        const plot2 = document.getElementById('plot2Container');
+        // Motivasyon mesajları
+        const quotes = [
+            "Çiftliğin tamamen kurak ve boş... İbadetlerini tamamlayarak can suyu ver.",
+            "Sabah bereketiyle ilk filizler topraktan başını çıkardı.",
+            "Öğle ve ikindi sulamalarıyla tarlalar hızla büyüyor.",
+            "Ağaçlar filizlendi, çiftlikte yaşam kıpırdamaya başladı.",
+            "Çocukların neşeyle koştuğu, evenin şenlendiği vakit...",
+            "Yatsı huzuruyla ağaçlar meyveyle doldu, tarlalar başak verdi.",
+            "✨ Zirve Hasat! Çiftliğin altın sarısı bereketle ve neşeyle doldu taştı!"
+        ];
+        document.getElementById('quoteBox').innerText = quotes[count];
+
+        // Tarlalar (Plot 1 ve Plot 2)
+        const plot1 = document.getElementById('plot1');
+        const plot2 = document.getElementById('plot2');
         plot1.innerHTML = '';
         plot2.innerHTML = '';
 
         let cropIcon = count === 0 ? "🟤" : (count < 3 ? "🌱" : (count < 6 ? "🌿" : "🌾"));
-        for(let i=0; i<3; i++) {
+        for (let i = 0; i < 3; i++) {
             let el1 = document.createElement('div');
-            el1.className = 'farm-element' + (animate ? ' pop-anim' : '');
+            el1.className = `entity ${animate ? 'pop-effect' : ''}`;
             el1.innerText = cropIcon;
             plot1.appendChild(el1);
 
             let el2 = document.createElement('div');
-            el2.className = 'farm-element' + (animate ? ' pop-anim' : '');
+            el2.className = `entity ${animate ? 'pop-effect' : ''}`;
             el2.innerText = cropIcon;
             plot2.appendChild(el2);
         }
 
-        // Ağaçlar ve Çocukların Sevinci (Sağ Alt Alan)
-        const treeZone = document.getElementById('treeZoneContainer');
-        treeZone.innerHTML = '';
+        // Ağaçlar, Çocuklar ve Neşe Alanı
+        const activityZone = document.getElementById('activityZone');
+        activityZone.innerHTML = '';
 
-        // İbadet arttıkça ağaçlar büyür ve çocuklar eklenir
-        let elementsToDisplay = [];
-        if (count >= 1) elementsToDisplay.push("🌳");
-        if (count >= 2) elementsToDisplay.push("🍎");
-        if (count >= 3) elementsToDisplay.push("🌳");
-        if (count >= 4) elementsToDisplay.push("👦"); // Çocukların sevinci
-        if (count >= 5) elementsToDisplay.push("👧"); // Neşe
-        if (count >= 6) elementsToDisplay.push("🌟");
+        let items = [];
+        if (count >= 1) items.push("🌳");
+        if (count >= 2) items.push("🍎");
+        if (count >= 3) items.push("🌳");
+        if (count >= 4) items.push("👦"); // Çoluk çocuk sevinci
+        if (count >= 5) items.push("👧"); 
+        if (count >= 6) items.push("🌟");
 
-        elementsToDisplay.forEach(icon => {
+        items.forEach(icon => {
             let item = document.createElement('div');
-            item.className = 'farm-element' + (animate ? ' pop-anim' : '');
+            item.className = `entity ${animate ? 'pop-effect' : ''}`;
             item.innerText = icon;
-            treeZone.appendChild(item);
+            activityZone.appendChild(item);
         });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('monthSelect').value = currentMonth;
         initCalendar();
     });
 </script>
