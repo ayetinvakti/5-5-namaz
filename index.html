@@ -36,11 +36,10 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        /* Fotoğraftaki Gibi Bulutlu ve Ferah Gökyüzü Arka Planı */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background: linear-gradient(135deg, #a5f3fc 0%, #38bdf8 35%, #818cf8 70%, #c084fc 100%);
-            background-size: 400% 400%;
-            animation: dynamicSky 20s ease infinite;
+            background: linear-gradient(180deg, #93c5fd 0%, #cbd5e1 45%, #f1f5f9 100%);
             color: var(--text-color); 
             min-height: 100vh; 
             display: flex; 
@@ -52,39 +51,40 @@
             overflow-x: hidden;
         }
 
-        @keyframes dynamicSky {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .ambient-light {
+        /* Yavaşça süzülen gerçekçi gökyüzü bulutları */
+        .sky-cloud {
             position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%);
-            z-index: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 100px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.03));
+            animation: driftCloud 25s linear infinite;
+            z-index: 1;
             pointer-events: none;
-            animation: pulseLight 6s ease-in-out infinite alternate;
         }
+        .sky-cloud::before, .sky-cloud::after { content: ''; position: absolute; background: rgba(255, 255, 255, 0.7); border-radius: 50%; }
+        
+        .sc1 { width: 140px; height: 40px; top: 15px; left: -150px; animation-duration: 30s; }
+        .sc1::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+        .sc1::after { width: 50px; height: 50px; top: -20px; left: 70px; }
 
-        @keyframes pulseLight {
-            0% { transform: translateX(-50%) scale(0.9); opacity: 0.5; }
-            100% { transform: translateX(-50%) scale(1.2); opacity: 0.9; }
+        .sc2 { width: 180px; height: 50px; top: 45px; left: -200px; animation-duration: 45s; animation-delay: 10s; opacity: 0.8; }
+        .sc2::before { width: 80px; height: 80px; top: -40px; left: 30px; }
+        .sc2::after { width: 60px; height: 60px; top: -25px; left: 90px; }
+
+        @keyframes driftCloud {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 300px)); }
         }
 
         .container { width: 100%; max-width: 450px; display: flex; flex-direction: column; gap: 12px; z-index: 2; }
         
         .navbar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 4px 2px; }
-        .back-btn { background: rgba(255,255,255,0.4); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.6); color: #0f172a; font-size: 1.4rem; cursor: pointer; text-decoration: none; font-weight: bold; backdrop-filter: blur(5px); }
+        .back-btn { background: rgba(255,255,255,0.6); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.8); color: #0f172a; font-size: 1.4rem; cursor: pointer; text-decoration: none; font-weight: bold; backdrop-filter: blur(5px); }
         .app-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; font-family: 'Georgia', serif; text-align: center; text-shadow: 0 2px 4px rgba(255,255,255,0.4); }
 
         #spiritQuote { 
             min-height: 38px; 
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.95);
             border-radius: 12px;
@@ -101,72 +101,54 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.05);
         }
 
-        .island-viewport {
+        /* Ufka Giden Perspektif Tarla Görünümü (Fotoğraftaki Açı) */
+        .field-viewport {
             width: 100%;
-            height: 270px;
+            height: 250px;
             position: relative;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            perspective: 1000px;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255,255,255,0.8);
+            background: #2b1808;
+            perspective: 600px;
         }
 
-        .cloud {
+        .field-3d-scene {
+            width: 100%;
+            height: 100%;
             position: absolute;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 100px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
-            animation: floatClouds 14s infinite alternate ease-in-out;
-        }
-        .cloud::before, .cloud::after { content: ''; position: absolute; background: rgba(255, 255, 255, 0.9); border-radius: 50%; }
-        .c1 { width: 100px; height: 35px; top: 20px; left: 10px; animation-duration: 12s; }
-        .c1::before { width: 50px; height: 50px; top: -25px; left: 15px; }
-        .c1::after { width: 40px; height: 40px; top: -18px; left: 50px; }
-
-        .c2 { width: 130px; height: 44px; top: 12px; right: 15px; animation-delay: 2s; animation-duration: 18s; }
-        .c2::before { width: 65px; height: 65px; top: -32px; left: 18px; }
-        .c2::after { width: 45px; height: 45px; top: -20px; left: 65px; }
-
-        @keyframes floatClouds {
-            0% { transform: translateX(-20px) scale(0.96); }
-            100% { transform: translateX(20px) scale(1.04); }
-        }
-
-        .floating-island {
-            width: 290px;
-            height: 190px;
-            position: relative;
+            top: 0;
+            left: 0;
             transform-style: preserve-3d;
-            animation: floatIsland 5s infinite ease-in-out;
-            transition: transform 0.2s ease-out;
+            transition: transform 0.1s ease-out;
         }
 
-        @keyframes floatIsland {
-            0%, 100% { transform: translateY(0px) rotateX(8deg) rotateY(0deg); }
-            50% { transform: translateY(-8px) rotateX(12deg) rotateY(2deg); }
+        .field-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
 
-        .island-svg { width: 100%; height: 100%; filter: drop-shadow(0 25px 35px rgba(0,0,0,0.3)); }
-
-        .field-crops-container {
+        /* Tarlanın Üzerindeki Dinamik Ekin Konteyneri */
+        .crops-overlay {
             position: absolute;
-            top: 75px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 170px;
-            height: 55px;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
+            height: 120px;
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            z-index: 5;
+            align-items: flex-end;
+            padding: 0 20px;
+            z-index: 10;
+            pointer-events: none;
         }
 
-        .farm-crop-item {
-            font-size: 1.7rem;
+        .crop-row-item {
+            font-size: 1.8rem;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.4);
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
         }
 
         .pop-animation {
@@ -180,7 +162,7 @@
         }
 
         .compact-date-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             border-radius: 14px;
             padding: 10px 14px;
@@ -210,7 +192,7 @@
         .day-dot.completed { background: #10b981; }
 
         .card { 
-            background: rgba(255, 255, 255, 0.9); 
+            background: rgba(255, 255, 255, 0.92); 
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.8); 
             border-radius: 16px; 
@@ -232,13 +214,12 @@
 
         .footer { margin: 2px 0 10px 0; text-align: center; font-size: 0.72rem; color: #334155; font-weight: 500; text-shadow: 0 1px 2px rgba(255,255,255,0.5); }
         .footer span { color: #047857; font-weight: 700; }
-
-        body.light-mode { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
     </style>
 </head>
 <body>
 
-<div class="ambient-light"></div>
+<div class="sky-cloud sc1"></div>
+<div class="sky-cloud sc2"></div>
 
 <div class="container">
     <header class="navbar">
@@ -247,44 +228,67 @@
         <div style="width: 36px;"></div>
     </header>
 
-    <div id="spiritQuote">"Bismillah de, tarlanı ekmeye başla..."</div>
+    <div id="spiritQuote">"Bismillah de, uçsuz bucaksız tarlanı ekmeye başla..."</div>
 
-    <div class="island-viewport" id="viewport">
-        <div class="cloud c1"></div>
-        <div class="cloud c2"></div>
-
-        <div class="floating-island" id="floatingIsland">
-            <svg class="island-svg" viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg">
+    <!-- Ufka Giden Perspektif Tarla Alanı -->
+    <div class="field-viewport" id="fieldViewport">
+        <div class="field-3d-scene" id="fieldScene">
+            <svg class="field-svg" viewBox="0 0 400 250" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="grassTop" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#4ade80"/>
-                        <stop offset="100%" stop-color="#16a34a"/>
+                    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#bfdbfe"/>
+                        <stop offset="60%" stop-color="#e2e8f0"/>
+                        <stop offset="100%" stop-color="#f8fafc"/>
                     </linearGradient>
-                    <linearGradient id="soilLayer" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#78350f"/>
-                        <stop offset="100%" stop-color="#3b1d06"/>
+                    <linearGradient id="soilRowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#451a03"/>
+                        <stop offset="100%" stop-color="#180b02"/>
                     </linearGradient>
                 </defs>
 
-                <!-- Fotoğraftakine Benzer 3D Çim ve Toprak Blok Platformu -->
-                <!-- Toprak Katmanı (Alt Gövde) -->
-                <path d="M25,110 L235,110 L245,150 L15,150 Z" fill="url(#soilLayer)" stroke="#261203" stroke-width="2"/>
+                <!-- Gökyüzü Kısmı -->
+                <rect x="0" y="0" width="400" height="110" fill="url(#skyGrad)"/>
                 
-                <!-- Toprak Yan Kesit Gölgeleri -->
-                <path d="M15,150 L35,160 L35,120 L25,110 Z" fill="#200e02"/>
-                <path d="M235,110 L245,120 L245,160 L235,150 Z" fill="#4d2208"/>
+                <!-- Ufuk Çizgisi Detayı -->
+                <line x1="0" y1="110" x2="400" y2="110" stroke="#cbd5e1" stroke-width="1.5"/>
 
-                <!-- Üst Çim Tabakası (Pofuduk / Canlı Yeşil Doku) -->
-                <path d="M20,105 Q60,95 130,102 Q200,95 240,105 L235,115 L25,115 Z" fill="url(#grassTop)" stroke="#15803d" stroke-width="1.5"/>
-                
-                <!-- Çim Üstü Detay Çeltikleri / Çimen Dokusu -->
-                <path d="M35,106 L38,98 M55,104 L57,96 M75,106 L78,97 M95,103 L97,95 M115,105 L118,96 M135,104 L138,95 M155,105 L158,97 M175,103 L178,94 M195,105 L198,96 M215,104 L218,97" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Tarla Zemin Gövdesi -->
+                <polygon points="0,110 400,110 400,250 0,250" fill="#2d1506"/>
+
+                <!-- Ufka Doğru Yakınlaşan Perspektif Sıra Karıklar (Çizgiler) -->
+                <!-- Merkezden dışa doğru yayılan hatlar -->
+                <g stroke="#1a0c03" stroke-width="2" opacity="0.85">
+                    <line x1="200" y1="110" x2="200" y2="250" stroke-width="5" stroke="#3b1705"/>
+                    <line x1="200" y1="110" x2="160" y2="250"/>
+                    <line x1="200" y1="110" x2="120" y2="250"/>
+                    <line x1="200" y1="110" x2="70" y2="250"/>
+                    <line x1="200" y1="110" x2="10" y2="250"/>
+                    
+                    <line x1="200" y1="110" x2="240" y2="250"/>
+                    <line x1="200" y1="110" x2="280" y2="250"/>
+                    <line x1="200" y1="110" x2="330" y2="250"/>
+                    <line x1="200" y1="110" x2="390" y2="250"/>
+                </g>
+
+                <!-- Ekinlerin Sıra Sıra Işıltılı Yeşil Dokusu (Perspektif Efekti) -->
+                <g fill="#15803d" opacity="0.9">
+                    <!-- Ön sıralar daha büyük, arkaya doğru küçülüyor -->
+                    <ellipse cx="200" cy="235" rx="14" ry="7" fill="#22c55e"/>
+                    <ellipse cx="165" cy="230" rx="12" ry="6" fill="#22c55e"/>
+                    <ellipse cx="235" cy="230" rx="12" ry="6" fill="#22c55e"/>
+                    <ellipse cx="130" cy="225" rx="10" ry="5" fill="#16a34a"/>
+                    <ellipse cx="270" cy="225" rx="10" ry="5" fill="#16a34a"/>
+                    <ellipse cx="95" cy="218" rx="8" ry="4" fill="#16a34a"/>
+                    <ellipse cx="305" cy="218" rx="8" ry="4" fill="#16a34a"/>
+                </g>
             </svg>
-            <div class="field-crops-container" id="fieldCropsContainer"></div>
+
+            <!-- Üzerinde Büyüyen Canlı Mahsuller -->
+            <div class="crops-overlay" id="fieldCropsContainer"></div>
         </div>
     </div>
 
-    <div style="background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.8);">
+    <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(12px); border-radius: 14px; border: 1px solid rgba(255,255,255,0.8);">
         <div class="compact-date-card" onclick="toggleCalendarDrawer()">
             <div class="date-display-info">
                 <span>📅</span>
@@ -311,12 +315,12 @@
             <span id="completionRate" style="color: var(--accent-color);">0/6</span>
         </div>
         
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="handleIbadetChange(0, '🌅 Sabahın bereketiyle çimler sulandı, ilk filizler yeşerdi.')"><div class="ibadet-text-group"><span class="ibadet-name">🌅 Sabah Namazı</span><span class="ibadet-desc">Günün ilk tohumu</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="handleIbadetChange(1, '☀️ Öğle vaktinde tarlan can suyuyla tazelendi.')"><div class="ibadet-text-group"><span class="ibadet-name">☀️ Öğle Namazı</span><span class="ibadet-desc">Gündüzün orta yerinde sulama</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="handleIbadetChange(2, '🌤️ İkindi vakti, fideler güneşe karşı boy attı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌤️ İkindi Namazı</span><span class="ibadet-desc">Ömrün ikindisinde sebat</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="handleIbadetChange(3, '🌇 Akşam, tarlada rengarenk çiçekler açtı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌇 Akşam Namazı</span><span class="ibadet-desc">Hüznü geride bırakıp ürüne yöneliş</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="handleIbadetChange(4, '🌙 Yatsı, başaklar dolgunlaşarak olgunlaştı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌙 Yatsı Namazı</span><span class="ibadet-desc">Gece sükunetinde tarlanın koruması</span></div></div></label>
-        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="handleIbadetChange(5, '✨📿 Zirve Hasat: Zikirle tarlan altın sarısı berekete ulaştı!')"><div class="ibadet-text-group"><span class="ibadet-name">📿 Günlük Zikir & Dua</span><span class="ibadet-desc">"Sübhanallahi ve bihamdihi" ile bereket</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="0" onchange="handleIbadetChange(0, '🌅 Sabah serinliğiyle uçsuz bucaksız tarlaya ilk tohumlar atıldı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌅 Sabah Namazı</span><span class="ibadet-desc">Günün ilk tohumu</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="1" onchange="handleIbadetChange(1, '☀️ Öğle güneşi altında tarlanın sıra sıra filizleri can suyu aldı.')"><div class="ibadet-text-group"><span class="ibadet-name">☀️ Öğle Namazı</span><span class="ibadet-desc">Gündüzün orta yerinde sulama</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="2" onchange="handleIbadetChange(2, '🌤️ İkindi vakti, uçsuz bucaksız yeşil yapraklar coşkuyla büyüdü.')"><div class="ibadet-text-group"><span class="ibadet-name">🌤️ İkindi Namazı</span><span class="ibadet-desc">Ömrün ikindisinde sebat</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="3" onchange="handleIbadetChange(3, '🌇 Akşam huzuruyla tarlada rengarenk çiçekler açtı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌇 Akşam Namazı</span><span class="ibadet-desc">Hüznü geride bırakıp ürüne yöneliş</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="4" onchange="handleIbadetChange(4, '🌙 Yatsı sükunetinde ekinler başak verip olgunlaştı.')"><div class="ibadet-text-group"><span class="ibadet-name">🌙 Yatsı Namazı</span><span class="ibadet-desc">Gece sükunetinde tarlanın koruması</span></div></div></label>
+        <label class="ibadet-item"><div class="ibadet-info"><input type="checkbox" class="ibadet-checkbox" data-index="5" onchange="handleIbadetCode(5, '✨📿 Zirve Hasat: Zikir bereketiyle tarlan uçsuz bucaksız altın sarısı ürüne kavuştu!')"><div class="ibadet-text-group"><span class="ibadet-name">📿 Günlük Zikir & Dua</span><span class="ibadet-desc">"Sübhanallahi ve bihamdihi" ile bereket</span></div></div></label>
     </div>
 </div>
 
@@ -328,18 +332,19 @@
     const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
 
-    const viewport = document.getElementById('viewport');
-    const island = document.getElementById('floatingIsland');
+    const viewport = document.getElementById('fieldViewport');
+    const scene = document.getElementById('fieldScene');
 
+    // Fare hareketine göre tarlada 3D derinlik ve açı efekti
     viewport.addEventListener('mousemove', (e) => {
         const rect = viewport.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        island.style.transform = `rotateX(${-y / 8}deg) rotateY(${x / 8}deg) translateY(-4px)`;
+        scene.style.transform = `rotateX(${-y / 15}deg) rotateY(${x / 15}deg) scale(1.05)`;
     });
 
     viewport.addEventListener('mouseleave', () => {
-        island.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0px)`;
+        scene.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
     });
 
     function toggleCalendarDrawer() {
@@ -397,21 +402,20 @@
         const container = document.getElementById('fieldCropsContainer');
         container.innerHTML = '';
         
-        // Fotoğraftaki çim bloğun üzerinde büyüyecek evreler
+        // Tarlanın evreleri
         const farmStages = [
-            "🌱", "🌿", "☘️", "🌷", "🎋", "🌾", "🌟🌾"
+            "🟤", "🌱", "🌿", "☘️", "🌷", "🌾", "🌟🌾"
         ];
         
-        let currentVisual = farmStages[count > 0 ? count - 1 : 0];
-        if(count === 0) currentVisual = ""; // Hiç ibadet yoksa sadece çim görünür
+        let currentVisual = farmStages[count];
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
             const item = document.createElement('div');
-            item.className = 'farm-crop-item' + (animate ? ' pop-animation' : '');
+            item.className = 'crop-row-item' + (animate ? ' pop-animation' : '');
             
             if (count === 6) {
-                item.style.transform = 'scale(1.4) translateY(-6px)';
-                item.style.filter = 'drop-shadow(0 0 14px rgba(234, 179, 8, 0.9))';
+                item.style.transform = 'scale(1.4) translateY(-8px)';
+                item.style.filter = 'drop-shadow(0 0 12px rgba(234, 179, 8, 0.9))';
             } else if (count > 0) {
                 item.style.transform = `scale(${0.9 + (count * 0.08)})`;
             }
