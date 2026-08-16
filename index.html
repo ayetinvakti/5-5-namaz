@@ -52,11 +52,11 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 3D Sahne Alanı (Örnek Resimdeki Sarı/Gün Batımı Atmosferi) */
+        /* 3D Sahne Alanı (Gün Batımı Atmosferi) */
         .scene-container {
             width: 100%;
             height: 380px;
-            background: linear-gradient(to bottom, #fce7f3 0%, #fed7aa 35%, #fef08a 70%, #d1d5db 100%);
+            background: linear-gradient(to bottom, #fde047 0%, #fed7aa 40%, #ffedd5 75%, #e2e8f0 100%);
             border-radius: 24px;
             border: 1px solid var(--border-glass);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
@@ -67,29 +67,30 @@
             justify-content: center;
         }
 
-        /* Gökyüzü Bulutları */
+        /* Gökyüzü Low-Poly Bulutları */
         .cloud {
             position: absolute;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 50px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
-            animation: floatCloud 8s ease-in-out infinite alternate;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            animation: floatCloud 6s ease-in-out infinite alternate;
         }
-        .cloud-1 { width: 70px; height: 22px; top: 30px; left: 50px; }
-        .cloud-2 { width: 90px; height: 26px; top: 20px; right: 70px; animation-delay: 2s; }
-        
+        .cloud-1 { width: 65px; height: 20px; top: 35px; left: 60px; }
+        .cloud-2 { width: 85px; height: 24px; top: 20px; right: 80px; animation-delay: 1.5s; }
+        .cloud-3 { width: 55px; height: 18px; top: 60px; left: 180px; animation-delay: 3s; }
+
         @keyframes floatCloud {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-6px); }
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-5px) scale(1.02); }
         }
 
-        /* Havada Süzülen 3D Low-Poly Ada (Örnek Resimdeki Ölçek ve Açı) */
+        /* Havada Süzülen 3D Low-Poly Ada */
         .floating-island {
             width: 290px;
             height: 290px;
             position: relative;
             transform-style: preserve-3d;
-            transform: rotateX(25deg) rotateZ(-15deg);
+            transform: rotateX(22deg) rotateZ(-12deg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -99,10 +100,10 @@
         .island-top {
             position: absolute;
             width: 270px;
-            height: 240px;
+            height: 230px;
             background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
-            clip-path: polygon(25% 10%, 75% 5%, 95% 35%, 90% 75%, 65% 95%, 25% 90%, 10% 60%, 12% 25%);
-            transform: translateY(30px);
+            clip-path: polygon(30% 15%, 70% 10%, 92% 35%, 88% 75%, 65% 92%, 30% 88%, 12% 65%, 15% 30%);
+            transform: translateY(35px);
             box-shadow: inset 0 -15px 25px rgba(0,0,0,0.25);
             transition: background 0.8s ease;
         }
@@ -115,18 +116,18 @@
         .island-bottom {
             position: absolute;
             width: 270px;
-            height: 240px;
+            height: 230px;
             background: #361502;
-            clip-path: polygon(25% 10%, 75% 5%, 95% 35%, 90% 75%, 65% 95%, 25% 90%, 10% 60%, 12% 25%);
-            transform: translateY(65px) scale(0.92);
-            filter: brightness(0.6);
+            clip-path: polygon(30% 15%, 70% 10%, 92% 35%, 88% 75%, 65% 92%, 30% 88%, 12% 65%, 15% 30%);
+            transform: translateY(70px) scale(0.92);
+            filter: brightness(0.55);
             box-shadow: 0 40px 70px rgba(0,0,0,0.8);
         }
 
-        /* Ağaç Konteyneri (Adanın Tam Üzerinde ve Büyük) */
+        /* Ağaç Konteyneri */
         .tree-container {
             position: absolute;
-            bottom: 60px;
+            bottom: 55px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -134,9 +135,9 @@
         }
 
         svg.main-tree-svg {
-            width: 220px;
-            height: 220px;
-            filter: drop-shadow(8px 16px 20px rgba(0,0,0,0.45));
+            width: 230px;
+            height: 230px;
+            filter: drop-shadow(6px 14px 18px rgba(0,0,0,0.4));
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -152,7 +153,7 @@
 
         .tree-label {
             position: absolute;
-            bottom: -18px;
+            bottom: -15px;
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(6px);
             padding: 4px 12px;
@@ -251,12 +252,13 @@
     <div class="scene-container">
         <div class="cloud cloud-1"></div>
         <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
 
         <div class="floating-island">
             <div class="island-bottom"></div>
             <div class="island-top kurak" id="islandTop"></div>
             
-            <!-- Örnek Resimle Birebir Oranlı Büyük Ağaç -->
+            <!-- Hedef Görselle Birebir Low-Poly Ağaç Model Motoru -->
             <div class="tree-container">
                 <svg id="mainTreeSvg" class="main-tree-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -266,14 +268,14 @@
                             <stop offset="100%" stop-color="#451a03"/>
                         </linearGradient>
                         <radialGradient id="leafGrad1" cx="30%" cy="30%" r="70%">
-                            <stop offset="0%" stop-color="#4ade80"/>
-                            <stop offset="70%" stop-color="#16a34a"/>
-                            <stop offset="100%" stop-color="#14532d"/>
+                            <stop offset="0%" stop-color="#86efac"/>
+                            <stop offset="60%" stop-color="#22c55e"/>
+                            <stop offset="100%" stop-color="#15803d"/>
                         </radialGradient>
                         <radialGradient id="leafGrad2" cx="30%" cy="30%" r="70%">
-                            <stop offset="0%" stop-color="#86efac"/>
-                            <stop offset="70%" stop-color="#22c55e"/>
-                            <stop offset="100%" stop-color="#15803d"/>
+                            <stop offset="0%" stop-color="#4ade80"/>
+                            <stop offset="60%" stop-color="#16a34a"/>
+                            <stop offset="100%" stop-color="#14532d"/>
                         </radialGradient>
                     </defs>
                 </svg>
@@ -309,7 +311,7 @@
     </div>
 </div>
 
-<footer>Ayetin Vakti Ekosistemi • <span>Örnek Resim Oranlarında</span></footer>
+<footer>Ayetin Vakti Ekosistemi • <span>Low-Poly Stil Tam Uyum</span></footer>
 
 <script>
     let activeDay = 16;
@@ -328,7 +330,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `exact_tree_${activeMonth}_${d}`;
+            const key = `exact_tree_v2_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -341,7 +343,7 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `exact_tree_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v2_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
@@ -351,13 +353,13 @@
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `exact_tree_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v2_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
         renderTree(data, true);
     }
 
-    // Örnek Resimle Birebir Aynı Low-Poly Çizim Fonksiyonu
+    // Hedef Görselle Birebir Uyumlu Low-Poly Çizim Motoru
     function renderTree(data, animate = true) {
         const count = data.filter(Boolean).length;
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
@@ -396,63 +398,63 @@
         } else if (count === 2) {
             svgContent = `
                 <path d="M 92 150 Q 97 115 100 85 Q 104 115 110 150 Z" fill="url(#trunkGrad)"/>
-                <path d="M 100 110 L 75 90" stroke="#78350f" stroke-width="7" stroke-linecap="round"/>
-                <path d="M 100 105 L 128 88" stroke="#b45309" stroke-width="7" stroke-linecap="round"/>`;
+                <path d="M 100 110 L 72 88" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
+                <path d="M 100 105 L 128 85" stroke="#b45309" stroke-width="8" stroke-linecap="round"/>`;
             labelText = "2. Aşama: Gövde ve Kolları";
             quoteText = "Öğle ibadetiyle dallar belirginleşti.";
         } else if (count === 3) {
             svgContent = `
                 <path d="M 92 150 Q 97 115 100 80 Q 104 115 110 150 Z" fill="url(#trunkGrad)"/>
-                <path d="M 100 105 C 75 95 55 75 42 55" stroke="#78350f" stroke-width="9" stroke-linecap="round"/>
-                <path d="M 100 95 C 125 90 148 70 160 52" stroke="#b45309" stroke-width="9" stroke-linecap="round"/>
-                <polygon points="35,50 58,35 68,60 45,70" fill="url(#leafGrad1)"/>
-                <polygon points="140,45 168,38 175,65 148,70" fill="url(#leafGrad2)"/>`;
+                <path d="M 100 105 C 75 92 48 70 36 48" stroke="#78350f" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 100 95 C 128 88 152 68 164 48" stroke="#b45309" stroke-width="9" stroke-linecap="round"/>
+                <polygon points="30,42 55,28 65,52 40,62" fill="url(#leafGrad1)"/>
+                <polygon points="135,40 162,32 170,58 142,65" fill="url(#leafGrad2)"/>`;
             labelText = "3. Aşama: Dallar ve Yapraklar";
             quoteText = "İkindi huzuruyla dallar etrafa yayıldı.";
         } else if (count === 4) {
             svgContent = `
-                <path d="M 92 150 Q 97 115 100 75 Q 104 115 110 150 Z" fill="url(#trunkGrad)"/>
-                <path d="M 100 105 C 75 95 50 72 40 50" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
-                <path d="M 100 95 C 130 90 155 70 165 48" stroke="#b45309" stroke-width="10" stroke-linecap="round"/>
-                <!-- Örnek Resimle Birebir Low-Poly Küreler -->
-                <polygon points="30,55 60,30 85,55 55,80" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
-                <polygon points="115,45 145,25 170,50 140,75" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
-                <polygon points="70,30 105,12 135,42 100,60" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>`;
+                <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
+                <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
+                <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="10" stroke-linecap="round"/>
+                <!-- Hedef Görseldeki Low-Poly Çok Yüzeyli Küreler -->
+                <polygon points="22,45 52,20 80,45 50,70" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
+                <polygon points="120,38 150,18 178,42 148,68" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
+                <polygon points="68,22 104,5 136,35 100,55" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>`;
             labelText = "4. Aşama: Küresel Low-Poly Yapraklar";
-            quoteText = "Akşam yaklaşırken örnek resimdeki hacimli küreler oluştu.";
+            quoteText = "Akşam yaklaşırken hedeflenen o hacimli küre yapılar oluştu.";
         } else if (count === 5) {
             svgContent = `
                 <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
-                <path d="M 100 100 C 72 85 45 65 38 45" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
-                <path d="M 100 90 C 130 85 158 65 168 42" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
-                <path d="M 100 80 C 102 62 104 45 100 25" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
-                <!-- Dolgun 3D Low-Poly Küreler -->
-                <polygon points="25,50 55,25 80,50 50,75" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="120,40 150,20 175,45 145,70" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="65,22 105,5 135,35 95,55" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="85,35 115,20 140,50 110,68" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>`;
+                <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
+                <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
+                <path d="M 100 80 C 102 60 104 42 100 22" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
+                <!-- Geniş ve Dolgun Low-Poly Küre Tacı -->
+                <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
+                <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
+                <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
+                <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>`;
             labelText = "5. Aşama: Geniş Ağaç Tacı";
             quoteText = "Yatsı huzuruyla ağaç tam formuna ulaştı.";
         } else if (count === 6) {
             svgContent = `
                 <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
-                <path d="M 100 100 C 72 85 45 65 38 45" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
-                <path d="M 100 90 C 130 85 158 65 168 42" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
-                <path d="M 100 80 C 102 62 104 45 100 25" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
-                <!-- Dolgun 3D Low-Poly Küreler -->
-                <polygon points="25,50 55,25 80,50 50,75" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="120,40 150,20 175,45 145,70" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="65,22 105,5 135,35 95,55" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="85,35 115,20 140,50 110,68" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>
-                <!-- Low-Poly Kristal Meyveler (Örnek Resimle Birebir) -->
-                <polygon points="45,40 54,35 58,45 48,50" fill="#ef4444"/>
-                <polygon points="135,32 144,27 148,37 138,42" fill="#ef4444"/>
-                <polygon points="98,18 107,13 111,23 101,28" fill="#eab308"/>
-                <polygon points="112,48 121,43 125,53 115,58" fill="#ef4444"/>
-                <polygon points="62,55 71,50 75,60 65,65" fill="#eab308"/>
-                <polygon points="152,42 161,37 165,47 155,52" fill="#ef4444"/>`;
-            labelText = "✨ Zirve: Meyveli Ulu Ağaç";
-            quoteText = "Elhamdülillah! Örnek resimdeki o muazzam oranlar ve meyveli ulu ağaç formu yakalandı.";
+                <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
+                <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
+                <path d="M 100 80 C 102 60 104 42 100 22" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
+                <!-- Geniş ve Dolgun Low-Poly Küre Tacı -->
+                <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
+                <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
+                <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
+                <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>
+                <!-- Hedef Resimdeki Kırmızı Low-Poly Meyveler -->
+                <polygon points="38,32 46,28 50,36 42,41" fill="#ef4444"/>
+                <polygon points="142,28 150,24 154,32 146,37" fill="#ef4444"/>
+                <polygon points="95,14 103,10 107,18 99,23" fill="#ef4444"/>
+                <polygon points="112,42 120,38 124,46 116,51" fill="#ef4444"/>
+                <polygon points="58,50 66,46 70,54 62,59" fill="#ef4444"/>
+                <polygon points="158,35 166,31 170,39 162,44" fill="#ef4444"/>`;
+            labelText = "✨ Zirve: Hedef Görselle Birebir Ulu Ağaç";
+            quoteText = "Elhamdülillah! İstediğin o low-poly hacim ve detaylar eksiksiz işlendi.";
         }
 
         svg.innerHTML = defsHTML + svgContent;
