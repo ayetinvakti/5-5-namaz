@@ -182,7 +182,6 @@
         svg.main-tree-svg {
             width: 230px;
             height: 230px;
-            filter: drop-shadow(6px 14px 18px rgba(0,0,0,0.4));
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -195,6 +194,20 @@
             70% { transform: scale(1.15); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
+
+        /* Çocuk ve Çim Animasyonları */
+        @keyframes walk {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0); }
+        }
+        .child-animate { animation: walk 2s infinite ease-in-out; }
+
+        @keyframes sway {
+            0% { transform: rotate(-8deg); }
+            100% { transform: rotate(8deg); }
+        }
+        .grass-animate { animation: sway 3s infinite alternate ease-in-out; transform-origin: bottom center; }
 
         .quote-box {
             background: var(--card-bg);
@@ -274,7 +287,7 @@
 <body>
 
 <div class="container">
-    <!-- Üst Navigasyon (Geri Dönüş ve Gece/Gündüz Butonları) -->
+    <!-- Üst Navigasyon -->
     <div class="top-nav">
         <a href="http://ayetinvakti.github.io" class="icon-btn" title="Ana Menüye Dön">←</a>
         <div class="app-title">🏝️ Manevi Ada</div>
@@ -298,7 +311,7 @@
             <div class="island-bottom"></div>
             <div class="island-top kurak" id="islandTop"></div>
             
-            <!-- Animasyonlu Low-Poly Ağaç Model Motoru -->
+            <!-- Animasyonlu Low-Poly Ağaç ve Ekstra Unsurlar Motoru -->
             <div class="tree-container">
                 <svg id="mainTreeSvg" class="main-tree-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -435,6 +448,7 @@
         let svgContent = '';
         let quoteText = '';
 
+        // Gri yansımalar (filter'lar) tamamen kaldırıldı, meyveler korundu ve ekstralar eklendi
         if (count === 0) {
             svgContent = `<polygon points="95,140 105,135 102,155 92,150" fill="url(#trunkGrad)"/>`;
             quoteText = "Amelsiz toprak kurak kalır; 'Ey Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver' (Bakara, 201) duasıyla adanı yeşert.";
@@ -460,9 +474,9 @@
                 <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
                 <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
                 <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="10" stroke-linecap="round"/>
-                <polygon points="22,45 52,20 80,45 50,70" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
-                <polygon points="120,38 150,18 178,42 148,68" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
-                <polygon points="68,22 104,5 136,35 100,55" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>`;
+                <polygon points="22,45 52,20 80,45 50,70" fill="url(#leafGrad1)"/>
+                <polygon points="120,38 150,18 178,42 148,68" fill="url(#leafGrad2)"/>
+                <polygon points="68,22 104,5 136,35 100,55" fill="url(#leafGrad1)"/>`;
             quoteText = "Akşamın feyziyle küre yapraklar oluştu. 'Ve her kim Allah'a güvenirse, O ona yetişir' (Talak, 3).";
         } else if (count === 5) {
             svgContent = `
@@ -470,10 +484,10 @@
                 <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 80 C 102 60 104 42 100 22" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
-                <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>`;
+                <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)"/>
+                <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)"/>
+                <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)"/>
+                <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)"/>`;
             quoteText = "Yatsı sükûnetiyle ağaç tacı tamamlandı. 'Kalpler ancak Allah'ı anmakla huzur bulur' (Ra'd, 28).";
         } else if (count === 6) {
             svgContent = `
@@ -481,10 +495,10 @@
                 <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 80 C 102 60 104 42 100 22" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
-                <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
-                <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>
+                <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)"/>
+                <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)"/>
+                <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)"/>
+                <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)"/>
                 <polygon points="38,32 46,28 50,36 42,41" fill="#ef4444"/>
                 <polygon points="142,28 150,24 154,32 146,37" fill="#ef4444"/>
                 <polygon points="95,14 103,10 107,18 99,23" fill="#ef4444"/>
@@ -494,7 +508,19 @@
             quoteText = "Elhamdülillah! 'Şüphesiz iman edip salih ameller işleyenler için Naîm cennetleri vardır' (Lokman, 8). Ağacın meyveye durdu.";
         }
 
-        svg.innerHTML = defsHTML + svgContent;
+        // Low-poly çimen ve hareketli çocuk ekstraları
+        let extraElements = `
+            <g class="grass-animate" transform="translate(45, 145)">
+                <path d="M 0 0 Q 8 -18 16 0" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path d="M 10 2 Q 16 -12 24 2" stroke="#22c55e" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </g>
+            <g class="child-animate" transform="translate(140, 125)">
+                <rect x="0" y="5" width="10" height="18" rx="3" fill="#f59e0b"/>
+                <circle cx="5" cy="0" r="6" fill="#fde68a"/>
+            </g>
+        `;
+
+        svg.innerHTML = defsHTML + svgContent + extraElements;
         quoteEl.innerText = quoteText;
     }
 
