@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manevi Ulu Ağaç | 3D İzometrik Çiftlik</title>
+    <title>Low-Poly 3D Manevi Ağaç Simülasyonu</title>
     <style>
         :root {
             --primary: #059669;
@@ -52,7 +52,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 3D İzometrik Sahne Kutusu */
+        /* 3D Sahne Alanı */
         .scene-container {
             width: 100%;
             height: 340px;
@@ -68,7 +68,6 @@
             perspective: 1500px;
         }
 
-        /* 3D İzometrik Ada Dünyası */
         .isometric-world {
             width: 340px;
             height: 240px;
@@ -78,92 +77,65 @@
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Ada Tabanı */
         .world-base {
             position: absolute;
             width: 300px;
             height: 300px;
-            background: #854d0e; /* Kurak toprak başlangıç */
+            background: #854d0e;
             border-radius: 12px;
             box-shadow: -25px 25px 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.5);
             transition: background 0.8s ease;
         }
 
         .world-base.active-island {
-            background: #15803d; /* Canlı yeşil ada */
+            background: #15803d;
         }
 
-        /* Merkezdeki Büyüyen Manevi Ağaç Alanı */
-        .tree-center-zone {
+        /* Low-Poly 3D Ağaç Konteyneri */
+        .tree-3d-container {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) translateZ(10px);
+            transform: translate(-50%, -50%) translateZ(15px);
+            width: 160px;
+            height: 180px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 10;
-            width: 120px;
-            height: 120px;
         }
 
-        /* Ağacın Görsel Efekti ve Büyüme Animasyonu */
-        .growing-tree {
-            font-size: 3.5rem;
-            filter: drop-shadow(6px 12px 16px rgba(0,0,0,0.7));
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), font-size 0.6s ease;
-            transform: translateZ(30px);
-            text-align: center;
+        svg.low-poly-tree {
+            width: 140px;
+            height: 160px;
+            filter: drop-shadow(8px 14px 18px rgba(0,0,0,0.7));
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .tree-pop {
-            animation: treeGrowAnim 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            animation: treeAnim 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        @keyframes treeGrowAnim {
-            0% { transform: scale(0.4) translateZ(10px); opacity: 0; }
-            70% { transform: scale(1.25) translateZ(60px); opacity: 1; }
-            100% { transform: scale(1) translateZ(35px); opacity: 1; }
+        @keyframes treeAnim {
+            0% { transform: scale(0.6) translateZ(10px); opacity: 0.5; }
+            70% { transform: scale(1.15) translateZ(50px); opacity: 1; }
+            100% { transform: scale(1) translateZ(30px); opacity: 1; }
         }
 
-        /* Ağaç Altı Bilgi / Seviye Etiketi */
         .tree-label {
             position: absolute;
-            bottom: -15px;
-            background: rgba(0, 0, 0, 0.6);
+            bottom: -10px;
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(6px);
-            padding: 3px 10px;
+            padding: 4px 12px;
             border-radius: 12px;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: #6ee7b7;
             border: 1px solid rgba(255,255,255,0.15);
             white-space: nowrap;
-            transform: translateZ(25px);
+            transform: translateZ(35px);
         }
 
-        /* Çevredeki Diğer Detaylar (Evler, Tarlalar) */
-        .farm-houses-area {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.8rem;
-            z-index: 3;
-            transform: translateZ(15px);
-            filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.5));
-        }
-
-        .vehicles-area {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 1.8rem;
-            z-index: 3;
-            transform: translateZ(15px);
-            filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.5));
-        }
-
-        /* Motivasyon Kutusu */
         .quote-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -242,28 +214,24 @@
 
 <div class="container">
     <header>
-        <span class="app-title">🌳 Manevi Ulu Ağaç Simülasyonu</span>
+        <span class="app-title">🌲 Low-Poly 3D Manevi Ağaç</span>
         <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
-    <div class="quote-box" id="quoteBox">"Toprak henüz kurak... Manevi ağacını yeşertmek için bugünkü ibadetlerini tamamla."</div>
+    <div class="quote-box" id="quoteBox">"Toprak tamamen kurak... Low-poly manevi ağacını büyütmek için can suyu ver."</div>
 
-    <!-- 3D İzometrik Sahne Alanı -->
+    <!-- 3D Sahne Alanı -->
     <div class="scene-container" id="sceneContainer">
         <div class="isometric-world" id="isoWorld">
             <div class="world-base" id="worldBase"></div>
             
-            <!-- Merkezdeki Büyüyen Manevi Ağaç -->
-            <div class="tree-center-zone">
-                <div class="growing-tree" id="mainTree">🟤</div>
-                <div class="tree-label" id="treeLabel">Kurak Toprak</div>
+            <!-- Low-Poly 3D Ağaç ve Evrim Alanı -->
+            <div class="tree-3d-container">
+                <svg id="treeSvg" class="low-poly-tree" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Dinamik Low-Poly Ağaç Gövdesi ve Yapraklar JavaScript ile yüklenecek -->
+                </svg>
+                <div class="tree-label" id="treeLabel">1. Aşama: Kurak Filiz</div>
             </div>
-
-            <!-- Çiftlik Evi Detayı -->
-            <div class="farm-houses-area">🏠</div>
-
-            <!-- Traktör Detayı -->
-            <div class="vehicles-area" id="tractorArea"></div>
         </div>
     </div>
 
@@ -285,22 +253,21 @@
             <span style="color: #34d399;" id="completionPercent">%0</span>
         </div>
 
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprağa ilk can suyu ve tohum ekildi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Tohum çatladı, küçük filiz belirdi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Filiz büyüdü, taze fidan oldu</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Fidan güçlendi, genç ağaca dönüştü</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Kocaman ulu bir ağaç haline geldi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Meyvelerle donanmış zirve bereket</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprağa ilk low-poly filiz atıldı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Gövde uzamaya başladı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Dallar filizlenip şekillendi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Low-poly yapraklar yeşermeye başladı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Geniş low-poly taç yapraklar oluştu</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Meyve ve çiçeklerle donanan zirve ağaç</span></div></div></label>
     </div>
 </div>
 
-<footer>Ayetin Vakti Ekosistemi • <span>Kişiye Özel Büyüyen Manevi Ağaç</span></footer>
+<footer>Ayetin Vakti Ekosistemi • <span>Low-Poly 3D Ağaç Evrimi</span></footer>
 
 <script>
     let activeDay = 16;
-    let activeMonth = 8; // Ağustos
+    let activeMonth = 8;
 
-    // Fare hareketiyle 3D adayı canlı döndürme efekti
     const scene = document.getElementById('sceneContainer');
     const world = document.getElementById('isoWorld');
     
@@ -328,7 +295,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `tree_day_${activeMonth}_${d}`;
+            const key = `poly_tree_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -341,28 +308,28 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `tree_day_${activeMonth}_${activeDay}`;
+        const key = `poly_tree_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
-        renderTree(data, false);
+        renderPolyTree(data, false);
     }
 
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `tree_day_${activeMonth}_${activeDay}`;
+        const key = `poly_tree_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
-        renderTree(data, true);
+        renderPolyTree(data, true);
     }
 
-    function renderTree(data, animate = true) {
+    // Low-Poly 3D Ağaç Çizim Fonksiyonu (Fotoğraftaki Aşamalarla Birebir)
+    function renderPolyTree(data, animate = true) {
         const count = data.filter(Boolean).length;
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
         document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
 
-        // Ada Zemin Renk Dönüşümü
         const base = document.getElementById('worldBase');
         if (count === 0) {
             base.style.background = '#854d0e';
@@ -372,54 +339,61 @@
             base.classList.add('active-island');
         }
 
-        // Ağacın Evreleri (Yavaş Yavaş Büyüme Mantığı)
-        const treeEl = document.getElementById('mainTree');
+        const svg = document.getElementById('treeSvg');
         const labelEl = document.getElementById('treeLabel');
         const quoteEl = document.getElementById('quoteBox');
-        const tractorArea = document.getElementById('tractorArea');
 
         if (animate) {
-            treeEl.classList.remove('tree-pop');
-            void treeEl.offsetWidth; // reflow trigger
-            treeEl.classList.add('tree-pop');
+            svg.classList.remove('tree-pop');
+            void svg.offsetWidth;
+            svg.classList.add('tree-pop');
         }
 
-        let treeIcon = "🟤";
-        let labelText = "Kurak Toprak";
-        let quoteText = "Toprak henüz kurak... Manevi ağacını yeşertmek için bugünkü ibadetlerini tamamla.";
+        let svgContent = '';
+        let labelText = '';
+        let quoteText = '';
 
-        if (count === 1) {
-            treeIcon = "🌱";
-            labelText = "1. Evre: Can Suyu & Tohum";
-            quoteText = "Sabah bereketiyle tohum çatladı, ilk can suyu verildi.";
+        // Gönderdiğin görsele tam uygun Low-Poly Aşama Çizimleri (SVG Poligonları)
+        if (count === 0) {
+            // Aşama 0: Minik Toprak Parçası
+            svgContent = `<polygon points="90,140 110,135 105,160 85,155" fill="#a16207"/><polygon points="90,140 100,130 110,135" fill="#ca8a04"/>`;
+            labelText = "Kurak Toprak";
+            quoteText = "Toprak tamamen kurak... Low-poly manevi ağacını büyütmek için can suyu ver.";
+        } else if (count === 1) {
+            // Aşama 1: Küçük Filiz Gövde
+            svgContent = `<polygon points="92,120 108,115 105,160 88,155" fill="#92400e"/><polygon points="92,120 100,105 108,115" fill="#b45309"/>`;
+            labelText = "1. Aşama: Filiz Gövde";
+            quoteText = "Sabah bereketiyle ilk low-poly filiz topraktan başını çıkardı.";
         } else if (count === 2) {
-            treeIcon = "🌿";
-            labelText = "2. Evre: Küçük Filiz";
-            quoteText = "Öğle ibadetiyle toprak canlandı, filiz boy vermeye başladı.";
+            // Aşama 2: Uzayan Gövde
+            svgContent = `<polygon points="90,95 110,90 106,160 86,155" fill="#92400e"/><polygon points="90,95 100,80 110,90" fill="#b45309"/><polygon points="100,80 105,90 115,85" fill="#78350f"/>`;
+            labelText = "2. Aşama: Gövde Boy Veriyor";
+            quoteText = "Öğle ibadetiyle ağacın gövdesi ve ilk minik dalları belirginleşti.";
         } else if (count === 3) {
-            treeIcon = "☘️";
-            labelText = "3. Evre: Taze Fidan";
-            quoteText = "İkindi huzuruyla fidan güçleniyor, kökleri derinleşiyor.";
+            // Aşama 3: Filizlenen Dallar
+            svgContent = `<polygon points="92,90 108,85 105,160 88,155" fill="#92400e"/><polygon points="92,90 75,70 90,75" fill="#b45309"/><polygon points="108,85 125,75 115,70" fill="#b45309"/><polygon points="75,70 80,65 88,72" fill="#84cc16"/><polygon points="125,75 120,68 115,72" fill="#84cc16"/>`;
+            labelText = "3. Aşama: Dallar Filizleniyor";
+            quoteText = "İkindi huzuruyla dallar yanlara doğru açılmaya başladı.";
         } else if (count === 4) {
-            treeIcon = "🌲";
-            labelText = "4. Evre: Genç Ağaç";
-            quoteText = "Akşam yaklaşırken ağacın gövdesi kalınlaştı ve yaprakları çoğaldı.";
+            // Aşama 4: Yeşil Yaprak Başlangıcı
+            svgContent = `<polygon points="92,90 108,85 105,160 88,155" fill="#92400e"/><polygon points="92,90 70,65 90,75" fill="#b45309"/><polygon points="108,85 130,70 115,70" fill="#b45309"/><polygon points="65,60 80,45 90,65" fill="#16a34a"/><polygon points="110,55 135,50 125,75" fill="#22c55e"/><polygon points="85,40 100,30 115,45" fill="#15803d"/>`;
+            labelText = "4. Aşama: Yapraklar Yeşeriyor";
+            quoteText = "Akşam yaklaşırken low-poly yapraklar kümeler halinde oluştu.";
         } else if (count === 5) {
-            treeIcon = "🌳";
-            labelText = "5. Evre: Ulu Çınar";
-            quoteText = "Yatsı huzuruyla manevi ağacın ulu bir gölge ağacına dönüştü.";
+            // Aşama 5: Geniş Low-Poly Taç Yapraklar
+            svgContent = `<polygon points="90,85 110,80 105,160 85,155" fill="#78350f"/><polygon points="75,70 50,55 70,40 90,60" fill="#15803d"/><polygon points="110,70 135,50 150,70 125,85" fill="#16a34a"/><polygon points="80,45 100,20 125,45 105,65" fill="#22c55e"/><polygon points="60,50 75,30 95,45" fill="#4ade80"/>`;
+            labelText = "5. Aşama: Ulu Ağaç Tacı";
+            quoteText = "Yatsı huzuruyla ağaç muazzam bir low-poly taç yapısıyla donandı.";
         } else if (count === 6) {
-            treeIcon = "🍎";
-            labelText = "Zirve: Meyve Veren Ulu Ağaç";
-            quoteText = "✨ Elhamdülillah! Günün tüm ibadetleri tamamlandı; manevi ağacın meyveye durdu ve bereketle taçlandı.";
+            // Aşama 6: Meyveli Zirve Hasat
+            svgContent = `<polygon points="90,85 110,80 105,160 85,155" fill="#78350f"/><polygon points="75,70 50,55 70,40 90,60" fill="#15803d"/><polygon points="110,70 135,50 150,70 125,85" fill="#16a34a"/><polygon points="80,45 100,20 125,45 105,65" fill="#22c55e"/><circle cx="70" cy="48" r="4" fill="#ef4444"/><circle cx="115" cy="35" r="4" fill="#ef4444"/><circle cx="95" cy="55" r="4" fill="#eab308"/><circle cx="130" cy="65" r="4" fill="#ef4444"/><circle cx="65" cy="65" r="4" fill="#eab308"/>`;
+            labelText = "Zirve: Meyveli Ulu Ağaç";
+            quoteText = "✨ Elhamdülillah! Tüm ibadetler tamamlandı; low-poly manevi ağacın meyve ve bereketle taçlandı.";
         }
 
-        treeEl.innerText = treeIcon;
+        svg.innerHTML = svgContent;
         labelEl.innerText = labelText;
         quoteEl.innerText = quoteText;
-
-        // 6. aşamada traktör/çiftlik araçları bereketi simgelemek için gelsin
-        tractorArea.innerHTML = count >= 6 ? "🚜" : "";
     }
 
     document.addEventListener('DOMContentLoaded', () => {
