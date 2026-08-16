@@ -52,91 +52,110 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 3D İzometrik Sahne Kutusu */
+        /* 3D İzometrik Sahne Kutusu (Örnek Görsel Atmosferi) */
         .scene-container {
             width: 100%;
-            height: 290px;
-            background: rgba(15, 23, 42, 0.6);
+            height: 310px;
+            background: linear-gradient(to bottom, #1e3a8a 0%, #0f172a 100%);
             border-radius: 24px;
             border: 1px solid var(--border-glass);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.15);
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1000px;
+            perspective: 1200px;
         }
 
         /* İzometrik Ada Dünyası */
         .isometric-world {
-            width: 300px;
-            height: 200px;
+            width: 320px;
+            height: 220px;
             position: relative;
             transform-style: preserve-3d;
-            transform: rotateX(55deg) rotateZ(-45deg);
-            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: rotateX(52deg) rotateZ(-45deg);
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Zemin Tabanı */
+        /* Zemin Tabanı (Toprak Katmanlı Gerçekçi Görünüm) */
         .world-base {
             position: absolute;
-            width: 260px;
-            height: 260px;
-            background: #27272a;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            transition: background 0.6s ease;
+            width: 280px;
+            height: 280px;
+            background: #854d0e; /* Varsayılan Kurak Toprak */
+            border-radius: 14px;
+            box-shadow: -15px 15px 40px rgba(0,0,0,0.7), inset 0 0 20px rgba(0,0,0,0.3);
+            transition: background 0.8s ease;
         }
 
-        /* Bölmeler */
+        /* Üst Çim Tabakası Efekti */
+        .world-base::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(34, 197, 94, 0);
+            border-radius: 14px;
+            transition: background 0.8s ease;
+        }
+
+        .world-base.green-grass::before {
+            background: rgba(34, 197, 94, 0.85);
+        }
+
+        /* Detay Alanları */
         .plot {
             position: absolute;
-            border-radius: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: space-around;
             padding: 6px;
             transition: 0.5s;
+            z-index: 2;
         }
 
-        .plot-left { width: 100px; height: 60px; top: 15px; left: 15px; background: #3f2e18; border: 2px dashed #5c4022; }
-        .plot-right { width: 100px; height: 60px; top: 90px; left: 15px; background: #3f2e18; border: 2px dashed #5c4022; }
+        .plot-left { width: 110px; height: 65px; top: 20px; left: 20px; background: rgba(0,0,0,0.25); border: 2px dashed rgba(255,255,255,0.2); }
+        .plot-right { width: 110px; height: 65px; top: 100px; left: 20px; background: rgba(0,0,0,0.25); border: 2px dashed rgba(255,255,255,0.2); }
 
-        /* Çiftlik Evi */
+        /* Çiftlik Evi (Örnek Görseldeki Stil) */
         .farm-house {
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 70px;
-            height: 55px;
-            background: #dc2626;
-            border-radius: 6px;
+            width: 75px;
+            height: 60px;
+            background: #b91c1c;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            box-shadow: -6px 6px 20px rgba(0,0,0,0.4);
+            font-size: 2rem;
+            box-shadow: -8px 8px 25px rgba(0,0,0,0.5);
+            z-index: 3;
+            transform: translateZ(10px);
         }
 
-        /* Ağaç & Aktivite Alanı */
+        /* Yel Değirmeni ve Ağaç/Aktivite Alanı */
         .activity-zone {
             position: absolute;
             bottom: 15px;
             right: 15px;
-            width: 110px;
-            height: 90px;
+            width: 130px;
+            height: 100px;
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
             align-items: center;
             justify-content: center;
+            z-index: 3;
         }
 
         .entity {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.4));
+            filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.5));
+            transform: translateZ(15px);
         }
 
         .pop-effect {
@@ -144,9 +163,9 @@
         }
 
         @keyframes bounceIn {
-            0% { transform: scale(0) translateZ(30px); opacity: 0; }
-            70% { transform: scale(1.2) translateZ(50px); opacity: 1; }
-            100% { transform: scale(1) translateZ(15px); opacity: 1; }
+            0% { transform: scale(0) translateZ(40px); opacity: 0; }
+            70% { transform: scale(1.25) translateZ(60px); opacity: 1; }
+            100% { transform: scale(1) translateZ(20px); opacity: 1; }
         }
 
         /* Bilgi / Motivasyon Kutusu */
@@ -248,7 +267,7 @@
     <!-- Takvim Seçici -->
     <div class="calendar-card" onclick="toggleDrawer()">
         <div class="calendar-header">
-            <span id="currentDateLabel">📅 15 Ağustos 2026</span>
+            <span id="currentDateLabel">📅 16 Ağustos 2026</span>
             <span style="font-size: 0.75rem; color: #94a3b8;" id="drawerIcon">▼ Takvimi Aç</span>
         </div>
         <div class="drawer" id="calendarDrawer">
@@ -275,8 +294,8 @@
 <footer>Ayetin Vakti Ekosistemi • <span>İnteraktif 3D Çiftlik Deneyimi</span></footer>
 
 <script>
-    let activeDay = 15;
-    let activeMonth = 7; // Ağustos
+    let activeDay = 16;
+    let activeMonth = 8; // Ağustos
 
     // Fare hareketiyle 3D adayı döndürme efekti
     const scene = document.getElementById('sceneContainer');
@@ -286,11 +305,11 @@
         const rect = scene.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        world.style.transform = `rotateX(${55 - y / 12}deg) rotateZ(${-45 + x / 12}deg)`;
+        world.style.transform = `rotateX(${52 - y / 10}deg) rotateZ(${-45 + x / 10}deg)`;
     });
 
     scene.addEventListener('mouseleave', () => {
-        world.style.transform = `rotateX(55deg) rotateZ(-45deg)`;
+        world.style.transform = `rotateX(52deg) rotateZ(-45deg)`;
     });
 
     function toggleDrawer() {
@@ -340,11 +359,15 @@
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
         document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
 
-        // Zemin renk değişimi (Kuraktan canlı çim yeşiline)
+        // Zemin ve Çim Geçiş Efekti (Örnek resim kalitesinde)
         const base = document.getElementById('worldBase');
-        if (count === 0) base.style.background = '#3f3f46'; // Kurak toprak
-        else if (count < 4) base.style.background = '#65a30d'; // Filizlenen yeşil
-        else base.style.background = '#16a34a'; // Canlı bereketli yeşil
+        if (count === 0) {
+            base.style.background = '#854d0e'; // Kurak toprak
+            base.classList.remove('green-grass');
+        } else {
+            base.style.background = '#15803d'; // Canlı yeşil taban
+            base.classList.add('green-grass');
+        }
 
         // Motivasyon mesajları
         const quotes = [
@@ -352,7 +375,7 @@
             "Sabah bereketiyle ilk filizler topraktan başını çıkardı.",
             "Öğle ve ikindi sulamalarıyla tarlalar hızla büyüyor.",
             "Ağaçlar filizlendi, çiftlikte yaşam kıpırdamaya başladı.",
-            "Çocukların neşeyle koştuğu, evenin şenlendiği vakit...",
+            "Çocukların neşeyle koştuğu, evin şenlendiği vakit...",
             "Yatsı huzuruyla ağaçlar meyveyle doldu, tarlalar başak verdi.",
             "✨ Zirve Hasat! Çiftliğin altın sarısı bereketle ve neşeyle doldu taştı!"
         ];
@@ -377,17 +400,17 @@
             plot2.appendChild(el2);
         }
 
-        // Ağaçlar, Çocuklar ve Neşe Alanı
+        // Ağaçlar, Yel Değirmeni ve Neşe Alanı
         const activityZone = document.getElementById('activityZone');
         activityZone.innerHTML = '';
 
         let items = [];
         if (count >= 1) items.push("🌳");
         if (count >= 2) items.push("🍎");
-        if (count >= 3) items.push("🌳");
+        if (count >= 3) items.push("🌾");
         if (count >= 4) items.push("👦"); // Çoluk çocuk sevinci
         if (count >= 5) items.push("👧"); 
-        if (count >= 6) items.push("🌟");
+        if (count >= 6) items.push("⭐");
 
         items.forEach(icon => {
             let item = document.createElement('div');
