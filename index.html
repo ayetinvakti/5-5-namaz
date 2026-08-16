@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Low-Poly Ada ve Animasyonlu Ağaç</title>
+    <title>3D Low-Poly Ada ve Manevi Takip</title>
     <style>
         :root {
             --primary: #059669;
@@ -183,15 +183,16 @@
             border: 1px solid var(--border-glass);
             border-radius: 14px;
             padding: 12px 16px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             text-align: center;
             font-style: italic;
-            color: #10b981;
-            min-height: 46px;
+            color: #34d399;
+            min-height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            line-height: 1.3;
         }
 
         /* Takvim Paneli */
@@ -255,11 +256,11 @@
 
 <div class="container">
     <header>
-        <span class="app-title">🏝️ Low-Poly Ada ve Animasyonlu Ağaç</span>
+        <span class="app-title">🏝️ Low-Poly Ada ve Manevi Takip</span>
         <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
-    <div class="quote-box" id="quoteBox">"Ada toprakları kurak... Ağacı büyütmek için görevleri tamamla."</div>
+    <div class="quote-box" id="quoteBox">"Amelsiz toprak kurak kalır; 'Ey Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver' (Bakara, 201) duasıyla adanı yeşert."</div>
 
     <!-- 3D Sahne Alanı -->
     <div class="scene-container">
@@ -324,7 +325,7 @@
     </div>
 </div>
 
-<footer>Ayetin Vakti Ekosistemi • <span>Dinamik 3D Animasyonlu Sürüm</span></footer>
+<footer>Ayetin Vakti Ekosistemi • <span>Manevi Low-Poly Sürüm</span></footer>
 
 <script>
     let activeDay = 16;
@@ -343,7 +344,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `exact_tree_v3_${activeMonth}_${d}`;
+            const key = `exact_tree_v4_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -356,7 +357,7 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `exact_tree_v3_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v4_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
@@ -366,7 +367,7 @@
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `exact_tree_v3_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v4_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
         renderTree(data, true);
@@ -402,18 +403,18 @@
         if (count === 0) {
             svgContent = `<polygon points="95,140 105,135 102,155 92,150" fill="url(#trunkGrad)"/>`;
             labelText = "Kurak Toprak";
-            quoteText = "Ada toprakları kurak... Ağacı büyütmek için görevleri tamamla.";
+            quoteText = "Amelsiz toprak kurak kalır; 'Ey Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver' (Bakara, 201) duasıyla adanı yeşert.";
         } else if (count === 1) {
             svgContent = `<path d="M 94 150 Q 98 120 100 95 Q 103 120 107 150 Z" fill="url(#trunkGrad)"/>`;
             labelText = "1. Aşama: Filiz";
-            quoteText = "Sabah bereketiyle filiz yükseldi.";
+            quoteText = "Sabah namazı günün ilk nurudur. 'Rabbinizi sabah akşam O'nun rızasını isteyerek anın' (Kehf, 28).";
         } else if (count === 2) {
             svgContent = `
                 <path d="M 92 150 Q 97 115 100 85 Q 104 115 110 150 Z" fill="url(#trunkGrad)"/>
                 <path d="M 100 110 L 72 88" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
                 <path d="M 100 105 L 128 85" stroke="#b45309" stroke-width="8" stroke-linecap="round"/>`;
             labelText = "2. Aşama: Gövde ve Kolları";
-            quoteText = "Öğle ibadetiyle dallar belirginleşti.";
+            quoteText = "Öğle vaktinin huzuruyla gövde yükseldi. 'Namazı kılın, zekatı verin; önceden kendiniz için yaptığınız her iyiliği Allah katında bulacaksınız' (Bakara, 110).";
         } else if (count === 3) {
             svgContent = `
                 <path d="M 92 150 Q 97 115 100 80 Q 104 115 110 150 Z" fill="url(#trunkGrad)"/>
@@ -422,7 +423,7 @@
                 <polygon points="30,42 55,28 65,52 40,62" fill="url(#leafGrad1)"/>
                 <polygon points="135,40 162,32 170,58 142,65" fill="url(#leafGrad2)"/>`;
             labelText = "3. Aşama: Dallar ve Yapraklar";
-            quoteText = "İkindi huzuruyla dallar etrafa yayıldı.";
+            quoteText = "İkindi bereketiyle kollar yayıldı. 'Şüphesiz namaz, müminler üzerine vakitleri belirlenmiş bir farzdır' (Nisa, 103).";
         } else if (count === 4) {
             svgContent = `
                 <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
@@ -432,7 +433,7 @@
                 <polygon points="120,38 150,18 178,42 148,68" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
                 <polygon points="68,22 104,5 136,35 100,55" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>`;
             labelText = "4. Aşama: Küresel Low-Poly Yapraklar";
-            quoteText = "Akşam yaklaşırken hedeflenen o hacimli küre yapılar oluştu.";
+            quoteText = "Akşamın feyziyle küre yapraklar oluştu. 'Ve her kim Allah'a güvenirse, O ona yetişir' (Talak, 3).";
         } else if (count === 5) {
             svgContent = `
                 <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
@@ -444,7 +445,7 @@
                 <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>`;
             labelText = "5. Aşama: Geniş Ağaç Tacı";
-            quoteText = "Yatsı huzuruyla ağaç tam formuna ulaştı.";
+            quoteText = "Yatsı sükûnetiyle ağaç tacı tamamlandı. 'Kalpler ancak Allah'ı anmakla huzur bulur' (Ra'd, 28).";
         } else if (count === 6) {
             svgContent = `
                 <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
@@ -461,8 +462,8 @@
                 <polygon points="112,42 120,38 124,46 116,51" fill="#ef4444"/>
                 <polygon points="58,50 66,46 70,54 62,59" fill="#ef4444"/>
                 <polygon points="158,35 166,31 170,39 162,44" fill="#ef4444"/>`;
-            labelText = "✨ Zirve: Hedef Görselle Birebir Ulu Ağaç";
-            quoteText = "Elhamdülillah! İstediğin o low-poly hacim ve detaylar eksiksiz işlendi.";
+            labelText = "✨ Zirve: Manevi Ulu Ağaç";
+            quoteText = "Elhamdülillah! 'Şüphesiz iman edip salih ameller işleyenler için Naîm cennetleri vardır' (Lokman, 8). Ağacın meyveye durdu.";
         }
 
         svg.innerHTML = defsHTML + svgContent;
