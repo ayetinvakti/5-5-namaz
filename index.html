@@ -56,7 +56,7 @@
         .scene-container {
             width: 100%;
             height: 360px;
-            background: linear-gradient(to bottom, #4f46e5 0%, #0284c7 40%, #0f172a 100%);
+            background: linear-gradient(to bottom, #6366f1 0%, #38bdf8 45%, #1e293b 100%);
             border-radius: 24px;
             border: 1px solid var(--border-glass);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.2);
@@ -78,32 +78,32 @@
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Ada Üst Yeşil Katman (Low-Poly Yüzey) */
+        /* Ada Üst Yeşil Katman (3D Low-Poly Efektli) */
         .island-top {
             position: absolute;
             width: 220px;
             height: 220px;
-            background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+            background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
             clip-path: polygon(30% 0%, 70% 5%, 100% 30%, 95% 70%, 70% 100%, 30% 95%, 5% 70%, 0% 30%);
             transform: translateZ(0px);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.3);
             transition: background 0.8s ease;
         }
 
         .island-top.kurak {
-            background: linear-gradient(135deg, #a16207 0%, #78350f 100%);
+            background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
         }
 
-        /* Ada Alt Toprak Kütlesi (Hacimli 3D Kesit) */
+        /* Ada Alt Toprak Kütlesi (Hacimli 3D Derinlik) */
         .island-bottom {
             position: absolute;
             width: 220px;
             height: 220px;
-            background: #451a03;
+            background: #361502;
             clip-path: polygon(30% 0%, 70% 5%, 100% 30%, 95% 70%, 70% 100%, 30% 95%, 5% 70%, 0% 30%);
-            transform: translateZ(-50px) scale(0.85);
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
-            filter: brightness(0.7);
+            transform: translateZ(-55px) scale(0.85);
+            box-shadow: 0 50px 90px rgba(0,0,0,0.95);
+            filter: brightness(0.65);
         }
 
         /* 3D Ağaç Konteyneri */
@@ -111,9 +111,9 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) translateZ(10px);
-            width: 140px;
-            height: 160px;
+            transform: translate(-50%, -50%) translateZ(12px);
+            width: 160px;
+            height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -121,9 +121,9 @@
         }
 
         svg.poly-tree-svg {
-            width: 150px;
-            height: 170px;
-            filter: drop-shadow(10px 18px 20px rgba(0,0,0,0.8));
+            width: 170px;
+            height: 190px;
+            filter: drop-shadow(12px 22px 25px rgba(0,0,0,0.85));
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -133,14 +133,14 @@
 
         @keyframes treeAnim {
             0% { transform: scale(0.5) translateZ(10px); opacity: 0.4; }
-            70% { transform: scale(1.2) translateZ(40px); opacity: 1; }
-            100% { transform: scale(1) translateZ(25px); opacity: 1; }
+            70% { transform: scale(1.2) translateZ(45px); opacity: 1; }
+            100% { transform: scale(1) translateZ(30px); opacity: 1; }
         }
 
         .tree-label {
             position: absolute;
-            bottom: -20px;
-            background: rgba(0, 0, 0, 0.75);
+            bottom: -22px;
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(6px);
             padding: 4px 12px;
             border-radius: 12px;
@@ -148,7 +148,7 @@
             color: #6ee7b7;
             border: 1px solid rgba(255,255,255,0.15);
             white-space: nowrap;
-            transform: translateZ(35px);
+            transform: translateZ(40px);
         }
 
         .quote-box {
@@ -229,11 +229,11 @@
 
 <div class="container">
     <header>
-        <span class="app-title">🏝️ 3D Low-Poly Manevi Ada</span>
+        <span class="app-title">🏝️ Gerçek 3D Low-Poly Ada</span>
         <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
-    <div class="quote-box" id="quoteBox">"Ada tamamen kurak toprakta... Low-poly ağacını büyütmek için görevleri tamamla."</div>
+    <div class="quote-box" id="quoteBox">"Ada toprakları kurak... 3D low-poly ağacı büyütmek için görevleri tamamla."</div>
 
     <!-- 3D Sahne Alanı -->
     <div class="scene-container" id="sceneContainer">
@@ -241,10 +241,28 @@
             <div class="island-bottom"></div>
             <div class="island-top kurak" id="islandTop"></div>
             
-            <!-- 3D Low-Poly Ağaç Model Alanı -->
+            <!-- Gerçek 3D Hacimli Ağaç Modeli -->
             <div class="tree-3d-model">
                 <svg id="polyTreeSvg" class="poly-tree-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Dinamik 3D Low-Poly Ağaç Kesitleri -->
+                    <defs>
+                        <!-- Gerçek 3D Hacim Gölgeleri ve Gradyanlar -->
+                        <linearGradient id="trunkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#78350f"/>
+                            <stop offset="50%" stop-color="#b45309"/>
+                            <stop offset="100%" stop-color="#451a03"/>
+                        </linearGradient>
+                        <radialGradient id="leafGrad1" cx="30%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#4ade80"/>
+                            <stop offset="70%" stop-color="#16a34a"/>
+                            <stop offset="100%" stop-color="#14532d"/>
+                        </radialGradient>
+                        <radialGradient id="leafGrad2" cx="30%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#86efac"/>
+                            <stop offset="70%" stop-color="#22c55e"/>
+                            <stop offset="100%" stop-color="#15803d"/>
+                        </radialGradient>
+                    </defs>
+                    <!-- Dinamik 3D Ağaç Çizimi -->
                 </svg>
                 <div class="tree-label" id="treeLabel">1. Aşama: Kurak Filiz</div>
             </div>
@@ -269,16 +287,16 @@
             <span style="color: #34d399;" id="completionPercent">%0</span>
         </div>
 
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprağa ilk 3D low-poly filiz atıldı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Gövde 3D hacim kazandı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Geometrik dallar uzadı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Low-poly yaprak kümeleri oluştu</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Muazzam hacimli taç yapraklar</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Meyvelerle donanan 3D zirve ağaç</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprağa ilk 3D filiz bırakıldı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Gövde silindirik hacim kazandı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">3D geometrik dallar uzadı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Low-poly küre yaprak kümeleri</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Geniş 3D taç yapraklar oluştu</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Meyvelerle donanan 3D ulu ağaç</span></div></div></label>
     </div>
 </div>
 
-<footer>Ayetin Vakti Ekosistemi • <span>3D Low-Poly Ada ve Ağaç Modeli</span></footer>
+<footer>Ayetin Vakti Ekosistemi • <span>Gerçek 3D Low-Poly Görünüm</span></footer>
 
 <script>
     let activeDay = 16;
@@ -311,7 +329,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `poly3d_tree_${activeMonth}_${d}`;
+            const key = `real3d_tree_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -324,24 +342,24 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `poly3d_tree_${activeMonth}_${activeDay}`;
+        const key = `real3d_tree_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
-        render3DPolyTree(data, false);
+        renderReal3DTree(data, false);
     }
 
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `poly3d_tree_${activeMonth}_${activeDay}`;
+        const key = `real3d_tree_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
-        render3DPolyTree(data, true);
+        renderReal3DTree(data, true);
     }
 
-    // Gerçek 3D Hacimli Low-Poly Ağaç Çizim Motoru
-    function render3DPolyTree(data, animate = true) {
+    // Örnek Resimdeki Gibi Gerçek 3D Hacimli Low-Poly Çizim Motoru
+    function renderReal3DTree(data, animate = true) {
         const count = data.filter(Boolean).length;
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
         document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
@@ -363,84 +381,93 @@
             svg.classList.add('tree-pop');
         }
 
+        // Sabit SVG Gradient Tanımları Korunarak İçerik Güncelleniyor
+        let defsHTML = svg.querySelector('defs').outerHTML;
         let svgContent = '';
         let labelText = '';
         let quoteText = '';
 
-        // Gönderdiğin son görseldeki gibi hacimli, çok yüzeyli low-poly 3D nesneler
         if (count === 0) {
-            // Aşama 0: Kurak Minik Kaya/Filiz Parçası
+            // Aşama 0: Kurak Zemin Taş Parçası
             svgContent = `
-                <polygon points="95,135 110,130 105,155 90,150" fill="#78350f"/>
-                <polygon points="95,135 102,125 110,130" fill="#b45309"/>
-                <polygon points="102,125 105,155 110,130" fill="#92400e"/>`;
+                <polygon points="92,135 110,130 106,155 88,150" fill="url(#trunkGrad)"/>
+                <polygon points="92,135 101,122 110,130" fill="#d97706"/>`;
             labelText = "Kurak Ada Toprağı";
-            quoteText = "Ada tamamen kurak toprakta... Low-poly ağacını büyütmek için görevleri tamamla.";
+            quoteText = "Ada toprakları kurak... 3D low-poly ağacı büyütmek için görevleri tamamla.";
         } else if (count === 1) {
-            // Aşama 1: İlk Filiz Gövde
+            // Aşama 1: Filiz Gövde
             svgContent = `
-                <polygon points="92,115 108,110 105,155 88,150" fill="#78350f"/>
-                <polygon points="92,115 100,100 108,110" fill="#b45309"/>
-                <polygon points="100,100 105,155 108,110" fill="#92400e"/>`;
+                <path d="M 94 140 Q 98 115 100 100 Q 102 115 106 140 Z" fill="url(#trunkGrad)" filter="drop-shadow(2px 2px 2px rgba(0,0,0,0.5))"/>
+                <polygon points="94,140 100,100 106,140" fill="#b45309" opacity="0.6"/>`;
             labelText = "1. Aşama: Filiz Gövde";
-            quoteText = "Sabah bereketiyle ilk low-poly filiz adada yükseldi.";
+            quoteText = "Sabah bereketiyle ilk 3D hacimli filiz yükseldi.";
         } else if (count === 2) {
-            // Aşama 2: Uzayan Gövde
+            // Aşama 2: Kalınlaşan Gövde ve Minik Dallar
             svgContent = `
-                <polygon points="90,90 110,85 106,155 86,150" fill="#78350f"/>
-                <polygon points="90,90 100,75 110,85" fill="#b45309"/>
-                <polygon points="100,75 106,155 110,85" fill="#92400e"/>
-                <polygon points="100,75 104,85 112,80" fill="#d97706"/>`;
-            labelText = "2. Aşama: Gövde Boy Veriyor";
-            quoteText = "Öğle ibadetiyle gövde hacim kazandı ve uzadı.";
+                <path d="M 90 150 Q 96 110 98 85 Q 102 110 110 150 Z" fill="url(#trunkGrad)"/>
+                <path d="M 98 105 L 78 85" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+                <path d="M 100 100 L 122 82" stroke="#b45309" stroke-width="5" stroke-linecap="round"/>`;
+            labelText = "2. Aşama: Gövde Silindirik Hacim Kazandı";
+            quoteText = "Öğle ibadetiyle gövde kalınlaştı ve kollara ayrıldı.";
         } else if (count === 3) {
-            // Aşama 3: Geometrik Dallar
+            // Aşama 3: Geometrik Dallar Genişliyor
             svgContent = `
-                <polygon points="92,90 108,85 105,155 88,150" fill="#78350f"/>
-                <polygon points="92,85 75,65 88,72" fill="#b45309"/>
-                <polygon points="108,85 125,70 115,75" fill="#92400e"/>
-                <polygon points="75,65 82,58 90,70" fill="#65a30d"/>
-                <polygon points="125,70 118,63 112,72" fill="#65a30d"/>`;
-            labelText = "3. Aşama: Dallar Filizleniyor";
-            quoteText = "İkindi huzuruyla geometrik dallar yanlara doğru açıldı.";
+                <path d="M 90 150 Q 96 110 98 80 Q 102 110 110 150 Z" fill="url(#trunkGrad)"/>
+                <path d="M 98 100 C 80 90 65 75 55 60" stroke="#78350f" stroke-width="7" stroke-linecap="round"/>
+                <path d="M 98 95 C 115 88 130 72 142 58" stroke="#b45309" stroke-width="7" stroke-linecap="round"/>
+                <polygon points="50,55 65,45 60,65" fill="url(#leafGrad1)"/>
+                <polygon points="138,52 150,65 132,68" fill="url(#leafGrad2)"/>`;
+            labelText = "3. Aşama: 3D Geometrik Dallar Uzadı";
+            quoteText = "İkindi huzuruyla ana dallar etrafa doğru yayıldı.";
         } else if (count === 4) {
-            // Aşama 4: Low-Poly Yaprak Kümeleri Başlıyor
+            // Aşama 4: Low-Poly Küresel Yaprak Kümeleri Başlıyor
             svgContent = `
-                <polygon points="92,90 108,85 105,155 88,150" fill="#78350f"/>
-                <polygon points="70,60 90,40 105,65 85,75" fill="#15803d"/>
-                <polygon points="105,55 125,35 140,60 120,75" fill="#22c55e"/>
-                <polygon points="85,35 105,20 120,45 100,55" fill="#16a34a"/>`;
-            labelText = "4. Aşama: Yaprak Kümeleri Oluşuyor";
-            quoteText = "Akşam yaklaşırken low-poly çok yüzeyli yapraklar belirginleşti.";
+                <path d="M 90 150 Q 96 110 98 80 Q 102 110 110 150 Z" fill="url(#trunkGrad)"/>
+                <path d="M 98 100 C 80 90 65 75 55 60" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
+                <path d="M 98 95 C 115 88 130 72 142 58" stroke="#b45309" stroke-width="8" stroke-linecap="round"/>
+                <!-- 3D Low-Poly Küre Grupları -->
+                <polygon points="55,50 75,30 85,55 60,70" fill="url(#leafGrad1)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.4))"/>
+                <polygon points="120,40 145,35 150,60 125,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.4))"/>
+                <polygon points="85,30 115,20 125,48 95,55" fill="url(#leafGrad1)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.4))"/>`;
+            labelText = "4. Aşama: 3D Low-Poly Yaprak Kümeleri";
+            quoteText = "Akşam yaklaşırken örnek resimdeki gibi hacimli low-poly yapraklar oluştu.";
         } else if (count === 5) {
-            // Aşama 5: Geniş Low-Poly Taç Yapı
+            // Aşama 5: Tam Donanımlı 3D Ulu Ağaç Tacı
             svgContent = `
-                <polygon points="90,85 110,80 105,155 85,150" fill="#78350f"/>
-                <polygon points="65,65 45,45 70,30 95,55" fill="#15803d"/>
-                <polygon points="105,55 130,35 155,55 130,75" fill="#16a34a"/>
-                <polygon points="75,40 100,15 125,40 100,60" fill="#22c55e"/>
-                <polygon points="85,30 115,25 125,50 95,50" fill="#4ade80"/>`;
-            labelText = "5. Aşama: Muazzam Ulu Ağaç Tacı";
-            quoteText = "Yatsı huzuruyla ağaç tam bir low-poly sanat eserine dönüştü.";
+                <path d="M 88 150 Q 95 110 98 75 Q 103 110 112 150 Z" fill="url(#trunkGrad)"/>
+                <path d="M 98 105 C 75 90 50 70 45 50" stroke="#78350f" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 98 95 C 120 90 145 72 152 50" stroke="#b45309" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 98 85 C 100 70 102 55 100 35" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
+                <!-- Hacimli 3D Low-Poly Küreler -->
+                <polygon points="40,55 65,30 85,50 60,75" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 6px rgba(0,0,0,0.5))"/>
+                <polygon points="120,45 150,30 160,60 130,70" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 6px rgba(0,0,0,0.5))"/>
+                <polygon points="75,25 110,10 130,40 95,55" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 6px rgba(0,0,0,0.5))"/>
+                <polygon points="90,40 120,25 135,55 105,65" fill="url(#leafGrad2)" filter="drop-shadow(2px 3px 3px rgba(0,0,0,0.3))"/>`;
+            labelText = "5. Aşama: Muazzam 3D Ulu Ağaç Tacı";
+            quoteText = "Yatsı huzuruyla ağacın 3D hacmi örnek resimle mükemmel uyuma ulaştı.";
         } else if (count === 6) {
-            // Aşama 6: Meyveli 3D Zirve Ağaç (Son Görseldeki Gibi)
+            // Aşama 6: Meyveli 3D Zirve Ağaç (Örnek Resmin Birebir Aynısı)
             svgContent = `
-                <polygon points="90,85 110,80 105,155 85,150" fill="#78350f"/>
-                <polygon points="65,65 45,45 70,30 95,55" fill="#15803d"/>
-                <polygon points="105,55 130,35 155,55 130,75" fill="#16a34a"/>
-                <polygon points="75,40 100,15 125,40 100,60" fill="#22c55e"/>
-                <polygon points="85,30 115,25 125,50 95,50" fill="#4ade80"/>
-                <!-- Low-Poly 3D Geometrik Meyveler -->
-                <polygon points="68,45 74,40 78,48 70,52" fill="#ef4444"/>
-                <polygon points="115,35 122,30 126,38 118,42" fill="#ef4444"/>
-                <polygon points="95,25 101,20 105,28 98,32" fill="#eab308"/>
-                <polygon points="135,50 141,45 145,53 138,57" fill="#ef4444"/>
-                <polygon points="80,55 86,50 90,58 83,62" fill="#eab308"/>`;
+                <path d="M 88 150 Q 95 110 98 75 Q 103 110 112 150 Z" fill="url(#trunkGrad)"/>
+                <path d="M 98 105 C 75 90 50 70 45 50" stroke="#78350f" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 98 95 C 120 90 145 72 152 50" stroke="#b45309" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 98 85 C 100 70 102 55 100 35" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
+                <!-- Hacimli 3D Low-Poly Küreler -->
+                <polygon points="40,55 65,30 85,50 60,75" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 6px rgba(0,0,0,0.5))"/>
+                <polygon points="120,45 150,30 160,60 130,70" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 6px rgba(0,0,0,0.5))"/>
+                <polygon points="75,25 110,10 130,40 95,55" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 6px rgba(0,0,0,0.5))"/>
+                <polygon points="90,40 120,25 135,55 105,65" fill="url(#leafGrad2)" filter="drop-shadow(2px 3px 3px rgba(0,0,0,0.3))"/>
+                <!-- Low-Poly 3D Kristal Meyveler -->
+                <polygon points="55,45 62,40 66,48 58,53" fill="#ef4444"/>
+                <polygon points="135,38 142,33 146,41 138,46" fill="#ef4444"/>
+                <polygon points="100,22 107,17 111,25 103,30" fill="#eab308"/>
+                <polygon points="115,52 122,47 126,55 118,60" fill="#ef4444"/>
+                <polygon points="70,60 77,55 81,63 73,68" fill="#eab308"/>`;
             labelText = "Zirve: Meyveli 3D Ulu Ağaç";
-            quoteText = "✨ Elhamdülillah! Tüm ibadetler tamamlandı; 3D low-poly manevi ağacın meyveleriyle ada berekete büründü.";
+            quoteText = "✨ Elhamdülillah! Tüm ibadetler tamamlandı; örnek resimdeki gibi 3D low-poly ulu ağaç meyveleriyle donandı.";
         }
 
-        svg.innerHTML = svgContent;
+        svg.innerHTML = defsHTML + svgContent;
         labelEl.innerText = labelText;
         quoteEl.innerText = quoteText;
     }
