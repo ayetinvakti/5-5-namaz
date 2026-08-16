@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Low-Poly 3D Manevi Ağaç Simülasyonu</title>
+    <title>3D Low-Poly Manevi Ada ve Ağaç Simülasyonu</title>
     <style>
         :root {
             --primary: #059669;
             --primary-light: #10b981;
-            --bg-gradient: linear-gradient(135deg, #090d16 0%, #171f38 50%, #032d22 100%);
+            --bg-gradient: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #064e3b 100%);
             --card-bg: rgba(255, 255, 255, 0.08);
             --border-glass: rgba(255, 255, 255, 0.15);
             --text-color: #f8fafc;
@@ -55,8 +55,8 @@
         /* 3D Sahne Alanı */
         .scene-container {
             width: 100%;
-            height: 340px;
-            background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
+            height: 360px;
+            background: linear-gradient(to bottom, #4f46e5 0%, #0284c7 40%, #0f172a 100%);
             border-radius: 24px;
             border: 1px solid var(--border-glass);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.2);
@@ -65,50 +65,65 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1500px;
+            perspective: 1400px;
         }
 
-        .isometric-world {
-            width: 340px;
+        /* Havada Süzülen 3D Low-Poly Ada */
+        .floating-island {
+            width: 240px;
             height: 240px;
             position: relative;
             transform-style: preserve-3d;
-            transform: rotateX(50deg) rotateZ(-45deg);
+            transform: rotateX(55deg) rotateZ(-45deg);
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .world-base {
+        /* Ada Üst Yeşil Katman (Low-Poly Yüzey) */
+        .island-top {
             position: absolute;
-            width: 300px;
-            height: 300px;
-            background: #854d0e;
-            border-radius: 12px;
-            box-shadow: -25px 25px 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.5);
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+            clip-path: polygon(30% 0%, 70% 5%, 100% 30%, 95% 70%, 70% 100%, 30% 95%, 5% 70%, 0% 30%);
+            transform: translateZ(0px);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
             transition: background 0.8s ease;
         }
 
-        .world-base.active-island {
-            background: #15803d;
+        .island-top.kurak {
+            background: linear-gradient(135deg, #a16207 0%, #78350f 100%);
         }
 
-        /* Low-Poly 3D Ağaç Konteyneri */
-        .tree-3d-container {
+        /* Ada Alt Toprak Kütlesi (Hacimli 3D Kesit) */
+        .island-bottom {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: #451a03;
+            clip-path: polygon(30% 0%, 70% 5%, 100% 30%, 95% 70%, 70% 100%, 30% 95%, 5% 70%, 0% 30%);
+            transform: translateZ(-50px) scale(0.85);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+            filter: brightness(0.7);
+        }
+
+        /* 3D Ağaç Konteyneri */
+        .tree-3d-model {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) translateZ(15px);
-            width: 160px;
-            height: 180px;
+            transform: translate(-50%, -50%) translateZ(10px);
+            width: 140px;
+            height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
         }
 
-        svg.low-poly-tree {
-            width: 140px;
-            height: 160px;
-            filter: drop-shadow(8px 14px 18px rgba(0,0,0,0.7));
+        svg.poly-tree-svg {
+            width: 150px;
+            height: 170px;
+            filter: drop-shadow(10px 18px 20px rgba(0,0,0,0.8));
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
@@ -117,15 +132,15 @@
         }
 
         @keyframes treeAnim {
-            0% { transform: scale(0.6) translateZ(10px); opacity: 0.5; }
-            70% { transform: scale(1.15) translateZ(50px); opacity: 1; }
-            100% { transform: scale(1) translateZ(30px); opacity: 1; }
+            0% { transform: scale(0.5) translateZ(10px); opacity: 0.4; }
+            70% { transform: scale(1.2) translateZ(40px); opacity: 1; }
+            100% { transform: scale(1) translateZ(25px); opacity: 1; }
         }
 
         .tree-label {
             position: absolute;
-            bottom: -10px;
-            background: rgba(0, 0, 0, 0.7);
+            bottom: -20px;
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(6px);
             padding: 4px 12px;
             border-radius: 12px;
@@ -214,21 +229,22 @@
 
 <div class="container">
     <header>
-        <span class="app-title">🌲 Low-Poly 3D Manevi Ağaç</span>
+        <span class="app-title">🏝️ 3D Low-Poly Manevi Ada</span>
         <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
-    <div class="quote-box" id="quoteBox">"Toprak tamamen kurak... Low-poly manevi ağacını büyütmek için can suyu ver."</div>
+    <div class="quote-box" id="quoteBox">"Ada tamamen kurak toprakta... Low-poly ağacını büyütmek için görevleri tamamla."</div>
 
     <!-- 3D Sahne Alanı -->
     <div class="scene-container" id="sceneContainer">
-        <div class="isometric-world" id="isoWorld">
-            <div class="world-base" id="worldBase"></div>
+        <div class="floating-island" id="floatingIsland">
+            <div class="island-bottom"></div>
+            <div class="island-top kurak" id="islandTop"></div>
             
-            <!-- Low-Poly 3D Ağaç ve Evrim Alanı -->
-            <div class="tree-3d-container">
-                <svg id="treeSvg" class="low-poly-tree" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Dinamik Low-Poly Ağaç Gövdesi ve Yapraklar JavaScript ile yüklenecek -->
+            <!-- 3D Low-Poly Ağaç Model Alanı -->
+            <div class="tree-3d-model">
+                <svg id="polyTreeSvg" class="poly-tree-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Dinamik 3D Low-Poly Ağaç Kesitleri -->
                 </svg>
                 <div class="tree-label" id="treeLabel">1. Aşama: Kurak Filiz</div>
             </div>
@@ -253,33 +269,33 @@
             <span style="color: #34d399;" id="completionPercent">%0</span>
         </div>
 
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprağa ilk low-poly filiz atıldı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Gövde uzamaya başladı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Dallar filizlenip şekillendi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Low-poly yapraklar yeşermeye başladı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Geniş low-poly taç yapraklar oluştu</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Meyve ve çiçeklerle donanan zirve ağaç</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprağa ilk 3D low-poly filiz atıldı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Gövde 3D hacim kazandı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Geometrik dallar uzadı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Low-poly yaprak kümeleri oluştu</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Muazzam hacimli taç yapraklar</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Meyvelerle donanan 3D zirve ağaç</span></div></div></label>
     </div>
 </div>
 
-<footer>Ayetin Vakti Ekosistemi • <span>Low-Poly 3D Ağaç Evrimi</span></footer>
+<footer>Ayetin Vakti Ekosistemi • <span>3D Low-Poly Ada ve Ağaç Modeli</span></footer>
 
 <script>
     let activeDay = 16;
     let activeMonth = 8;
 
     const scene = document.getElementById('sceneContainer');
-    const world = document.getElementById('isoWorld');
+    const island = document.getElementById('floatingIsland');
     
     scene.addEventListener('mousemove', (e) => {
         const rect = scene.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        world.style.transform = `rotateX(${50 - y / 8}deg) rotateZ(${-45 + x / 8}deg)`;
+        island.style.transform = `rotateX(${55 - y / 7}deg) rotateZ(${-45 + x / 7}deg)`;
     });
 
     scene.addEventListener('mouseleave', () => {
-        world.style.transform = `rotateX(50deg) rotateZ(-45deg)`;
+        island.style.transform = `rotateX(55deg) rotateZ(-45deg)`;
     });
 
     function toggleDrawer() {
@@ -295,7 +311,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `poly_tree_${activeMonth}_${d}`;
+            const key = `poly3d_tree_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -308,38 +324,36 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `poly_tree_${activeMonth}_${activeDay}`;
+        const key = `poly3d_tree_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
-        renderPolyTree(data, false);
+        render3DPolyTree(data, false);
     }
 
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `poly_tree_${activeMonth}_${activeDay}`;
+        const key = `poly3d_tree_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
-        renderPolyTree(data, true);
+        render3DPolyTree(data, true);
     }
 
-    // Low-Poly 3D Ağaç Çizim Fonksiyonu (Fotoğraftaki Aşamalarla Birebir)
-    function renderPolyTree(data, animate = true) {
+    // Gerçek 3D Hacimli Low-Poly Ağaç Çizim Motoru
+    function render3DPolyTree(data, animate = true) {
         const count = data.filter(Boolean).length;
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
         document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
 
-        const base = document.getElementById('worldBase');
+        const islandTop = document.getElementById('islandTop');
         if (count === 0) {
-            base.style.background = '#854d0e';
-            base.classList.remove('active-island');
+            islandTop.classList.add('kurak');
         } else {
-            base.style.background = '#15803d';
-            base.classList.add('active-island');
+            islandTop.classList.remove('kurak');
         }
 
-        const svg = document.getElementById('treeSvg');
+        const svg = document.getElementById('polyTreeSvg');
         const labelEl = document.getElementById('treeLabel');
         const quoteEl = document.getElementById('quoteBox');
 
@@ -353,42 +367,77 @@
         let labelText = '';
         let quoteText = '';
 
-        // Gönderdiğin görsele tam uygun Low-Poly Aşama Çizimleri (SVG Poligonları)
+        // Gönderdiğin son görseldeki gibi hacimli, çok yüzeyli low-poly 3D nesneler
         if (count === 0) {
-            // Aşama 0: Minik Toprak Parçası
-            svgContent = `<polygon points="90,140 110,135 105,160 85,155" fill="#a16207"/><polygon points="90,140 100,130 110,135" fill="#ca8a04"/>`;
-            labelText = "Kurak Toprak";
-            quoteText = "Toprak tamamen kurak... Low-poly manevi ağacını büyütmek için can suyu ver.";
+            // Aşama 0: Kurak Minik Kaya/Filiz Parçası
+            svgContent = `
+                <polygon points="95,135 110,130 105,155 90,150" fill="#78350f"/>
+                <polygon points="95,135 102,125 110,130" fill="#b45309"/>
+                <polygon points="102,125 105,155 110,130" fill="#92400e"/>`;
+            labelText = "Kurak Ada Toprağı";
+            quoteText = "Ada tamamen kurak toprakta... Low-poly ağacını büyütmek için görevleri tamamla.";
         } else if (count === 1) {
-            // Aşama 1: Küçük Filiz Gövde
-            svgContent = `<polygon points="92,120 108,115 105,160 88,155" fill="#92400e"/><polygon points="92,120 100,105 108,115" fill="#b45309"/>`;
+            // Aşama 1: İlk Filiz Gövde
+            svgContent = `
+                <polygon points="92,115 108,110 105,155 88,150" fill="#78350f"/>
+                <polygon points="92,115 100,100 108,110" fill="#b45309"/>
+                <polygon points="100,100 105,155 108,110" fill="#92400e"/>`;
             labelText = "1. Aşama: Filiz Gövde";
-            quoteText = "Sabah bereketiyle ilk low-poly filiz topraktan başını çıkardı.";
+            quoteText = "Sabah bereketiyle ilk low-poly filiz adada yükseldi.";
         } else if (count === 2) {
             // Aşama 2: Uzayan Gövde
-            svgContent = `<polygon points="90,95 110,90 106,160 86,155" fill="#92400e"/><polygon points="90,95 100,80 110,90" fill="#b45309"/><polygon points="100,80 105,90 115,85" fill="#78350f"/>`;
+            svgContent = `
+                <polygon points="90,90 110,85 106,155 86,150" fill="#78350f"/>
+                <polygon points="90,90 100,75 110,85" fill="#b45309"/>
+                <polygon points="100,75 106,155 110,85" fill="#92400e"/>
+                <polygon points="100,75 104,85 112,80" fill="#d97706"/>`;
             labelText = "2. Aşama: Gövde Boy Veriyor";
-            quoteText = "Öğle ibadetiyle ağacın gövdesi ve ilk minik dalları belirginleşti.";
+            quoteText = "Öğle ibadetiyle gövde hacim kazandı ve uzadı.";
         } else if (count === 3) {
-            // Aşama 3: Filizlenen Dallar
-            svgContent = `<polygon points="92,90 108,85 105,160 88,155" fill="#92400e"/><polygon points="92,90 75,70 90,75" fill="#b45309"/><polygon points="108,85 125,75 115,70" fill="#b45309"/><polygon points="75,70 80,65 88,72" fill="#84cc16"/><polygon points="125,75 120,68 115,72" fill="#84cc16"/>`;
+            // Aşama 3: Geometrik Dallar
+            svgContent = `
+                <polygon points="92,90 108,85 105,155 88,150" fill="#78350f"/>
+                <polygon points="92,85 75,65 88,72" fill="#b45309"/>
+                <polygon points="108,85 125,70 115,75" fill="#92400e"/>
+                <polygon points="75,65 82,58 90,70" fill="#65a30d"/>
+                <polygon points="125,70 118,63 112,72" fill="#65a30d"/>`;
             labelText = "3. Aşama: Dallar Filizleniyor";
-            quoteText = "İkindi huzuruyla dallar yanlara doğru açılmaya başladı.";
+            quoteText = "İkindi huzuruyla geometrik dallar yanlara doğru açıldı.";
         } else if (count === 4) {
-            // Aşama 4: Yeşil Yaprak Başlangıcı
-            svgContent = `<polygon points="92,90 108,85 105,160 88,155" fill="#92400e"/><polygon points="92,90 70,65 90,75" fill="#b45309"/><polygon points="108,85 130,70 115,70" fill="#b45309"/><polygon points="65,60 80,45 90,65" fill="#16a34a"/><polygon points="110,55 135,50 125,75" fill="#22c55e"/><polygon points="85,40 100,30 115,45" fill="#15803d"/>`;
-            labelText = "4. Aşama: Yapraklar Yeşeriyor";
-            quoteText = "Akşam yaklaşırken low-poly yapraklar kümeler halinde oluştu.";
+            // Aşama 4: Low-Poly Yaprak Kümeleri Başlıyor
+            svgContent = `
+                <polygon points="92,90 108,85 105,155 88,150" fill="#78350f"/>
+                <polygon points="70,60 90,40 105,65 85,75" fill="#15803d"/>
+                <polygon points="105,55 125,35 140,60 120,75" fill="#22c55e"/>
+                <polygon points="85,35 105,20 120,45 100,55" fill="#16a34a"/>`;
+            labelText = "4. Aşama: Yaprak Kümeleri Oluşuyor";
+            quoteText = "Akşam yaklaşırken low-poly çok yüzeyli yapraklar belirginleşti.";
         } else if (count === 5) {
-            // Aşama 5: Geniş Low-Poly Taç Yapraklar
-            svgContent = `<polygon points="90,85 110,80 105,160 85,155" fill="#78350f"/><polygon points="75,70 50,55 70,40 90,60" fill="#15803d"/><polygon points="110,70 135,50 150,70 125,85" fill="#16a34a"/><polygon points="80,45 100,20 125,45 105,65" fill="#22c55e"/><polygon points="60,50 75,30 95,45" fill="#4ade80"/>`;
-            labelText = "5. Aşama: Ulu Ağaç Tacı";
-            quoteText = "Yatsı huzuruyla ağaç muazzam bir low-poly taç yapısıyla donandı.";
+            // Aşama 5: Geniş Low-Poly Taç Yapı
+            svgContent = `
+                <polygon points="90,85 110,80 105,155 85,150" fill="#78350f"/>
+                <polygon points="65,65 45,45 70,30 95,55" fill="#15803d"/>
+                <polygon points="105,55 130,35 155,55 130,75" fill="#16a34a"/>
+                <polygon points="75,40 100,15 125,40 100,60" fill="#22c55e"/>
+                <polygon points="85,30 115,25 125,50 95,50" fill="#4ade80"/>`;
+            labelText = "5. Aşama: Muazzam Ulu Ağaç Tacı";
+            quoteText = "Yatsı huzuruyla ağaç tam bir low-poly sanat eserine dönüştü.";
         } else if (count === 6) {
-            // Aşama 6: Meyveli Zirve Hasat
-            svgContent = `<polygon points="90,85 110,80 105,160 85,155" fill="#78350f"/><polygon points="75,70 50,55 70,40 90,60" fill="#15803d"/><polygon points="110,70 135,50 150,70 125,85" fill="#16a34a"/><polygon points="80,45 100,20 125,45 105,65" fill="#22c55e"/><circle cx="70" cy="48" r="4" fill="#ef4444"/><circle cx="115" cy="35" r="4" fill="#ef4444"/><circle cx="95" cy="55" r="4" fill="#eab308"/><circle cx="130" cy="65" r="4" fill="#ef4444"/><circle cx="65" cy="65" r="4" fill="#eab308"/>`;
-            labelText = "Zirve: Meyveli Ulu Ağaç";
-            quoteText = "✨ Elhamdülillah! Tüm ibadetler tamamlandı; low-poly manevi ağacın meyve ve bereketle taçlandı.";
+            // Aşama 6: Meyveli 3D Zirve Ağaç (Son Görseldeki Gibi)
+            svgContent = `
+                <polygon points="90,85 110,80 105,155 85,150" fill="#78350f"/>
+                <polygon points="65,65 45,45 70,30 95,55" fill="#15803d"/>
+                <polygon points="105,55 130,35 155,55 130,75" fill="#16a34a"/>
+                <polygon points="75,40 100,15 125,40 100,60" fill="#22c55e"/>
+                <polygon points="85,30 115,25 125,50 95,50" fill="#4ade80"/>
+                <!-- Low-Poly 3D Geometrik Meyveler -->
+                <polygon points="68,45 74,40 78,48 70,52" fill="#ef4444"/>
+                <polygon points="115,35 122,30 126,38 118,42" fill="#ef4444"/>
+                <polygon points="95,25 101,20 105,28 98,32" fill="#eab308"/>
+                <polygon points="135,50 141,45 145,53 138,57" fill="#ef4444"/>
+                <polygon points="80,55 86,50 90,58 83,62" fill="#eab308"/>`;
+            labelText = "Zirve: Meyveli 3D Ulu Ağaç";
+            quoteText = "✨ Elhamdülillah! Tüm ibadetler tamamlandı; 3D low-poly manevi ağacın meyveleriyle ada berekete büründü.";
         }
 
         svg.innerHTML = svgContent;
