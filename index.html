@@ -164,19 +164,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        .tree-label {
-            position: absolute;
-            bottom: -15px;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.72rem;
-            color: #6ee7b7;
-            border: 1px solid rgba(255,255,255,0.15);
-            white-space: nowrap;
-        }
-
         .quote-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -293,7 +280,6 @@
                         </radialGradient>
                     </defs>
                 </svg>
-                <div class="tree-label" id="treeLabel">Kurak Toprak</div>
             </div>
         </div>
     </div>
@@ -316,12 +302,12 @@
             <span style="color: #34d399;" id="completionPercent">%0</span>
         </div>
 
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprak yeşermeye başladı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Ağacın ana gövdesi yükseldi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Dallar kollara ayrıldı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Low-poly küre yapraklar oluştu</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Geniş yaprak tacı tamamlandı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Ulu ağaç meyvelerle donandı</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Günün ilk nuru ve rahmet vakti</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Günün ortasında kalbi tazeleme</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Zamanın bereketine sığınma</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Günü şükürle taçlandırma vakti</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Gecenin sükûneti ve huzuru</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Kalbin zikirle oymalanması</span></div></div></label>
     </div>
 </div>
 
@@ -344,7 +330,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `exact_tree_v4_${activeMonth}_${d}`;
+            const key = `exact_tree_v5_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -357,7 +343,7 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `exact_tree_v4_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v5_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
@@ -367,7 +353,7 @@
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `exact_tree_v4_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v5_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
         renderTree(data, true);
@@ -386,7 +372,6 @@
         }
 
         const svg = document.getElementById('mainTreeSvg');
-        const labelEl = document.getElementById('treeLabel');
         const quoteEl = document.getElementById('quoteBox');
 
         if (animate) {
@@ -397,23 +382,19 @@
 
         let defsHTML = svg.querySelector('defs').outerHTML;
         let svgContent = '';
-        let labelText = '';
         let quoteText = '';
 
         if (count === 0) {
             svgContent = `<polygon points="95,140 105,135 102,155 92,150" fill="url(#trunkGrad)"/>`;
-            labelText = "Kurak Toprak";
             quoteText = "Amelsiz toprak kurak kalır; 'Ey Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver' (Bakara, 201) duasıyla adanı yeşert.";
         } else if (count === 1) {
             svgContent = `<path d="M 94 150 Q 98 120 100 95 Q 103 120 107 150 Z" fill="url(#trunkGrad)"/>`;
-            labelText = "1. Aşama: Filiz";
             quoteText = "Sabah namazı günün ilk nurudur. 'Rabbinizi sabah akşam O'nun rızasını isteyerek anın' (Kehf, 28).";
         } else if (count === 2) {
             svgContent = `
                 <path d="M 92 150 Q 97 115 100 85 Q 104 115 110 150 Z" fill="url(#trunkGrad)"/>
                 <path d="M 100 110 L 72 88" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
                 <path d="M 100 105 L 128 85" stroke="#b45309" stroke-width="8" stroke-linecap="round"/>`;
-            labelText = "2. Aşama: Gövde ve Kolları";
             quoteText = "Öğle vaktinin huzuruyla gövde yükseldi. 'Namazı kılın, zekatı verin; önceden kendiniz için yaptığınız her iyiliği Allah katında bulacaksınız' (Bakara, 110).";
         } else if (count === 3) {
             svgContent = `
@@ -422,7 +403,6 @@
                 <path d="M 100 95 C 128 88 152 68 164 48" stroke="#b45309" stroke-width="9" stroke-linecap="round"/>
                 <polygon points="30,42 55,28 65,52 40,62" fill="url(#leafGrad1)"/>
                 <polygon points="135,40 162,32 170,58 142,65" fill="url(#leafGrad2)"/>`;
-            labelText = "3. Aşama: Dallar ve Yapraklar";
             quoteText = "İkindi bereketiyle kollar yayıldı. 'Şüphesiz namaz, müminler üzerine vakitleri belirlenmiş bir farzdır' (Nisa, 103).";
         } else if (count === 4) {
             svgContent = `
@@ -432,7 +412,6 @@
                 <polygon points="22,45 52,20 80,45 50,70" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
                 <polygon points="120,38 150,18 178,42 148,68" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
                 <polygon points="68,22 104,5 136,35 100,55" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>`;
-            labelText = "4. Aşama: Küresel Low-Poly Yapraklar";
             quoteText = "Akşamın feyziyle küre yapraklar oluştu. 'Ve her kim Allah'a güvenirse, O ona yetişir' (Talak, 3).";
         } else if (count === 5) {
             svgContent = `
@@ -444,7 +423,6 @@
                 <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>`;
-            labelText = "5. Aşama: Geniş Ağaç Tacı";
             quoteText = "Yatsı sükûnetiyle ağaç tacı tamamlandı. 'Kalpler ancak Allah'ı anmakla huzur bulur' (Ra'd, 28).";
         } else if (count === 6) {
             svgContent = `
@@ -462,12 +440,10 @@
                 <polygon points="112,42 120,38 124,46 116,51" fill="#ef4444"/>
                 <polygon points="58,50 66,46 70,54 62,59" fill="#ef4444"/>
                 <polygon points="158,35 166,31 170,39 162,44" fill="#ef4444"/>`;
-            labelText = "✨ Zirve: Manevi Ulu Ağaç";
             quoteText = "Elhamdülillah! 'Şüphesiz iman edip salih ameller işleyenler için Naîm cennetleri vardır' (Lokman, 8). Ağacın meyveye durdu.";
         }
 
         svg.innerHTML = defsHTML + svgContent;
-        labelEl.innerText = labelText;
         quoteEl.innerText = quoteText;
     }
 
