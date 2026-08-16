@@ -276,7 +276,7 @@
 <div class="container">
     <!-- Üst Navigasyon (Geri Dönüş ve Gece/Gündüz Butonları) -->
     <div class="top-nav">
-        ⁠<a href="[http://ayetinvakti.github.io](http://ayetinvakti.github.io)" class="icon-btn" title="Ana Menüye Dön">←</a>
+        <a href="http://ayetinvakti.github.io" class="icon-btn" title="Ana Menüye Dön">←</a>
         <div class="app-title">🏝️ Manevi Ada</div>
         <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir">🌙</button>
     </div>
@@ -363,7 +363,6 @@
         localStorage.setItem('exact_tree_theme', isLight ? 'light' : 'dark');
     }
 
-    // Kaydedilmiş tema tercihini yükle
     if (localStorage.getItem('exact_tree_theme') === 'light') {
         document.body.classList.add('light-mode');
         document.getElementById('themeToggleBtn').innerText = '☀️';
