@@ -14,6 +14,13 @@
             --text-color: #f8fafc;
         }
 
+        body.light-mode {
+            --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --border-glass: rgba(0, 0, 0, 0.1);
+            --text-color: #1e293b;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -26,6 +33,7 @@
             align-items: center;
             padding: 16px;
             overflow-x: hidden;
+            transition: background 0.4s ease, color 0.4s ease;
         }
 
         .container {
@@ -36,20 +44,44 @@
             gap: 14px;
         }
 
-        header {
+        /* Üst Navigasyon Tuşları Alanı */
+        .top-nav {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 4px 8px;
         }
 
-        .app-title {
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, background 0.2s ease;
+            text-decoration: none;
+            color: var(--text-color);
             font-size: 1.1rem;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .app-title {
+            font-size: 1.05rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             background: linear-gradient(to right, #34d399, #6ee7b7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-align: center;
         }
 
         /* 3D Sahne Alanı (Gün Batımı Atmosferi) */
@@ -198,7 +230,7 @@
         .drawer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .drawer.open { max-height: 160px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); }
         .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-height: 110px; overflow-y: auto; }
-        .day-cell { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px; text-align: center; font-size: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .day-cell { background: var(--card-bg); border: 1px solid var(--border-glass); border-radius: 6px; padding: 4px; text-align: center; font-size: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
         .day-cell.active { background: rgba(16, 185, 129, 0.2); border-color: #10b981; }
         .dot { width: 4px; height: 4px; border-radius: 50%; background: #64748b; }
         .dot.done { background: #34d399; }
@@ -221,18 +253,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--card-bg);
+            border: 1px solid var(--border-glass);
             padding: 10px 12px;
             border-radius: 10px;
             cursor: pointer;
             transition: 0.2s;
         }
-        .task-item:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--primary-light); }
+        .task-item:hover { border-color: var(--primary-light); }
         .task-info { display: flex; align-items: center; gap: 10px; width: 100%; }
         .task-checkbox { width: 18px; height: 18px; accent-color: var(--primary-light); cursor: pointer; }
         .task-texts { display: flex; flex-direction: column; gap: 2px; width: 100%; }
-        .task-name { font-weight: 600; font-size: 0.88rem; color: #f1f5f9; }
+        .task-name { font-weight: 600; font-size: 0.88rem; }
         .task-desc { font-size: 0.72rem; color: #94a3b8; }
 
         footer { text-align: center; font-size: 0.72rem; color: #64748b; margin-top: 4px; }
@@ -242,10 +274,17 @@
 <body>
 
 <div class="container">
-    <header>
-        <span class="app-title">🏝️ Low-Poly Ada ve Manevi Takip</span>
-        <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
-    </header>
+    <!-- Üst Navigasyon (Geri Dönüş ve Gece/Gündüz Butonları) -->
+    <div class="top-nav">
+        <a href="index.html" class="icon-btn" title="Ana Menüye Dön">←</a>
+        <div class="app-title">🏝️ Manevi Ada</div>
+        <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir">🌙</button>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
+        <span style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;" id="currentDateLabel">📅 16 Ağustos 2026</span>
+        <span id="progressBadge" style="font-size: 0.75rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 3px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
+    </div>
 
     <div class="quote-box" id="quoteBox">"Amelsiz toprak kurak kalır; 'Ey Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver' (Bakara, 201) duasıyla adanı yeşert."</div>
 
@@ -287,8 +326,8 @@
     <!-- Takvim Seçici -->
     <div class="calendar-card" onclick="toggleDrawer()">
         <div class="calendar-header">
-            <span id="currentDateLabel">📅 16 Ağustos 2026</span>
-            <span style="font-size: 0.75rem; color: #94a3b8;" id="drawerIcon">▼ Takvimi Aç</span>
+            <span>📅 Takvimi Aç / Kapat</span>
+            <span style="font-size: 0.75rem; color: #94a3b8;" id="drawerIcon">▼ Aç</span>
         </div>
         <div class="drawer" id="calendarDrawer">
             <div class="days-grid" id="daysGrid"></div>
@@ -317,11 +356,24 @@
     let activeDay = 16;
     let activeMonth = 8;
 
+    function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        document.getElementById('themeToggleBtn').innerText = isLight ? '☀️' : '🌙';
+        localStorage.setItem('exact_tree_theme', isLight ? 'light' : 'dark');
+    }
+
+    // Kaydedilmiş tema tercihini yükle
+    if (localStorage.getItem('exact_tree_theme') === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('themeToggleBtn').innerText = '☀️';
+    }
+
     function toggleDrawer() {
         const drawer = document.getElementById('calendarDrawer');
         const icon = document.getElementById('drawerIcon');
         drawer.classList.toggle('open');
-        icon.innerText = drawer.classList.contains('open') ? "▲ Kapat" : "▼ Takvimi Aç";
+        icon.innerText = drawer.classList.contains('open') ? "▲ Kapat" : "▼ Aç";
     }
 
     function initCalendar() {
@@ -330,12 +382,12 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `exact_tree_v5_${activeMonth}_${d}`;
+            const key = `exact_tree_v6_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
             cell.innerHTML = `<span>${d}</span><div class="dot ${count > 0 ? 'done' : ''}"></div>`;
-            cell.onclick = () => { activeDay = d; initCalendar(); loadDay(); };
+            cell.onclick = (e) => { e.stopPropagation(); activeDay = d; initCalendar(); loadDay(); };
             grid.appendChild(cell);
         }
         loadDay();
@@ -343,7 +395,7 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `exact_tree_v5_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v6_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
@@ -353,7 +405,7 @@
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `exact_tree_v5_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v6_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
         renderTree(data, true);
