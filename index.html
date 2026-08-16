@@ -508,17 +508,26 @@
             quoteText = "Elhamdülillah! 'Şüphesiz iman edip salih ameller işleyenler için Naîm cennetleri vardır' (Lokman, 8). Ağacın meyveye durdu.";
         }
 
-        // Low-poly çimen ve hareketli çocuk ekstraları
+                // Low-poly çimen ve adanın üstünde doğru konumlandırılmış çocuk animasyonu
         let extraElements = `
-            <g class="grass-animate" transform="translate(45, 145)">
-                <path d="M 0 0 Q 8 -18 16 0" stroke="#15803d" stroke-width="5" fill="none" stroke-linecap="round"/>
-                <path d="M 10 2 Q 16 -12 24 2" stroke="#22c55e" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <!-- Çimenler (Sol Alt Kısım) -->
+            <g class="grass-animate" transform="translate(75, 145)">
+                <path d="M 0 0 Q 6 -14 12 0" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <path d="M 8 2 Q 13 -10 18 2" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round"/>
             </g>
-            <g class="child-animate" transform="translate(140, 125)">
-                <rect x="0" y="5" width="10" height="18" rx="3" fill="#f59e0b"/>
-                <circle cx="5" cy="0" r="6" fill="#fde68a"/>
+
+            <!-- Sevinçle Hareket Eden Çocuk (Sağ Ön Kısım) -->
+            <g class="child-animate" transform="translate(125, 115)">
+                <!-- Gövde -->
+                <rect x="0" y="4" width="9" height="16" rx="2.5" fill="#f59e0b"/>
+                <!-- Baş -->
+                <circle cx="4.5" cy="-2" r="5.5" fill="#fde68a"/>
+                <!-- Mutlu Kollar -->
+                <path d="M -3 8 L -7 4" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 12 8 L 16 4" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
             </g>
         `;
+
 
         svg.innerHTML = defsHTML + svgContent + extraElements;
         quoteEl.innerText = quoteText;
