@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D İzometrik Çiftlik Simülasyonu | Ayetin Vakti</title>
+    <title>Manevi Ulu Ağaç | 3D İzometrik Çiftlik</title>
     <style>
         :root {
             --primary: #059669;
@@ -52,10 +52,10 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Fotoğraftaki Gibi Gerçek 3D İzometrik Sahne Kutusu */
+        /* 3D İzometrik Sahne Kutusu */
         .scene-container {
             width: 100%;
-            height: 330px;
+            height: 340px;
             background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
             border-radius: 24px;
             border: 1px solid var(--border-glass);
@@ -78,108 +78,92 @@
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Ana Ada Tabanı (Fotoğraftaki Dikdörtgen Adacık Yapısı) */
+        /* Ada Tabanı */
         .world-base {
             position: absolute;
             width: 300px;
             height: 300px;
-            background: #854d0e; /* Başlangıçta Kurak Toprak */
+            background: #854d0e; /* Kurak toprak başlangıç */
             border-radius: 12px;
             box-shadow: -25px 25px 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.5);
             transition: background 0.8s ease;
         }
 
-        /* Üst Canlı Çim ve Tarla Katmanı */
-        .world-base::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #2e1065; /* Kurak doku */
-            opacity: 0.3;
-            border-radius: 12px;
-            transition: 0.8s;
-        }
-
         .world-base.active-island {
-            background: #15803d; /* Fotoğraftaki canlı yeşil çim alanı */
+            background: #15803d; /* Canlı yeşil ada */
         }
 
-        /* Fotoğraftaki Tarla Şeritleri (Grid Alanları) */
-        .farm-grid {
+        /* Merkezdeki Büyüyen Manevi Ağaç Alanı */
+        .tree-center-zone {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            width: 270px;
-            height: 270px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 12px;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .field-section {
-            background: rgba(0, 0, 0, 0.25);
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateZ(10px);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px;
-            padding: 8px;
-            transition: 0.5s;
+            z-index: 10;
+            width: 120px;
+            height: 120px;
         }
 
-        /* Fotoğraftaki Kırmızı Çiftlik Evleri Bölgesi */
+        /* Ağacın Görsel Efekti ve Büyüme Animasyonu */
+        .growing-tree {
+            font-size: 3.5rem;
+            filter: drop-shadow(6px 12px 16px rgba(0,0,0,0.7));
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), font-size 0.6s ease;
+            transform: translateZ(30px);
+            text-align: center;
+        }
+
+        .tree-pop {
+            animation: treeGrowAnim 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes treeGrowAnim {
+            0% { transform: scale(0.4) translateZ(10px); opacity: 0; }
+            70% { transform: scale(1.25) translateZ(60px); opacity: 1; }
+            100% { transform: scale(1) translateZ(35px); opacity: 1; }
+        }
+
+        /* Ağaç Altı Bilgi / Seviye Etiketi */
+        .tree-label {
+            position: absolute;
+            bottom: -15px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #6ee7b7;
+            border: 1px solid rgba(255,255,255,0.15);
+            white-space: nowrap;
+            transform: translateZ(25px);
+        }
+
+        /* Çevredeki Diğer Detaylar (Evler, Tarlalar) */
         .farm-houses-area {
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 110px;
-            height: 90px;
-            background: rgba(185, 28, 28, 0.15);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            font-size: 1.8rem;
             z-index: 3;
-            transform: translateZ(10px);
+            transform: translateZ(15px);
+            filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.5));
         }
 
-        /* Fotoğraftaki Traktör ve Araç Bölgesi */
         .vehicles-area {
             position: absolute;
             bottom: 20px;
             left: 20px;
-            display: flex;
-            gap: 10px;
+            font-size: 1.8rem;
             z-index: 3;
             transform: translateZ(15px);
+            filter: drop-shadow(4px 6px 8px rgba(0,0,0,0.5));
         }
 
-        /* 3D Nesne ve Öğe Stilleri */
-        .entity-3d {
-            font-size: 1.8rem;
-            filter: drop-shadow(4px 8px 10px rgba(0,0,0,0.6));
-            transform: translateZ(20px);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .pop-effect {
-            animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0) translateZ(40px); opacity: 0; }
-            70% { transform: scale(1.3) translateZ(70px); opacity: 1; }
-            100% { transform: scale(1) translateZ(25px); opacity: 1; }
-        }
-
-        /* Bilgi / Motivasyon Kutusu */
+        /* Motivasyon Kutusu */
         .quote-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -258,31 +242,28 @@
 
 <div class="container">
     <header>
-        <span class="app-title">🌿 3D Çiftlik Simülasyonu</span>
+        <span class="app-title">🌳 Manevi Ulu Ağaç Simülasyonu</span>
         <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
-    <div class="quote-box" id="quoteBox">"Çiftliğin tamamen kurak ve boş... İbadetlerini tamamlayarak can suyu ver."</div>
+    <div class="quote-box" id="quoteBox">"Toprak henüz kurak... Manevi ağacını yeşertmek için bugünkü ibadetlerini tamamla."</div>
 
-    <!-- Fotoğraftaki Konseptle Birebir 3D İzometrik Sahne Alanı -->
+    <!-- 3D İzometrik Sahne Alanı -->
     <div class="scene-container" id="sceneContainer">
         <div class="isometric-world" id="isoWorld">
             <div class="world-base" id="worldBase"></div>
             
-            <div class="farm-grid">
-                <div class="field-section" id="field1"></div>
-                <div class="field-section" id="field2"></div>
-                <div class="field-section" id="field3"></div>
-                <div class="field-section" id="field4"></div>
+            <!-- Merkezdeki Büyüyen Manevi Ağaç -->
+            <div class="tree-center-zone">
+                <div class="growing-tree" id="mainTree">🟤</div>
+                <div class="tree-label" id="treeLabel">Kurak Toprak</div>
             </div>
 
-            <!-- Fotoğraftaki Çiftlik Evleri -->
-            <div class="farm-houses-area" id="housesArea">
-               <span class="entity-3d">🏠</span>
-            </div>
+            <!-- Çiftlik Evi Detayı -->
+            <div class="farm-houses-area">🏠</div>
 
-            <!-- Fotoğraftaki Traktörler ve Araçlar -->
-            <div class="vehicles-area" id="vehiclesArea"></div>
+            <!-- Traktör Detayı -->
+            <div class="vehicles-area" id="tractorArea"></div>
         </div>
     </div>
 
@@ -304,16 +285,16 @@
             <span style="color: #34d399;" id="completionPercent">%0</span>
         </div>
 
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Kurak toprağa ilk can suyu verildi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Tarlada yeşermeler başladı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Meyve ağaçları filizlendi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Çiftlik evi şenlendi, çocuklar oynamaya başladı</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Ağaçlar meyveyle doldu, tarlalar başak verdi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Altın sarısı zirve hasat ve neşe bereketi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌅 Sabah Namazı</span><span class="task-desc">Toprağa ilk can suyu ve tohum ekildi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name">☀️ Öğle Namazı</span><span class="task-desc">Tohum çatladı, küçük filiz belirdi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌤️ İkindi Namazı</span><span class="task-desc">Filiz büyüdü, taze fidan oldu</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌇 Akşam Namazı</span><span class="task-desc">Fidan güçlendi, genç ağaca dönüştü</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name">🌙 Yatsı Namazı</span><span class="task-desc">Kocaman ulu bir ağaç haline geldi</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name">📿 Günlük Zikir & Dua</span><span class="task-desc">Meyvelerle donanmış zirve bereket</span></div></div></label>
     </div>
 </div>
 
-<footer>Ayetin Vakti Ekosistemi • <span>İnteraktif 3D Çiftlik Deneyimi</span></footer>
+<footer>Ayetin Vakti Ekosistemi • <span>Kişiye Özel Büyüyen Manevi Ağaç</span></footer>
 
 <script>
     let activeDay = 16;
@@ -347,7 +328,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `farm_day_${activeMonth}_${d}`;
+            const key = `tree_day_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -360,106 +341,85 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `farm_day_${activeMonth}_${activeDay}`;
+        const key = `tree_day_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
-        renderFarm(data, false);
+        renderTree(data, false);
     }
 
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `farm_day_${activeMonth}_${activeDay}`;
+        const key = `tree_day_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
-        renderFarm(data, true);
+        renderTree(data, true);
     }
 
-    function renderFarm(data, animate = true) {
+    function renderTree(data, animate = true) {
         const count = data.filter(Boolean).length;
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
         document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
 
-        // Adanın Zemin Renk Dönüşümü (Kuraktan Fotoğraftaki Canlı Çime)
+        // Ada Zemin Renk Dönüşümü
         const base = document.getElementById('worldBase');
         if (count === 0) {
-            base.style.background = '#854d0e'; // Kurak toprak
+            base.style.background = '#854d0e';
             base.classList.remove('active-island');
         } else {
-            base.style.background = '#15803d'; // Fotoğraftaki canlı yeşil çim
+            base.style.background = '#15803d';
             base.classList.add('active-island');
         }
 
-        // Motivasyon Mesajları
-        const quotes = [
-            "Çiftliğin tamamen kurak ve boş... İbadetlerini tamamlayarak can suyu ver.",
-            "Sabah bereketiyle ilk tarlalar canlandı.",
-            "Öğle ibadetiyle yeşermeler tarlayı sardı.",
-            "İkindi bereketiyle ağaçlar ve çiftlik evi şenlendi.",
-            "Akşam huzuruyla traktörler ve çalışanlar sahneye katıldı.",
-            "Yatsı bereketiyle tarlalar başak verdi.",
-            "✨ Zirve Hasat! Çiftliğin altın sarısı bereketle doldu taştı!"
-        ];
-        document.getElementById('quoteBox').innerText = quotes[count];
+        // Ağacın Evreleri (Yavaş Yavaş Büyüme Mantığı)
+        const treeEl = document.getElementById('mainTree');
+        const labelEl = document.getElementById('treeLabel');
+        const quoteEl = document.getElementById('quoteBox');
+        const tractorArea = document.getElementById('tractorArea');
 
-        // 4 Farklı Tarla Bölümünü Doldurma (Fotoğraftaki Şerit Sistemine Göre)
-        const f1 = document.getElementById('field1');
-        const f2 = document.getElementById('field2');
-        const f3 = document.getElementById('field3');
-        const f4 = document.getElementById('field4');
-
-        f1.innerHTML = ''; f2.innerHTML = ''; f3.innerHTML = ''; f4.innerHTML = '';
-
-        let cropIcon = count === 0 ? "🟤" : (count < 3 ? "🌱" : (count < 6 ? "🌿" : "🌾"));
-        
-        // Tarla 1
-        let e1 = document.createElement('div');
-        e1.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
-        e1.innerText = cropIcon;
-        f1.appendChild(e1);
-
-        // Tarla 2 (İkinci aşamada başak/ürün eklenir)
-        if (count >= 2) {
-            let e2 = document.createElement('div');
-            e2.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
-            e2.innerText = "🌾";
-            f2.appendChild(e2);
+        if (animate) {
+            treeEl.classList.remove('tree-pop');
+            void treeEl.offsetWidth; // reflow trigger
+            treeEl.classList.add('tree-pop');
         }
 
-        // Tarla 3 (Ağaçlar ve yeşillikler)
-        if (count >= 3) {
-            let e3 = document.createElement('div');
-            e3.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
-            e3.innerText = "🌳";
-            f3.appendChild(e3);
+        let treeIcon = "🟤";
+        let labelText = "Kurak Toprak";
+        let quoteText = "Toprak henüz kurak... Manevi ağacını yeşertmek için bugünkü ibadetlerini tamamla.";
+
+        if (count === 1) {
+            treeIcon = "🌱";
+            labelText = "1. Evre: Can Suyu & Tohum";
+            quoteText = "Sabah bereketiyle tohum çatladı, ilk can suyu verildi.";
+        } else if (count === 2) {
+            treeIcon = "🌿";
+            labelText = "2. Evre: Küçük Filiz";
+            quoteText = "Öğle ibadetiyle toprak canlandı, filiz boy vermeye başladı.";
+        } else if (count === 3) {
+            treeIcon = "☘️";
+            labelText = "3. Evre: Taze Fidan";
+            quoteText = "İkindi huzuruyla fidan güçleniyor, kökleri derinleşiyor.";
+        } else if (count === 4) {
+            treeIcon = "🌲";
+            labelText = "4. Evre: Genç Ağaç";
+            quoteText = "Akşam yaklaşırken ağacın gövdesi kalınlaştı ve yaprakları çoğaldı.";
+        } else if (count === 5) {
+            treeIcon = "🌳";
+            labelText = "5. Evre: Ulu Çınar";
+            quoteText = "Yatsı huzuruyla manevi ağacın ulu bir gölge ağacına dönüştü.";
+        } else if (count === 6) {
+            treeIcon = "🍎";
+            labelText = "Zirve: Meyve Veren Ulu Ağaç";
+            quoteText = "✨ Elhamdülillah! Günün tüm ibadetleri tamamlandı; manevi ağacın meyveye durdu ve bereketle taçlandı.";
         }
 
-        // Tarla 4 (Hasat / Altın Başak)
-        if (count >= 5) {
-            let e4 = document.createElement('div');
-            e4.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
-            e4.innerText = "🌽";
-            f4.appendChild(e4);
-        }
+        treeEl.innerText = treeIcon;
+        labelEl.innerText = labelText;
+        quoteEl.innerText = quoteText;
 
-        // Fotoğraftaki Traktör ve Araçların Belirme Mantığı
-        const vehiclesArea = document.getElementById('vehiclesArea');
-        vehiclesArea.innerHTML = '';
-
-        if (count >= 4) {
-            let tractor = document.createElement('div');
-            tractor.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
-            tractor.innerText = "🚜";
-            vehiclesArea.appendChild(tractor);
-        }
-
-        if (count >= 6) {
-            let truck = document.createElement('div');
-            truck.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
-            truck.innerText = "🚚";
-            vehiclesArea.appendChild(truck);
-        }
+        // 6. aşamada traktör/çiftlik araçları bereketi simgelemek için gelsin
+        tractorArea.innerHTML = count >= 6 ? "🚜" : "";
     }
 
     document.addEventListener('DOMContentLoaded', () => {
