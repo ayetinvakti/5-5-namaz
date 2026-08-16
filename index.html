@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manevi Tarım & İzometrik Çiftlik Simülasyonu</title>
+    <title>3D İzometrik Çiftlik Simülasyonu | Ayetin Vakti</title>
     <style>
         :root {
             --primary: #059669;
@@ -52,10 +52,10 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Ultra Derinlikli 3D Sahne Kutusu */
+        /* Fotoğraftaki Gibi Gerçek 3D İzometrik Sahne Kutusu */
         .scene-container {
             width: 100%;
-            height: 320px;
+            height: 330px;
             background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
             border-radius: 24px;
             border: 1px solid var(--border-glass);
@@ -65,98 +65,108 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1400px;
+            perspective: 1500px;
         }
 
-        /* İzometrik Ada Dünyası */
+        /* 3D İzometrik Ada Dünyası */
         .isometric-world {
-            width: 320px;
-            height: 220px;
+            width: 340px;
+            height: 240px;
             position: relative;
             transform-style: preserve-3d;
             transform: rotateX(50deg) rotateZ(-45deg);
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Zemin Tabanı (Çok Katmanlı Gerçekçi Görünüm) */
+        /* Ana Ada Tabanı (Fotoğraftaki Dikdörtgen Adacık Yapısı) */
         .world-base {
             position: absolute;
-            width: 280px;
-            height: 280px;
-            background: #78350f; /* Kurak Toprak Derinliği */
-            border-radius: 16px;
-            box-shadow: -20px 20px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.4);
+            width: 300px;
+            height: 300px;
+            background: #854d0e; /* Başlangıçta Kurak Toprak */
+            border-radius: 12px;
+            box-shadow: -25px 25px 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.5);
             transition: background 0.8s ease;
         }
 
-        /* Üst Canlı Çim Tabakası */
+        /* Üst Canlı Çim ve Tarla Katmanı */
         .world-base::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(22, 163, 74, 0);
-            border-radius: 16px;
-            transition: background 0.8s ease;
+            background: #2e1065; /* Kurak doku */
+            opacity: 0.3;
+            border-radius: 12px;
+            transition: 0.8s;
         }
 
-        .world-base.green-grass::before {
-            background: rgba(22, 163, 74, 0.92);
-            box-shadow: inset 0 0 15px rgba(250, 204, 21, 0.2);
+        .world-base.active-island {
+            background: #15803d; /* Fotoğraftaki canlı yeşil çim alanı */
         }
 
-        /* Bölmeler */
-        .plot {
+        /* Fotoğraftaki Tarla Şeritleri (Grid Alanları) */
+        .farm-grid {
             position: absolute;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 6px;
-            transition: 0.5s;
+            top: 15px;
+            left: 15px;
+            width: 270px;
+            height: 270px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 12px;
+            pointer-events: none;
             z-index: 2;
         }
 
-        .plot-left { width: 110px; height: 65px; top: 20px; left: 20px; background: rgba(0,0,0,0.3); border: 2px dashed rgba(255,255,255,0.25); }
-        .plot-right { width: 110px; height: 65px; top: 100px; left: 20px; background: rgba(0,0,0,0.3); border: 2px dashed rgba(255,255,255,0.25); }
-
-        /* Çiftlik Evi */
-        .farm-house {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 75px;
-            height: 60px;
-            background: #dc2626;
+        .field-section {
+            background: rgba(0, 0, 0, 0.25);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            box-shadow: -10px 10px 30px rgba(0,0,0,0.6);
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px;
+            transition: 0.5s;
+        }
+
+        /* Fotoğraftaki Kırmızı Çiftlik Evleri Bölgesi */
+        .farm-houses-area {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 110px;
+            height: 90px;
+            background: rgba(185, 28, 28, 0.15);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            z-index: 3;
+            transform: translateZ(10px);
+        }
+
+        /* Fotoğraftaki Traktör ve Araç Bölgesi */
+        .vehicles-area {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
             z-index: 3;
             transform: translateZ(15px);
         }
 
-        /* Aktivite ve Yaşam Alanı */
-        .activity-zone {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 130px;
-            height: 100px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            z-index: 3;
-        }
-
-        .entity {
-            font-size: 1.7rem;
+        /* 3D Nesne ve Öğe Stilleri */
+        .entity-3d {
+            font-size: 1.8rem;
+            filter: drop-shadow(4px 8px 10px rgba(0,0,0,0.6));
+            transform: translateZ(20px);
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            filter: drop-shadow(4px 8px 12px rgba(0,0,0,0.6));
-            transform: translateZ(25px);
         }
 
         .pop-effect {
@@ -164,9 +174,9 @@
         }
 
         @keyframes bounceIn {
-            0% { transform: scale(0) translateZ(50px); opacity: 0; }
-            70% { transform: scale(1.3) translateZ(75px); opacity: 1; }
-            100% { transform: scale(1) translateZ(30px); opacity: 1; }
+            0% { transform: scale(0) translateZ(40px); opacity: 0; }
+            70% { transform: scale(1.3) translateZ(70px); opacity: 1; }
+            100% { transform: scale(1) translateZ(25px); opacity: 1; }
         }
 
         /* Bilgi / Motivasyon Kutusu */
@@ -248,20 +258,31 @@
 
 <div class="container">
     <header>
-        <span class="app-title">🌿 Manevi Çiftlik Simülasyonu</span>
+        <span class="app-title">🌿 3D Çiftlik Simülasyonu</span>
         <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
     <div class="quote-box" id="quoteBox">"Çiftliğin tamamen kurak ve boş... İbadetlerini tamamlayarak can suyu ver."</div>
 
-    <!-- 3D İzometrik Sahne Alanı -->
+    <!-- Fotoğraftaki Konseptle Birebir 3D İzometrik Sahne Alanı -->
     <div class="scene-container" id="sceneContainer">
         <div class="isometric-world" id="isoWorld">
             <div class="world-base" id="worldBase"></div>
-            <div class="plot plot-left" id="plot1"></div>
-            <div class="plot plot-right" id="plot2"></div>
-            <div class="farm-house" id="farmHouse">🏠</div>
-            <div class="activity-zone" id="activityZone"></div>
+            
+            <div class="farm-grid">
+                <div class="field-section" id="field1"></div>
+                <div class="field-section" id="field2"></div>
+                <div class="field-section" id="field3"></div>
+                <div class="field-section" id="field4"></div>
+            </div>
+
+            <!-- Fotoğraftaki Çiftlik Evleri -->
+            <div class="farm-houses-area" id="housesArea">
+               <span class="entity-3d">🏠</span>
+            </div>
+
+            <!-- Fotoğraftaki Traktörler ve Araçlar -->
+            <div class="vehicles-area" id="vehiclesArea"></div>
         </div>
     </div>
 
@@ -298,7 +319,7 @@
     let activeDay = 16;
     let activeMonth = 8; // Ağustos
 
-    // Fare veya dokunma hareketiyle 3D adayı canlı döndürme efekti
+    // Fare hareketiyle 3D adayı canlı döndürme efekti
     const scene = document.getElementById('sceneContainer');
     const world = document.getElementById('isoWorld');
     
@@ -360,65 +381,85 @@
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
         document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
 
-        // Zemin ve Çim Geçiş Efekti
+        // Adanın Zemin Renk Dönüşümü (Kuraktan Fotoğraftaki Canlı Çime)
         const base = document.getElementById('worldBase');
         if (count === 0) {
-            base.style.background = '#78350f'; // Kurak toprak
-            base.classList.remove('green-grass');
+            base.style.background = '#854d0e'; // Kurak toprak
+            base.classList.remove('active-island');
         } else {
-            base.style.background = '#15803d'; // Canlı yeşil taban
-            base.classList.add('green-grass');
+            base.style.background = '#15803d'; // Fotoğraftaki canlı yeşil çim
+            base.classList.add('active-island');
         }
 
-        // Motivasyon mesajları
+        // Motivasyon Mesajları
         const quotes = [
             "Çiftliğin tamamen kurak ve boş... İbadetlerini tamamlayarak can suyu ver.",
-            "Sabah bereketiyle ilk filizler topraktan başını çıkardı.",
-            "Öğle ve ikindi sulamalarıyla tarlalar hızla büyüyor.",
-            "Ağaçlar filizlendi, çiftlikte yaşam kıpırdamaya başladı.",
-            "Çocukların neşeyle koştuğu, evin şenlendiği vakit...",
-            "Yatsı huzuruyla ağaçlar meyveyle doldu, tarlalar başak verdi.",
-            "✨ Zirve Hasat! Çiftliğin altın sarısı bereketle ve neşeyle doldu taştı!"
+            "Sabah bereketiyle ilk tarlalar canlandı.",
+            "Öğle ibadetiyle yeşermeler tarlayı sardı.",
+            "İkindi bereketiyle ağaçlar ve çiftlik evi şenlendi.",
+            "Akşam huzuruyla traktörler ve çalışanlar sahneye katıldı.",
+            "Yatsı bereketiyle tarlalar başak verdi.",
+            "✨ Zirve Hasat! Çiftliğin altın sarısı bereketle doldu taştı!"
         ];
         document.getElementById('quoteBox').innerText = quotes[count];
 
-        // Tarlalar (Plot 1 ve Plot 2)
-        const plot1 = document.getElementById('plot1');
-        const plot2 = document.getElementById('plot2');
-        plot1.innerHTML = '';
-        plot2.innerHTML = '';
+        // 4 Farklı Tarla Bölümünü Doldurma (Fotoğraftaki Şerit Sistemine Göre)
+        const f1 = document.getElementById('field1');
+        const f2 = document.getElementById('field2');
+        const f3 = document.getElementById('field3');
+        const f4 = document.getElementById('field4');
+
+        f1.innerHTML = ''; f2.innerHTML = ''; f3.innerHTML = ''; f4.innerHTML = '';
 
         let cropIcon = count === 0 ? "🟤" : (count < 3 ? "🌱" : (count < 6 ? "🌿" : "🌾"));
-        for (let i = 0; i < 3; i++) {
-            let el1 = document.createElement('div');
-            el1.className = `entity ${animate ? 'pop-effect' : ''}`;
-            el1.innerText = cropIcon;
-            plot1.appendChild(el1);
+        
+        // Tarla 1
+        let e1 = document.createElement('div');
+        e1.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
+        e1.innerText = cropIcon;
+        f1.appendChild(e1);
 
-            let el2 = document.createElement('div');
-            el2.className = `entity ${animate ? 'pop-effect' : ''}`;
-            el2.innerText = cropIcon;
-            plot2.appendChild(el2);
+        // Tarla 2 (İkinci aşamada başak/ürün eklenir)
+        if (count >= 2) {
+            let e2 = document.createElement('div');
+            e2.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
+            e2.innerText = "🌾";
+            f2.appendChild(e2);
         }
 
-        // Ağaçlar, Yel Değirmeni ve Neşe Alanı
-        const activityZone = document.getElementById('activityZone');
-        activityZone.innerHTML = '';
+        // Tarla 3 (Ağaçlar ve yeşillikler)
+        if (count >= 3) {
+            let e3 = document.createElement('div');
+            e3.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
+            e3.innerText = "🌳";
+            f3.appendChild(e3);
+        }
 
-        let items = [];
-        if (count >= 1) items.push("🌳");
-        if (count >= 2) items.push("🍎");
-        if (count >= 3) items.push("🌾");
-        if (count >= 4) items.push("👦"); // Çoluk çocuk sevinci
-        if (count >= 5) items.push("👧"); 
-        if (count >= 6) items.push("⭐");
+        // Tarla 4 (Hasat / Altın Başak)
+        if (count >= 5) {
+            let e4 = document.createElement('div');
+            e4.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
+            e4.innerText = "🌽";
+            f4.appendChild(e4);
+        }
 
-        items.forEach(icon => {
-            let item = document.createElement('div');
-            item.className = `entity ${animate ? 'pop-effect' : ''}`;
-            item.innerText = icon;
-            activityZone.appendChild(item);
-        });
+        // Fotoğraftaki Traktör ve Araçların Belirme Mantığı
+        const vehiclesArea = document.getElementById('vehiclesArea');
+        vehiclesArea.innerHTML = '';
+
+        if (count >= 4) {
+            let tractor = document.createElement('div');
+            tractor.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
+            tractor.innerText = "🚜";
+            vehiclesArea.appendChild(tractor);
+        }
+
+        if (count >= 6) {
+            let truck = document.createElement('div');
+            truck.className = `entity-3d ${animate ? 'pop-effect' : ''}`;
+            truck.innerText = "🚚";
+            vehiclesArea.appendChild(truck);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
