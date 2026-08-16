@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Low-Poly Ada ve Ağaç Simülasyonu</title>
+    <title>3D Low-Poly Ada ve Animasyonlu Ağaç</title>
     <style>
         :root {
             --primary: #059669;
@@ -84,7 +84,7 @@
             100% { transform: translateY(-5px) scale(1.02); }
         }
 
-        /* Havada Süzülen 3D Low-Poly Ada */
+        /* Havada Sürekli Süzülen ve Hafif Salınan 3D Ada Animasyonu */
         .floating-island {
             width: 290px;
             height: 290px;
@@ -94,6 +94,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: floatIsland 4.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatIsland {
+            0% { transform: translateY(0px) rotateX(22deg) rotateZ(-12deg); }
+            100% { transform: translateY(-10px) rotateX(25deg) rotateZ(-10deg); }
         }
 
         /* Ada Üst Yeşil Katman */
@@ -124,7 +130,7 @@
             box-shadow: 0 40px 70px rgba(0,0,0,0.8);
         }
 
-        /* Ağaç Konteyneri */
+        /* Ağaç Konteyneri (Rüzgârla Canlı Sallantı Efekti) */
         .tree-container {
             position: absolute;
             bottom: 55px;
@@ -132,6 +138,13 @@
             align-items: center;
             justify-content: center;
             z-index: 10;
+            transform-origin: bottom center;
+            animation: windSway 3.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes windSway {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(2.5deg); }
         }
 
         svg.main-tree-svg {
@@ -242,7 +255,7 @@
 
 <div class="container">
     <header>
-        <span class="app-title">🏝️ Low-Poly Ada ve Ağaç</span>
+        <span class="app-title">🏝️ Low-Poly Ada ve Animasyonlu Ağaç</span>
         <span id="progressBadge" style="font-size: 0.8rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 4px 10px; border-radius: 20px; color: #34d399;">0 / 6 Tamamlandı</span>
     </header>
 
@@ -258,7 +271,7 @@
             <div class="island-bottom"></div>
             <div class="island-top kurak" id="islandTop"></div>
             
-            <!-- Hedef Görselle Birebir Low-Poly Ağaç Model Motoru -->
+            <!-- Animasyonlu Low-Poly Ağaç Model Motoru -->
             <div class="tree-container">
                 <svg id="mainTreeSvg" class="main-tree-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -311,7 +324,7 @@
     </div>
 </div>
 
-<footer>Ayetin Vakti Ekosistemi • <span>Low-Poly Stil Tam Uyum</span></footer>
+<footer>Ayetin Vakti Ekosistemi • <span>Dinamik 3D Animasyonlu Sürüm</span></footer>
 
 <script>
     let activeDay = 16;
@@ -330,7 +343,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `exact_tree_v2_${activeMonth}_${d}`;
+            const key = `exact_tree_v3_${activeMonth}_${d}`;
             const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
             const count = data.filter(Boolean).length;
             
@@ -343,7 +356,7 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} Ağustos 2026`;
-        const key = `exact_tree_v2_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v3_${activeMonth}_${activeDay}`;
         const data = JSON.parse(localStorage.getItem(key)) || [false, false, false, false, false, false];
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = data[idx]);
@@ -353,13 +366,12 @@
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `exact_tree_v2_${activeMonth}_${activeDay}`;
+        const key = `exact_tree_v3_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
         renderTree(data, true);
     }
 
-    // Hedef Görselle Birebir Uyumlu Low-Poly Çizim Motoru
     function renderTree(data, animate = true) {
         const count = data.filter(Boolean).length;
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
@@ -416,7 +428,6 @@
                 <path d="M 90 150 Q 96 110 100 70 Q 105 110 112 150 Z" fill="url(#trunkGrad)"/>
                 <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
                 <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="10" stroke-linecap="round"/>
-                <!-- Hedef Görseldeki Low-Poly Çok Yüzeyli Küreler -->
                 <polygon points="22,45 52,20 80,45 50,70" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
                 <polygon points="120,38 150,18 178,42 148,68" fill="url(#leafGrad2)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>
                 <polygon points="68,22 104,5 136,35 100,55" fill="url(#leafGrad1)" filter="drop-shadow(4px 6px 5px rgba(0,0,0,0.4))"/>`;
@@ -428,7 +439,6 @@
                 <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 80 C 102 60 104 42 100 22" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
-                <!-- Geniş ve Dolgun Low-Poly Küre Tacı -->
                 <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
@@ -441,12 +451,10 @@
                 <path d="M 100 100 C 70 85 42 62 32 40" stroke="#78350f" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 90 C 130 82 158 60 168 38" stroke="#b45309" stroke-width="11" stroke-linecap="round"/>
                 <path d="M 100 80 C 102 60 104 42 100 22" stroke="#78350f" stroke-width="10" stroke-linecap="round"/>
-                <!-- Geniş ve Dolgun Low-Poly Küre Tacı -->
                 <polygon points="20,42 50,18 78,42 48,68" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="122,35 152,15 180,40 150,65" fill="url(#leafGrad2)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="65,18 102,2 134,32 98,52" fill="url(#leafGrad1)" filter="drop-shadow(5px 7px 6px rgba(0,0,0,0.45))"/>
                 <polygon points="85,32 115,18 142,48 112,65" fill="url(#leafGrad2)" filter="drop-shadow(3px 4px 4px rgba(0,0,0,0.3))"/>
-                <!-- Hedef Resimdeki Kırmızı Low-Poly Meyveler -->
                 <polygon points="38,32 46,28 50,36 42,41" fill="#ef4444"/>
                 <polygon points="142,28 150,24 154,32 146,37" fill="#ef4444"/>
                 <polygon points="95,14 103,10 107,18 99,23" fill="#ef4444"/>
