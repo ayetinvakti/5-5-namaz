@@ -44,7 +44,6 @@
             gap: 14px;
         }
 
-        /* Üst Navigasyon Tuşları Alanı */
         .top-nav {
             display: flex;
             align-items: center;
@@ -84,7 +83,6 @@
             text-align: center;
         }
 
-        /* 3D Sahne Alanı (Gün Batımı Atmosferi) */
         .scene-container {
             width: 100%;
             height: 380px;
@@ -99,7 +97,6 @@
             justify-content: center;
         }
 
-        /* Gökyüzü Low-Poly Bulutları */
         .cloud {
             position: absolute;
             background: rgba(255, 255, 255, 0.9);
@@ -116,7 +113,6 @@
             100% { transform: translateY(-5px) scale(1.02); }
         }
 
-        /* Havada Sürekli Süzülen ve Hafif Salınan 3D Ada Animasyonu */
         .floating-island {
             width: 290px;
             height: 290px;
@@ -134,7 +130,6 @@
             100% { transform: translateY(-10px) rotateX(25deg) rotateZ(-10deg); }
         }
 
-        /* Ada Üst Yeşil Katman */
         .island-top {
             position: absolute;
             width: 270px;
@@ -150,7 +145,6 @@
             background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
         }
 
-        /* Ada Alt Toprak Kütlesi (Hacimli Derinlik) */
         .island-bottom {
             position: absolute;
             width: 270px;
@@ -162,7 +156,6 @@
             box-shadow: 0 40px 70px rgba(0,0,0,0.8);
         }
 
-        /* Ağaç Konteyneri (Rüzgârla Canlı Sallantı Efekti) */
         .tree-container {
             position: absolute;
             bottom: 55px;
@@ -195,19 +188,18 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Çocuk ve Çim Animasyonları */
         @keyframes walk {
             0% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-5px); }
             100% { transform: translateY(0); }
         }
-        .child-animate { animation: walk 2s infinite ease-in-out; }
+        .child-animate { animation: walk 1.8s infinite ease-in-out; transform-origin: bottom center; }
 
         @keyframes sway {
-            0% { transform: rotate(-8deg); }
-            100% { transform: rotate(8deg); }
+            0% { transform: rotate(-6deg); }
+            100% { transform: rotate(6deg); }
         }
-        .grass-animate { animation: sway 3s infinite alternate ease-in-out; transform-origin: bottom center; }
+        .grass-animate { animation: sway 2.5s infinite alternate ease-in-out; transform-origin: bottom center; }
 
         .quote-box {
             background: var(--card-bg);
@@ -227,7 +219,6 @@
             line-height: 1.3;
         }
 
-        /* Takvim Paneli */
         .calendar-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -248,7 +239,6 @@
         .dot { width: 4px; height: 4px; border-radius: 50%; background: #64748b; }
         .dot.done { background: #34d399; }
 
-        /* Görev Listesi */
         .tasks-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -287,7 +277,6 @@
 <body>
 
 <div class="container">
-    <!-- Üst Navigasyon -->
     <div class="top-nav">
         <a href="http://ayetinvakti.github.io" class="icon-btn" title="Ana Menüye Dön">←</a>
         <div class="app-title">🏝️ Manevi Ada</div>
@@ -301,7 +290,6 @@
 
     <div class="quote-box" id="quoteBox">"Amelsiz toprak kurak kalır; 'Ey Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver' (Bakara, 201) duasıyla adanı yeşert."</div>
 
-    <!-- 3D Sahne Alanı -->
     <div class="scene-container">
         <div class="cloud cloud-1"></div>
         <div class="cloud cloud-2"></div>
@@ -311,7 +299,6 @@
             <div class="island-bottom"></div>
             <div class="island-top kurak" id="islandTop"></div>
             
-            <!-- Animasyonlu Low-Poly Ağaç ve Ekstra Unsurlar Motoru -->
             <div class="tree-container">
                 <svg id="mainTreeSvg" class="main-tree-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -336,7 +323,6 @@
         </div>
     </div>
 
-    <!-- Takvim Seçici -->
     <div class="calendar-card" onclick="toggleDrawer()">
         <div class="calendar-header">
             <span>📅 Takvimi Aç / Kapat</span>
@@ -347,7 +333,6 @@
         </div>
     </div>
 
-    <!-- Görev Listesi -->
     <div class="tasks-card">
         <div class="tasks-title">
             <span>Günün Manevi Amelleri</span>
@@ -448,7 +433,6 @@
         let svgContent = '';
         let quoteText = '';
 
-        // Gri yansımalar (filter'lar) tamamen kaldırıldı, meyveler korundu ve ekstralar eklendi
         if (count === 0) {
             svgContent = `<polygon points="95,140 105,135 102,155 92,150" fill="url(#trunkGrad)"/>`;
             quoteText = "Amelsiz toprak kurak kalır; 'Ey Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver' (Bakara, 201) duasıyla adanı yeşert.";
@@ -508,26 +492,25 @@
             quoteText = "Elhamdülillah! 'Şüphesiz iman edip salih ameller işleyenler için Naîm cennetleri vardır' (Lokman, 8). Ağacın meyveye durdu.";
         }
 
-                // Low-poly çimen ve adanın üstünde doğru konumlandırılmış çocuk animasyonu
+        // Çim ve çocuk adanın merkezine doğru hizalandı
         let extraElements = `
-            <!-- Çimenler (Sol Alt Kısım) -->
-            <g class="grass-animate" transform="translate(75, 145)">
-                <path d="M 0 0 Q 6 -14 12 0" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/>
-                <path d="M 8 2 Q 13 -10 18 2" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- Low-Poly Çimen (Sol Ön Alan) -->
+            <g class="grass-animate" transform="translate(65, 125)">
+                <path d="M 0 0 Q 5 -14 10 0" stroke="#15803d" stroke-width="4" fill="none" stroke-linecap="round"/>
+                <path d="M 6 2 Q 10 -10 15 2" stroke="#22c55e" stroke-width="3" fill="none" stroke-linecap="round"/>
             </g>
 
-            <!-- Sevinçle Hareket Eden Çocuk (Sağ Ön Kısım) -->
-            <g class="child-animate" transform="translate(125, 115)">
+            <!-- Sevinçle Hareket Eden Çocuk (Ağacın Önü / Ada Üstü) -->
+            <g class="child-animate" transform="translate(100, 105)">
                 <!-- Gövde -->
-                <rect x="0" y="4" width="9" height="16" rx="2.5" fill="#f59e0b"/>
+                <rect x="-3" y="2" width="8" height="14" rx="2" fill="#f59e0b"/>
                 <!-- Baş -->
-                <circle cx="4.5" cy="-2" r="5.5" fill="#fde68a"/>
+                <circle cx="1" cy="-3" r="5" fill="#fde68a"/>
                 <!-- Mutlu Kollar -->
-                <path d="M -3 8 L -7 4" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M 12 8 L 16 4" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M -3 6 L -7 2" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 5 6 L 9 2" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
             </g>
         `;
-
 
         svg.innerHTML = defsHTML + svgContent + extraElements;
         quoteEl.innerText = quoteText;
