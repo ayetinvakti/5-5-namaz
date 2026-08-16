@@ -8,7 +8,7 @@
         :root {
             --primary: #059669;
             --primary-light: #10b981;
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%);
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #171f38 50%, #032d22 100%);
             --card-bg: rgba(255, 255, 255, 0.08);
             --border-glass: rgba(255, 255, 255, 0.15);
             --text-color: #f8fafc;
@@ -52,20 +52,20 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 3D İzometrik Sahne Kutusu (Örnek Görsel Atmosferi) */
+        /* Ultra Derinlikli 3D Sahne Kutusu */
         .scene-container {
             width: 100%;
-            height: 310px;
-            background: linear-gradient(to bottom, #1e3a8a 0%, #0f172a 100%);
+            height: 320px;
+            background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
             border-radius: 24px;
             border: 1px solid var(--border-glass);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.2);
             position: relative;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1200px;
+            perspective: 1400px;
         }
 
         /* İzometrik Ada Dünyası */
@@ -74,36 +74,37 @@
             height: 220px;
             position: relative;
             transform-style: preserve-3d;
-            transform: rotateX(52deg) rotateZ(-45deg);
+            transform: rotateX(50deg) rotateZ(-45deg);
             transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        /* Zemin Tabanı (Toprak Katmanlı Gerçekçi Görünüm) */
+        /* Zemin Tabanı (Çok Katmanlı Gerçekçi Görünüm) */
         .world-base {
             position: absolute;
             width: 280px;
             height: 280px;
-            background: #854d0e; /* Varsayılan Kurak Toprak */
-            border-radius: 14px;
-            box-shadow: -15px 15px 40px rgba(0,0,0,0.7), inset 0 0 20px rgba(0,0,0,0.3);
+            background: #78350f; /* Kurak Toprak Derinliği */
+            border-radius: 16px;
+            box-shadow: -20px 20px 50px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.4);
             transition: background 0.8s ease;
         }
 
-        /* Üst Çim Tabakası Efekti */
+        /* Üst Canlı Çim Tabakası */
         .world-base::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(34, 197, 94, 0);
-            border-radius: 14px;
+            background: rgba(22, 163, 74, 0);
+            border-radius: 16px;
             transition: background 0.8s ease;
         }
 
         .world-base.green-grass::before {
-            background: rgba(34, 197, 94, 0.85);
+            background: rgba(22, 163, 74, 0.92);
+            box-shadow: inset 0 0 15px rgba(250, 204, 21, 0.2);
         }
 
-        /* Detay Alanları */
+        /* Bölmeler */
         .plot {
             position: absolute;
             border-radius: 10px;
@@ -115,28 +116,28 @@
             z-index: 2;
         }
 
-        .plot-left { width: 110px; height: 65px; top: 20px; left: 20px; background: rgba(0,0,0,0.25); border: 2px dashed rgba(255,255,255,0.2); }
-        .plot-right { width: 110px; height: 65px; top: 100px; left: 20px; background: rgba(0,0,0,0.25); border: 2px dashed rgba(255,255,255,0.2); }
+        .plot-left { width: 110px; height: 65px; top: 20px; left: 20px; background: rgba(0,0,0,0.3); border: 2px dashed rgba(255,255,255,0.25); }
+        .plot-right { width: 110px; height: 65px; top: 100px; left: 20px; background: rgba(0,0,0,0.3); border: 2px dashed rgba(255,255,255,0.25); }
 
-        /* Çiftlik Evi (Örnek Görseldeki Stil) */
+        /* Çiftlik Evi */
         .farm-house {
             position: absolute;
             top: 15px;
             right: 15px;
             width: 75px;
             height: 60px;
-            background: #b91c1c;
+            background: #dc2626;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            box-shadow: -8px 8px 25px rgba(0,0,0,0.5);
+            box-shadow: -10px 10px 30px rgba(0,0,0,0.6);
             z-index: 3;
-            transform: translateZ(10px);
+            transform: translateZ(15px);
         }
 
-        /* Yel Değirmeni ve Ağaç/Aktivite Alanı */
+        /* Aktivite ve Yaşam Alanı */
         .activity-zone {
             position: absolute;
             bottom: 15px;
@@ -152,10 +153,10 @@
         }
 
         .entity {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.5));
-            transform: translateZ(15px);
+            filter: drop-shadow(4px 8px 12px rgba(0,0,0,0.6));
+            transform: translateZ(25px);
         }
 
         .pop-effect {
@@ -163,9 +164,9 @@
         }
 
         @keyframes bounceIn {
-            0% { transform: scale(0) translateZ(40px); opacity: 0; }
-            70% { transform: scale(1.25) translateZ(60px); opacity: 1; }
-            100% { transform: scale(1) translateZ(20px); opacity: 1; }
+            0% { transform: scale(0) translateZ(50px); opacity: 0; }
+            70% { transform: scale(1.3) translateZ(75px); opacity: 1; }
+            100% { transform: scale(1) translateZ(30px); opacity: 1; }
         }
 
         /* Bilgi / Motivasyon Kutusu */
@@ -297,7 +298,7 @@
     let activeDay = 16;
     let activeMonth = 8; // Ağustos
 
-    // Fare hareketiyle 3D adayı döndürme efekti
+    // Fare veya dokunma hareketiyle 3D adayı canlı döndürme efekti
     const scene = document.getElementById('sceneContainer');
     const world = document.getElementById('isoWorld');
     
@@ -305,11 +306,11 @@
         const rect = scene.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        world.style.transform = `rotateX(${52 - y / 10}deg) rotateZ(${-45 + x / 10}deg)`;
+        world.style.transform = `rotateX(${50 - y / 8}deg) rotateZ(${-45 + x / 8}deg)`;
     });
 
     scene.addEventListener('mouseleave', () => {
-        world.style.transform = `rotateX(52deg) rotateZ(-45deg)`;
+        world.style.transform = `rotateX(50deg) rotateZ(-45deg)`;
     });
 
     function toggleDrawer() {
@@ -359,10 +360,10 @@
         document.getElementById('progressBadge').innerText = `${count} / 6 Tamamlandı`;
         document.getElementById('completionPercent').innerText = `%${Math.round((count/6)*100)}`;
 
-        // Zemin ve Çim Geçiş Efekti (Örnek resim kalitesinde)
+        // Zemin ve Çim Geçiş Efekti
         const base = document.getElementById('worldBase');
         if (count === 0) {
-            base.style.background = '#854d0e'; // Kurak toprak
+            base.style.background = '#78350f'; // Kurak toprak
             base.classList.remove('green-grass');
         } else {
             base.style.background = '#15803d'; // Canlı yeşil taban
