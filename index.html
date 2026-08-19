@@ -14,14 +14,6 @@
             document.documentElement.classList.add('light-mode');
         }
 
-        const savedAccent = localStorage.getItem('custom_accent');
-        const savedBg = localStorage.getItem('custom_bg');
-        const savedText = localStorage.getItem('custom_text');
-
-        if (savedAccent) document.documentElement.style.setProperty('--primary', savedAccent);
-        if (savedBg) document.documentElement.style.setProperty('--bg-gradient', savedBg);
-        if (savedText) document.documentElement.style.setProperty('--text-color', savedText);
-
         const currentLang = localStorage.getItem('user_lang') || 'tr';
         if (currentLang === 'ar') {
             document.documentElement.setAttribute('dir', 'rtl');
@@ -82,6 +74,11 @@
 
         [dir="rtl"] .top-nav { flex-direction: row-reverse; }
 
+        .nav-actions {
+            display: flex;
+            gap: 8px;
+        }
+
         .icon-btn {
             width: 44px;
             height: 44px;
@@ -126,6 +123,60 @@
             justify-content: center;
         }
 
+        /* God Rays / Işık Huzmeleri */
+        .god-rays {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent 0deg, rgba(255,215,0,0.2) 15deg, transparent 30deg, rgba(255,215,0,0.2) 45deg, transparent 60deg, rgba(255,215,0,0.2) 75deg, transparent 90deg, rgba(255,215,0,0.2) 105deg, transparent 120deg, rgba(255,215,0,0.2) 135deg, transparent 150deg, rgba(255,215,0,0.2) 165deg, transparent 180deg, rgba(255,215,0,0.2) 195deg, transparent 210deg, rgba(255,215,0,0.2) 225deg, transparent 240deg, rgba(255,215,0,0.2) 255deg, transparent 270deg, rgba(255,215,0,0.2) 285deg, transparent 300deg, rgba(255,215,0,0.2) 315deg, transparent 330deg, rgba(255,215,0,0.2) 345deg, transparent 360deg);
+            transform-origin: center center;
+            animation: spinRays 25s linear infinite;
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+            margin-top: -100%; margin-left: -100%;
+        }
+        .scene-container.zirve .god-rays { opacity: 1; }
+        @keyframes spinRays { 100% { transform: rotate(360deg); } }
+
+        /* Clouds / Bulutlar */
+        .cloud {
+            position: absolute;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50px;
+            filter: blur(1px);
+            opacity: 0;
+            transition: opacity 1s ease;
+            z-index: 2;
+        }
+        .scene-container.zirve .cloud { opacity: 1; }
+        .cloud1 { width: 120px; height: 35px; top: 15%; left: -150px; animation: moveCloud 20s linear infinite; }
+        .cloud2 { width: 90px; height: 28px; top: 30%; left: -100px; animation: moveCloud 28s linear infinite 8s; }
+        @keyframes moveCloud { 100% { transform: translateX(600px); } }
+
+        /* Birds / Kuşlar */
+        .bird {
+            position: absolute;
+            font-size: 1.2rem;
+            opacity: 0;
+            z-index: 15;
+            color: #1e293b;
+        }
+        .scene-container.zirve .bird { opacity: 0.8; }
+        .bird1 { top: 25%; left: -30px; animation: flyBird1 12s linear infinite; }
+        .bird2 { top: 35%; left: -50px; animation: flyBird2 15s linear infinite 4s; }
+        @keyframes flyBird1 {
+            0% { transform: translate(0, 0) scale(0.6) rotate(10deg); }
+            50% { transform: translate(250px, -40px) scale(0.8) rotate(0deg); }
+            100% { transform: translate(500px, -20px) scale(0.5) rotate(5deg); }
+        }
+        @keyframes flyBird2 {
+            0% { transform: translate(0, 0) scale(0.5) rotate(-5deg); }
+            50% { transform: translate(200px, -60px) scale(0.9) rotate(-15deg); }
+            100% { transform: translate(500px, -40px) scale(0.4) rotate(-5deg); }
+        }
+
         .floating-island {
             width: 290px;
             height: 290px;
@@ -136,6 +187,7 @@
             align-items: center;
             justify-content: center;
             animation: floatIsland 4.5s ease-in-out infinite alternate;
+            z-index: 10;
         }
 
         @keyframes floatIsland {
@@ -151,11 +203,13 @@
             clip-path: polygon(30% 15%, 70% 10%, 92% 35%, 88% 75%, 65% 92%, 30% 88%, 12% 65%, 15% 30%);
             transform: translateY(35px);
             box-shadow: inset 0 -15px 25px rgba(0,0,0,0.3);
-            transition: background 0.8s ease;
+            transition: all 1s ease;
         }
 
-        .island-top.kurak {
-            background: linear-gradient(135deg, #d97706 0%, #78350f 100%);
+        .island-top.kurak { background: linear-gradient(135deg, #d97706 0%, #78350f 100%); }
+        .island-top.golden {
+            background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #854d0e 100%);
+            box-shadow: 0 0 50px rgba(250, 204, 21, 0.8), inset 0 -15px 30px rgba(133, 77, 14, 0.8), inset 0 0 25px #fef08a;
         }
 
         .island-bottom {
@@ -167,7 +221,9 @@
             transform: translateY(70px) scale(0.92);
             filter: brightness(0.55);
             box-shadow: 0 40px 70px rgba(0,0,0,0.8);
+            transition: all 1s ease;
         }
+        .island-top.golden + .island-bottom { filter: brightness(1); background: #854d0e; box-shadow: 0 40px 80px rgba(234, 179, 8, 0.5); }
 
         .kaba-container {
             position: absolute;
@@ -175,53 +231,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
+            z-index: 20;
         }
 
-        svg.main-kaba-svg {
-            width: 240px;
-            height: 240px;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .kaba-pop {
-            animation: kabaAnim 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-
-        @keyframes kabaAnim {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            70% { transform: scale(1.08); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        svg.main-kaba-svg { width: 240px; height: 240px; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .kaba-pop { animation: kabaAnim 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes kabaAnim { 0% { transform: scale(0.8); opacity: 0.5; } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
 
         .quote-box {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            padding: 12px 16px;
-            font-size: 0.83rem;
-            text-align: center;
-            font-style: italic;
-            color: #34d399;
-            min-height: 55px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            line-height: 1.35;
+            background: var(--card-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 14px;
+            padding: 12px 16px; font-size: 0.83rem; text-align: center;
+            font-style: italic; color: #34d399; min-height: 55px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2); line-height: 1.35;
         }
 
         .calendar-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass);
-            border-radius: 14px;
-            padding: 10px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            cursor: pointer;
+            background: var(--card-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 14px;
+            padding: 10px 14px; display: flex; flex-direction: column;
+            gap: 8px; cursor: pointer;
         }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.9rem; }
         [dir="rtl"] .calendar-header { flex-direction: row-reverse; }
@@ -234,29 +264,18 @@
         .dot.done { background: #34d399; }
 
         .tasks-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass);
-            border-radius: 16px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: var(--card-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass); border-radius: 16px;
+            padding: 14px; display: flex; flex-direction: column;
+            gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .tasks-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 4px; }
         [dir="rtl"] .tasks-title { flex-direction: row-reverse; }
 
         .task-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-bg);
-            border: 1px solid var(--border-glass);
-            padding: 8px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--card-bg); border: 1px solid var(--border-glass);
+            padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: 0.2s;
         }
         .task-item:hover { border-color: var(--primary-light); }
         .task-info { display: flex; align-items: center; gap: 10px; width: 100%; }
@@ -269,6 +288,34 @@
 
         footer { text-align: center; font-size: 0.72rem; color: #64748b; margin-top: 4px; }
         footer span { color: #f59e0b; font-weight: 600; }
+
+        /* Modal Stilleri */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 100; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content {
+            background: var(--bg-gradient); color: var(--text-color);
+            padding: 24px; border-radius: 16px; width: 90%; max-width: 400px;
+            position: relative; border: 1px solid var(--border-glass);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        body.light-mode .modal-content { background: #f8fafc; color: #1e293b; }
+        .modal-close {
+            position: absolute; top: 12px; right: 12px;
+            background: transparent; border: none; color: var(--text-color);
+            font-size: 1.5rem; cursor: pointer; opacity: 0.7; transition: 0.2s;
+        }
+        .modal-close:hover { opacity: 1; }
+        [dir="rtl"] .modal-close { right: auto; left: 12px; }
+        .modal-title { color: #10b981; margin-bottom: 12px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px;}
+        .modal-body { font-size: 0.9rem; line-height: 1.6; color: #cbd5e1; display: flex; flex-direction: column; gap: 12px; }
+        body.light-mode .modal-body { color: #475569; }
+        .modal-subtitle { color: #f59e0b; font-weight: bold; font-size: 1rem; margin-top: 8px; }
+
     </style>
 </head>
 <body>
@@ -277,31 +324,39 @@
     <div class="top-nav">
         <a href="http://ayetinvakti.github.io" class="icon-btn" title="Ana Menüye Dön">←</a>
         <div class="app-title" data-i18n="app_title">🕋 Manevi Kâbe İnşası</div>
-        <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir">🌙</button>
+        <div class="nav-actions">
+            <button class="icon-btn" id="infoBtn" onclick="toggleModal(true)" title="Bilgi">❓</button>
+            <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir">🌙</button>
+        </div>
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
         <span style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;" id="currentDateLabel">📅 19 Ağustos 2026</span>
-        <span id="progressBadge" style="font-size: 0.75rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 3px 10px; border-radius: 20px; color: #34d399;">0 / 10 Tamamlandı</span>
+        <span id="progressBadge" style="font-size: 0.75rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 3px 10px; border-radius: 20px; color: #34d399;">0 / 12 Tamamlandı</span>
     </div>
 
     <div class="quote-box" id="quoteBox">"Hani İbrahim, İsmail ile birlikte evin (Kâbe'nin) temellerini yükseltiyordu..." (Bakara, 127)</div>
 
-    <div class="scene-container">
+    <div class="scene-container" id="sceneContainer">
+        <!-- Zirve Huzur Animasyonları -->
+        <div class="god-rays"></div>
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="bird bird1">🕊️</div>
+        <div class="bird bird2">🕊️</div>
+
         <div class="floating-island">
-            <div class="island-bottom"></div>
+            <div class="island-bottom" id="islandBottom"></div>
             <div class="island-top kurak" id="islandTop"></div>
             
             <div class="kaba-container">
                 <svg id="mainKabaSvg" class="main-kaba-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <defs>
-                        <!-- Altın Işıltı Gradyanı -->
                         <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#fef08a"/>
                             <stop offset="50%" stop-color="#eab308"/>
                             <stop offset="100%" stop-color="#854d0e"/>
                         </linearGradient>
-                        <!-- Taş Duvar Renkleri -->
                         <linearGradient id="stoneFront" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stop-color="#78716c"/>
                             <stop offset="100%" stop-color="#44403c"/>
@@ -310,7 +365,6 @@
                             <stop offset="0%" stop-color="#44403c"/>
                             <stop offset="100%" stop-color="#1c1917"/>
                         </linearGradient>
-                        <!-- Kisve (Siyah Örtü) -->
                         <linearGradient id="kisveFront" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="#262626"/>
                             <stop offset="100%" stop-color="#0a0a0a"/>
@@ -347,38 +401,60 @@
         <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_4_name">🌇 Akşam Namazı</span><span class="task-desc" data-i18n="task_4_desc">Günü şükürle tamamlama</span></div></div></label>
         <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_5_name">🌙 Yatsı Namazı</span><span class="task-desc" data-i18n="task_5_desc">Gecenin sükûnetine teslimiyet</span></div></div></label>
         
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_6_name">📖 Kur'an Okuma / Dinleme</span><span class="task-desc" data-i18n="task_6_desc">İlahî kelam ile kalbi aydınlatma</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="6" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_7_name">🤲 Dua & Salavat Getirdim</span><span class="task-desc" data-i18n="task_7_desc">Peygamberimize (s.a.v) hürmet ve nida</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="7" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_8_name">🤝 İyilik Yapma & Güzel Ahlak</span><span class="task-desc" data-i18n="task_8_desc">İnsanlara tebessüm ve güzel muamele</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="8" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_9_name">🛡️ Harama Bakmadım & İrade</span><span class="task-desc" data-i18n="task_9_desc">Gözü ve kalbi kötülükten koruma</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="9" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_10_name">💝 Sadaka & Yardımlaşma</span><span class="task-desc" data-i18n="task_10_desc">Gönülden cömertlik gösterisi</span></div></div></label>
+        <!-- Yeni Eklenenler -->
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_6_name">🌌 Vitir Namazı</span><span class="task-desc" data-i18n="task_6_desc">Gecenin son mührü</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="6" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_7_name">📿 Sünnetleri Kıldım</span><span class="task-desc" data-i18n="task_7_desc">Peygamberimizin yolundan ayrılmamak</span></div></div></label>
+
+        <!-- Kaydırılanlar -->
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="7" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_8_name">📖 Kur'an Okuma / Dinleme</span><span class="task-desc" data-i18n="task_8_desc">İlahî kelam ile kalbi aydınlatma</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="8" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_9_name">🤲 Dua & Salavat Getirdim</span><span class="task-desc" data-i18n="task_9_desc">Peygamberimize (s.a.v) hürmet ve nida</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="9" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_10_name">🤝 İyilik Yapma & Güzel Ahlak</span><span class="task-desc" data-i18n="task_10_desc">İnsanlara tebessüm ve güzel muamele</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="10" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_11_name">🛡️ Harama Bakmadım & İrade</span><span class="task-desc" data-i18n="task_11_desc">Gözü ve kalbi kötülükten koruma</span></div></div></label>
+        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="11" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_12_name">💝 Sadaka & Yardımlaşma</span><span class="task-desc" data-i18n="task_12_desc">Gönülden cömertlik gösterisi</span></div></div></label>
     </div>
 </div>
 
 <footer>Ayetin Vakti Ekosistemi • <span data-i18n="footer_brand">Kâbe İnşası</span></footer>
 
+<!-- Bilgi Modalı -->
+<div class="modal-overlay" id="infoModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="toggleModal(false)">×</button>
+        <div class="modal-title" data-i18n="modal_title">5-5 Namaz Nedir?</div>
+        <div class="modal-body">
+            <p data-i18n="modal_desc_1">İslam'ın şartı olan 5 Vakit Farz namaz ile birlikte, gününüzü nurlandıracak 5 vakit manevi ameli (Kur'an, Dua, Ahlak, İrade, Sadaka) temsil eder.</p>
+            <div class="modal-subtitle" data-i18n="modal_subtitle">Bu Uygulamanın Amacı</div>
+            <p data-i18n="modal_desc_2">Gündelik ibadetlerimizi ve güzel ahlakı görselleştirerek, iç dünyamızdaki manevi Kâbemizi tuğla tuğla inşa etme motivasyonudur. Her amel, ruha atılan sağlam bir temeldir.</p>
+        </div>
+    </div>
+</div>
+
 <script>
-    // Dil Sözlüğü
+    // Dil Sözlüğü (12 Görev & 13 Aşama)
     const translations = {
         tr: {
             page_title: "Manevi Kâbe İnşa Takibi",
             app_title: "🕋 Manevi Kâbe İnşası",
             cal_toggle: "📅 Takvimi Aç / Kapat",
-            open_btn: "Aç",
-            close_btn: "Kapat",
-            tasks_header: "Günün Manevi Amelleri",
-            footer_brand: "Kâbe İnşası",
+            open_btn: "Aç", close_btn: "Kapat",
+            tasks_header: "Günün Manevi Amelleri", footer_brand: "Kâbe İnşası",
             task_1_name: "🌅 Sabah Namazı", task_1_desc: "Günün ilk nuru ve bereketi",
             task_2_name: "☀️ Öğle Namazı", task_2_desc: "Günün ortasında ruha huzur",
             task_3_name: "🌤️ İkindi Namazı", task_3_desc: "Zamanın kıymetine şahitlik",
             task_4_name: "🌇 Akşam Namazı", task_4_desc: "Günü şükürle tamamlama",
             task_5_name: "🌙 Yatsı Namazı", task_5_desc: "Gecenin sükûnetine teslimiyet",
-            task_6_name: "📖 Kur'an Okuma / Dinleme", task_6_desc: "İlahî kelam ile kalbi aydınlatma",
-            task_7_name: "🤲 Dua & Salavat Getirdim", task_7_desc: "Peygamberimize (s.a.v) hürmet ve nida",
-            task_8_name: "🤝 İyilik Yapma & Güzel Ahlak", task_8_desc: "İnsanlara tebessüm ve güzel muamele",
-            task_9_name: "🛡️ Harama Bakmadım & İrade", task_9_desc: "Gözü ve kalbi kötülükten koruma",
-            task_10_name: "💝 Sadaka & Yardımlaşma", task_10_desc: "Gönülden cömertlik gösterisi",
+            task_6_name: "🌌 Vitir Namazı", task_6_desc: "Gecenin son mührü",
+            task_7_name: "📿 Sünnetleri Kıldım", task_7_desc: "Peygamberimizin yolundan ayrılmamak",
+            task_8_name: "📖 Kur'an Okuma / Dinleme", task_8_desc: "İlahî kelam ile kalbi aydınlatma",
+            task_9_name: "🤲 Dua & Salavat Getirdim", task_9_desc: "Peygamberimize (s.a.v) hürmet ve nida",
+            task_10_name: "🤝 İyilik Yapma & Güzel Ahlak", task_10_desc: "İnsanlara tebessüm ve güzel muamele",
+            task_11_name: "🛡️ Harama Bakmadım & İrade", task_11_desc: "Gözü ve kalbi kötülükten koruma",
+            task_12_name: "💝 Sadaka & Yardımlaşma", task_12_desc: "Gönülden cömertlik gösterisi",
             month_name: "Ağustos",
+            modal_title: "5-5 Namaz Nedir?",
+            modal_desc_1: "İslam'ın şartı olan 5 Vakit Farz namaz ile birlikte, gününüzü nurlandıracak 5 vakit manevi ameli (Kur'an, Dua, Ahlak, İrade, Sadaka) temsil eder. Ayrıca Vitir ve Sünnet namazları da manevi zirvenize katkı sağlar.",
+            modal_subtitle: "Bu Uygulamanın Amacı",
+            modal_desc_2: "Gündelik ibadetlerimizi ve güzel ahlakı görselleştirerek, iç dünyamızdaki manevi Kâbemizi tuğla tuğla inşa etme motivasyonudur. Her amel, ruha atılan sağlam bir temeldir.",
             quotes: [
                 "Hani İbrahim, İsmail ile birlikte evin (Kâbe'nin) temellerini yükseltiyordu... (Bakara, 127)",
                 "İlk tuğla konuldu! Bismillah... Temeller sadakatle yükselmeye başlıyor.",
@@ -390,79 +466,73 @@
                 "Siyah Kisve örtüsü giydirildi. Mukaddes mekân zarafet kazandı.",
                 "Altın sırma işlemeler ve hatlar örtüyü süsledi.",
                 "Maşallah! Tavaf mermerleri (Mataf) ve Şazırvan tamamlandı.",
-                "ELHAMDÜLİLLAH! Kâbe tamamlandı, üzerinden nûrlar yükseliyor! Rabbin amellerini kabul eylesin."
+                "ELHAMDÜLİLLAH! Kâbe tamamlandı, üzerinden nûrlar yükseliyor!",
+                "Pırıl Pırıl Zemin! Maneviyatın altın ışığı her yanı sardı, kalpler nura gark oldu.",
+                "ZİRVE HUZUR! Melekler şahitlik ediyor, gökyüzünde kuşlar uçuşuyor, bulutlar selâm duruyor!"
             ]
         },
         en: {
-            page_title: "Spiritual Kaaba Construction Tracker",
-            app_title: "🕋 Spiritual Kaaba Building",
-            cal_toggle: "📅 Open / Close Calendar",
-            open_btn: "Open",
-            close_btn: "Close",
-            tasks_header: "Daily Spiritual Deeds",
-            footer_brand: "Kaaba Building",
+            // (İngilizce çeviriler buraya aynı mantıkla eklenebilir)
+            page_title: "Spiritual Kaaba Construction Tracker", app_title: "🕋 Spiritual Kaaba Building",
+            cal_toggle: "📅 Open / Close Calendar", open_btn: "Open", close_btn: "Close", tasks_header: "Daily Spiritual Deeds",
+            footer_brand: "Kaaba Building", month_name: "August",
             task_1_name: "🌅 Fajr Prayer", task_1_desc: "First light and blessing of the day",
             task_2_name: "☀️ Dhuhr Prayer", task_2_desc: "Peace to the soul at midday",
             task_3_name: "🌤️ Asr Prayer", task_3_desc: "Witnessing the value of time",
             task_4_name: "🌇 Maghrib Prayer", task_4_desc: "Completing the day with gratitude",
             task_5_name: "🌙 Isha Prayer", task_5_desc: "Surrender to night's serenity",
-            task_6_name: "📖 Quran Reading / Listening", task_6_desc: "Enlightening the heart with divine words",
-            task_7_name: "🤲 Dua & Salawat", task_7_desc: "Honoring the Prophet (pbuh)",
-            task_8_name: "🤝 Kindness & Good Manners", task_8_desc: "Smiling and being gentle to people",
-            task_9_name: "🛡️ Guarded Vision & Willpower", task_9_desc: "Protecting eye and heart from harm",
-            task_10_name: "💝 Charity & Helping Others", task_10_desc: "Display of heartfelt generosity",
-            month_name: "August",
+            task_6_name: "🌌 Witr Prayer", task_6_desc: "The final seal of the night",
+            task_7_name: "📿 Prayed Sunnahs", task_7_desc: "Following the path of the Prophet",
+            task_8_name: "📖 Quran Reading / Listening", task_8_desc: "Enlightening the heart with divine words",
+            task_9_name: "🤲 Dua & Salawat", task_9_desc: "Honoring the Prophet (pbuh)",
+            task_10_name: "🤝 Kindness & Good Manners", task_10_desc: "Smiling and being gentle to people",
+            task_11_name: "🛡️ Guarded Vision & Willpower", task_11_desc: "Protecting eye and heart from harm",
+            task_12_name: "💝 Charity & Helping Others", task_12_desc: "Display of heartfelt generosity",
+            modal_title: "What is 5-5 Prayer?",
+            modal_desc_1: "It represents 5 Obligatory prayers and 5 spiritual deeds (Quran, Dua, Manners, Willpower, Charity). Witr and Sunnah prayers elevate you to the spiritual peak.",
+            modal_subtitle: "Purpose of this App",
+            modal_desc_2: "A motivation to visualize our daily worship and build our inner spiritual Kaaba brick by brick.",
             quotes: [
-                "And when Abraham was raising the foundations of the House with Ishmael... (Al-Baqarah, 127)",
-                "First brick laid! Bismillah... Foundations begin to rise.",
-                "Stone walls grow with prayers and devotions.",
-                "Walls are rising! Your spiritual effort shapes the Kaaba.",
-                "Four walls are completed and the roof is closed!",
-                "The Black Stone (Hajar al-Aswad) is set in place!",
-                "Golden Door and Mīzāb al-Rahmah added.",
-                "The Black Kiswah drape is dressed onto Kaaba.",
-                "Golden calligraphy embellishes the Kiswah.",
-                "Mataf marble floor and Shadhrawan completed.",
-                "ALHAMDULILLAH! Kaaba is completed, divine light shines above!"
+                "And when Abraham was raising the foundations... (Al-Baqarah, 127)", "First brick laid! Bismillah...", "Stone walls grow with prayers.",
+                "Walls are rising! Your effort shapes the Kaaba.", "Four walls completed and roof closed!", "The Black Stone is set in place!",
+                "Golden Door and Mīzāb al-Rahmah added.", "The Black Kiswah drape is dressed.", "Golden calligraphy embellishes the Kiswah.",
+                "Mataf floor and Shadhrawan completed.", "ALHAMDULILLAH! Kaaba is completed!",
+                "Golden Ground! The golden light of spirituality surrounds everywhere.",
+                "PEAK PEACE! Angels bear witness, birds fly in the sky, clouds salute!"
             ]
         },
         ar: {
-            page_title: "متابعة بناء الكعبة الروحية",
-            app_title: "🕋 بناء الكعبة الروحية",
-            cal_toggle: "📅 فتح / إغلاق التقويم",
-            open_btn: "فتح",
-            close_btn: "إغلاق",
-            tasks_header: "الأعمال الروحية اليومية",
-            footer_brand: "بناء الكعبة",
+            page_title: "متابعة بناء الكعبة الروحية", app_title: "🕋 بناء الكعبة الروحية",
+            cal_toggle: "📅 فتح / إغلاق التقويم", open_btn: "فتح", close_btn: "إغلاق", tasks_header: "الأعمال الروحية اليومية",
+            footer_brand: "بناء الكعبة", month_name: "أغسطس",
             task_1_name: "🌅 صلاة الفجر", task_1_desc: "نور اليوم الأول وبركته",
             task_2_name: "☀️ صلاة الظهر", task_2_desc: "راحة الروح في منتصف النهار",
             task_3_name: "🌤️ صلاة العصر", task_3_desc: "شهادة على قيمة الوقت",
             task_4_name: "🌇 صلاة المغرب", task_4_desc: "إتمام اليوم بالحمد والشكر",
             task_5_name: "🌙 صلاة العشاء", task_5_desc: "التسليم لسكينة الليل",
-            task_6_name: "📖 قراءة / سماع القرآن", task_6_desc: "تنير القلب بالكلمات الإلهية",
-            task_7_name: "🤲 الدعاء والصلاة على النبي", task_7_desc: "إكرام النبي صلى الله عليه وسلم",
-            task_8_name: "🤝 الاحسان وحسن الخلق", task_8_desc: "الابتسامة والمعاملة الطيبة",
-            task_9_name: "🛡️ غض البصر وقوة الإرادة", task_9_desc: "حماية العين والقلب من السوء",
-            task_10_name: "💝 الصدقة ومساعدة الآخرين", task_10_desc: "إظهار الجود من أعمق القلب",
-            month_name: "أغسطس",
+            task_6_name: "🌌 صلاة الوتر", task_6_desc: "خاتم الليل",
+            task_7_name: "📿 صليت السنن", task_7_desc: "اتباع هدي النبي",
+            task_8_name: "📖 قراءة القرآن", task_8_desc: "تنير القلب بالكلمات الإلهية",
+            task_9_name: "🤲 الدعاء والصلوات", task_9_desc: "إكرام النبي صلى الله عليه وسلم",
+            task_10_name: "🤝 الاحسان", task_10_desc: "المعاملة الطيبة",
+            task_11_name: "🛡️ غض البصر", task_11_desc: "حماية العين والقلب",
+            task_12_name: "💝 الصدقة", task_12_desc: "إظهار الجود",
+            modal_title: "ما هي صلاة 5-5؟",
+            modal_desc_1: "تمثل 5 صلوات مفروضة و 5 أعمال روحية...",
+            modal_subtitle: "الغرض من هذا التطبيق",
+            modal_desc_2: "تحفيز لتصور عبادتنا اليومية وبناء كعبتنا الروحية الداخلية لبنة لبنة.",
             quotes: [
-                "وَإِذْ يَرْفَعُ إِبْرَاهِيمُ الْقَوَاعِدَ مِنَ الْبَيْتِ وَإِسْمَاعِيلُ... (البقرة، 127)",
-                "وضعت اللبنة الأولى! بسم الله... القواعد تبدأ بالارتفاع.",
-                "تنمو الجدران الحجرية بالدعاء والصلوات.",
-                "الجدران ترتفع! جهدك الروحي يشكل الكعبة المشرفة.",
-                "اكتملت الجدران الأربعة وتغطي السقف! الحمد لله.",
-                "تم وضع الحجر الأسود في مكانه وبدأ ينبعث منه النور!",
-                "تمت إضافة الباب الذهبي وميزاب الرحمة.",
-                "تم إلباس كسوة الكعبة المشرفة السوداء.",
-                "الخطوط الذهبية تزين كسوة الكعبة.",
-                "اكتمل صحن المطاف المرمري والشاذروان.",
-                "الْحَمْدُ لِلَّهِ! اكتملت الكعبة المشرفة، والنور يتصاعد منها!"
+                "وَإِذْ يَرْفَعُ إِبْرَاهِيمُ الْقَوَاعِدَ مِنَ الْبَيْتِ...", "وضعت اللبنة الأولى! بسم الله...", "تنمو الجدران الحجرية بالصلوات.",
+                "الجدران ترتفع!", "اكتملت الجدران الأربعة!", "تم وضع الحجر الأسود في مكانه!", "تمت إضافة الباب الذهبي وميزاب الرحمة.",
+                "تم إلباس كسوة الكعبة المشرفة السوداء.", "الخطوط الذهبية تزين كسوة الكعبة.", "اكتمل صحن المطاف المرمري.",
+                "الْحَمْدُ لِلَّهِ! اكتملت الكعبة المشرفة!", "أرضية ذهبية! نور الروحانية يحيط بكل مكان.", "ذروة السلام! الملائكة تشهد، الطيور تحلق، السحب تسلم!"
             ]
         }
     };
 
     const activeLang = localStorage.getItem('user_lang') || 'tr';
     const langData = translations[activeLang] || translations['tr'];
+    const TOTAL_TASKS = 12;
 
     let activeDay = 19;
     let activeMonth = 8;
@@ -479,6 +549,12 @@
         document.getElementById('themeToggleBtn').innerText = '☀️';
     }
 
+    function toggleModal(show) {
+        const modal = document.getElementById('infoModal');
+        if (show) modal.classList.add('show');
+        else modal.classList.remove('show');
+    }
+
     function toggleDrawer() {
         const drawer = document.getElementById('calendarDrawer');
         const icon = document.getElementById('drawerIcon');
@@ -487,14 +563,20 @@
         icon.innerHTML = isOpen ? `▲ <span>${langData.close_btn}</span>` : `▼ <span>${langData.open_btn}</span>`;
     }
 
+    function getData(key) {
+        let data = JSON.parse(localStorage.getItem(key)) || [];
+        while(data.length < TOTAL_TASKS) data.push(false); // Yeni eklenenler için geriye dönük güvenlik
+        return data;
+    }
+
     function initCalendar() {
         const grid = document.getElementById('daysGrid');
         grid.innerHTML = '';
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `kaba_build_v1_${activeMonth}_${d}`;
-            const data = JSON.parse(localStorage.getItem(key)) || new Array(10).fill(false);
+            const key = `kaba_build_v2_${activeMonth}_${d}`; // Anahtar versiyonunu güncelledik (v2) ki eski veriyle çakışmasın
+            const data = getData(key);
             const count = data.filter(Boolean).length;
             
             cell.innerHTML = `<span>${d}</span><div class="dot ${count > 0 ? 'done' : ''}"></div>`;
@@ -506,8 +588,8 @@
 
     function loadDay() {
         document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} ${langData.month_name} 2026`;
-        const key = `kaba_build_v1_${activeMonth}_${activeDay}`;
-        const data = JSON.parse(localStorage.getItem(key)) || new Array(10).fill(false);
+        const key = `kaba_build_v2_${activeMonth}_${activeDay}`;
+        const data = getData(key);
         const checkboxes = document.querySelectorAll('.task-checkbox');
         checkboxes.forEach((cb, idx) => cb.checked = !!data[idx]);
         renderKaba(data, false);
@@ -516,7 +598,7 @@
     function updateFarm() {
         const checkboxes = document.querySelectorAll('.task-checkbox');
         const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `kaba_build_v1_${activeMonth}_${activeDay}`;
+        const key = `kaba_build_v2_${activeMonth}_${activeDay}`;
         localStorage.setItem(key, JSON.stringify(data));
         initCalendar();
         renderKaba(data, true);
@@ -524,12 +606,24 @@
 
     function renderKaba(data, animate = true) {
         const count = data.filter(Boolean).length;
-        document.getElementById('progressBadge').innerText = `${count} / 10 ${activeLang === 'ar' ? 'مكتمل' : (activeLang === 'en' ? 'Completed' : 'Tamamlandı')}`;
-        document.getElementById('completionPercent').innerText = `%${Math.round((count/10)*100)}`;
+        document.getElementById('progressBadge').innerText = `${count} / ${TOTAL_TASKS} ${activeLang === 'ar' ? 'مكتمل' : (activeLang === 'en' ? 'Completed' : 'Tamamlandı')}`;
+        document.getElementById('completionPercent').innerText = `%${Math.round((count/TOTAL_TASKS)*100)}`;
 
+        const scene = document.getElementById('sceneContainer');
         const islandTop = document.getElementById('islandTop');
-        if (count === 0) islandTop.classList.add('kurak');
-        else islandTop.classList.remove('kurak');
+        
+        // Zemin Kurak / Altın Parlaklık ve Zirve Animasyonu Kontrolleri
+        islandTop.classList.remove('kurak', 'golden');
+        scene.classList.remove('zirve');
+
+        if (count === 0) {
+            islandTop.classList.add('kurak');
+        } else if (count >= 11) {
+            islandTop.classList.add('golden'); // Aşama 11 ve 12: Altın Zemin
+        }
+        if (count === 12) {
+            scene.classList.add('zirve'); // Aşama 12: Kuşlar, Bulutlar, Işık Huzmeleri
+        }
 
         const svg = document.getElementById('mainKabaSvg');
         const quoteEl = document.getElementById('quoteBox');
@@ -542,133 +636,109 @@
 
         let defsHTML = svg.querySelector('defs').outerHTML;
         let svgContent = '';
-        let quoteText = langData.quotes[count];
+        let quoteText = langData.quotes[Math.min(count, 12)]; // Güvenlik çemberi
 
-        // 10 Aşamalı İzometrik Kâbe Evrim Sistemi
-        if (count === 0) {
-            // Sadece Temel İzi
+        // 13 Aşamalı (0-12) İzometrik Kâbe Evrimi
+        // Sınırlandırma ile (0 ile 10 arası klasik Kabe inşaat aşamaları, 11 ve 12 ise arka plan ve ekstra nur)
+        let visualCount = Math.min(count, 10); 
+
+        if (visualCount === 0) {
             svgContent = `<polygon points="100,160 145,138 100,116 55,138" fill="rgba(0,0,0,0.2)" stroke="#78350f" stroke-dasharray="3,3" stroke-width="2"/>`;
-        } else if (count === 1) {
-            // Temel Taşları (Çok alçak)
+        } else if (visualCount === 1) {
             svgContent = `
                 <polygon points="100,160 145,138 100,116 55,138" fill="#44403c"/>
                 <polygon points="55,138 100,160 100,152 55,130" fill="url(#stoneFront)"/>
                 <polygon points="100,160 145,138 145,130 100,152" fill="url(#stoneSide)"/>`;
-        } else if (count === 2) {
-            // Yarı Yükseklikte Taş Duvarlar
+        } else if (visualCount === 2) {
             svgContent = `
                 <polygon points="100,140 145,118 100,96 55,118" fill="#57534e"/>
                 <polygon points="55,118 100,140 100,160 55,138" fill="url(#stoneFront)"/>
                 <polygon points="100,140 145,118 145,138 100,160" fill="url(#stoneSide)"/>`;
-        } else if (count === 3) {
-            // Tam Yükseklikte Taş Duvarlar
+        } else if (visualCount === 3) {
             svgContent = `
                 <polygon points="100,120 145,98 100,76 55,98" fill="#57534e"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>`;
-        } else if (count === 4) {
-            // Tavan Kapanması
+        } else if (visualCount === 4) {
             svgContent = `
                 <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>`;
-        } else if (count === 5) {
-            // Hacerül Esved Eklendi
+        } else if (visualCount === 5) {
             svgContent = `
                 <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>
-                <!-- Hacerul Esved ve Gümüş Muhafazası -->
-                <circle cx="100" cy="152" r="5" fill="#e2e8f0"/>
-                <circle cx="100" cy="152" r="3" fill="#09090b"/>`;
-        } else if (count === 6) {
-            // Altın Kapı ve Oluk Eklendi
+                <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>`;
+        } else if (visualCount === 6) {
             svgContent = `
                 <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>
-                <!-- Hacerul Esved -->
                 <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <!-- Altın Kapı -->
                 <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <!-- Mizab-ı Rahmet (Altın Oluk) -->
                 <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (count === 7) {
-            // Siyah Örtü (Kisve) Giydirildi
+        } else if (visualCount === 7) {
             svgContent = `
                 <polygon points="100,120 145,98 100,76 55,98" fill="#171717"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <!-- Hacerul Esved -->
                 <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <!-- Altın Kapı -->
                 <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <!-- Mizab-ı Rahmet -->
                 <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (count === 8) {
-            // Altın Şeritler (Kisve İşlemeleri)
+        } else if (visualCount === 8) {
             svgContent = `
                 <polygon points="100,120 145,98 100,76 55,98" fill="#171717"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <!-- Altın Kuşak (Front & Side) -->
                 <polygon points="55,108 100,130 100,134 55,112" fill="url(#goldGrad)"/>
                 <polygon points="100,130 145,108 145,112 100,134" fill="url(#goldGrad)"/>
-                <!-- Hacerul Esved -->
                 <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <!-- Altın Kapı -->
                 <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <!-- Mizab-ı Rahmet -->
                 <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (count === 9) {
-            // Şazırvan & Mermer Zemin (Mataf) Eklendi
+        } else if (visualCount === 9) {
             svgContent = `
-                <!-- Mataf (Beyaz Mermer Zemin) -->
                 <polygon points="100,175 162,144 100,113 38,144" fill="#f8fafc" opacity="0.85"/>
-                <!-- Altın Şazırvan Mermer Eteti -->
                 <polygon points="52,141 100,164 100,160 52,137" fill="#cbd5e1"/>
                 <polygon points="100,164 148,141 148,137 100,160" fill="#94a3b8"/>
-                <!-- Kâbe Ana Gövde -->
                 <polygon points="100,120 145,98 100,76 55,98" fill="#171717"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <!-- Altın Kuşak -->
                 <polygon points="55,108 100,130 100,134 55,112" fill="url(#goldGrad)"/>
                 <polygon points="100,130 145,108 145,112 100,134" fill="url(#goldGrad)"/>
-                <!-- Hacerul Esved -->
                 <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <!-- Altın Kapı -->
                 <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <!-- Mizab-ı Rahmet -->
                 <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (count === 10) {
-            // Tamamlandı: İlahi Nûr Huzmeleri, Işık Halesi ve Tüm İhtişam
+        } else if (visualCount === 10) { 
+            // 10. aşama ve yukarısı (11 ve 12) için aynı ana Kabe yapısı çizilir
             svgContent = `
-                <!-- Nûr Huzmeleri -->
-                <polygon points="100,20 60,98 140,98" fill="url(#goldGrad)" opacity="0.25"/>
-                <polygon points="100,10 40,160 160,160" fill="#fef08a" opacity="0.15"/>
-                <!-- Mataf (Beyaz Mermer Zemin) -->
+                <!-- Nûr Huzmeleri (Sadece 11 ve 12'de daha parlak) -->
+                <polygon points="100,20 60,98 140,98" fill="url(#goldGrad)" opacity="${count >= 11 ? '0.6' : '0.25'}"/>
+                <polygon points="100,10 40,160 160,160" fill="#fef08a" opacity="${count >= 11 ? '0.4' : '0.15'}"/>
+                
+                <!-- Mataf -->
                 <polygon points="100,175 162,144 100,113 38,144" fill="#ffffff"/>
-                <!-- Şazırvan -->
                 <polygon points="52,141 100,164 100,160 52,137" fill="#e2e8f0"/>
                 <polygon points="100,164 148,141 148,137 100,160" fill="#cbd5e1"/>
-                <!-- Kâbe Gövde -->
+                
+                <!-- Kâbe -->
                 <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <!-- Altın Kuşak -->
                 <polygon points="55,108 100,130 100,134 55,112" fill="url(#goldGrad)"/>
                 <polygon points="100,130 145,108 145,112 100,134" fill="url(#goldGrad)"/>
-                <!-- Hacerul Esved Parıltısı -->
-                <circle cx="100" cy="152" r="7" fill="#fef08a" opacity="0.6"/>
+                
+                <!-- Hacerul Esved -->
+                <circle cx="100" cy="152" r="7" fill="#fef08a" opacity="${count >= 11 ? '0.9' : '0.6'}"/>
                 <circle cx="100" cy="152" r="4" fill="#e2e8f0"/>
                 <circle cx="100" cy="152" r="2" fill="#000000"/>
-                <!-- Altın Kapı -->
+                
+                <!-- Kapı ve Oluk -->
                 <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <!-- Mizab-ı Rahmet -->
                 <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>
+                
                 <!-- Tavan Nûr Halesi -->
-                <ellipse cx="100" cy="97" rx="22" ry="11" fill="#fef08a" opacity="0.4"/>`;
+                <ellipse cx="100" cy="97" rx="22" ry="11" fill="#fef08a" opacity="${count >= 11 ? '0.8' : '0.4'}"/>`;
         }
 
         svg.innerHTML = defsHTML + svgContent;
