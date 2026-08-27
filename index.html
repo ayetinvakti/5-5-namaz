@@ -12,6 +12,9 @@
         if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
             document.documentElement.setAttribute('data-theme', 'light');
             document.documentElement.classList.add('light-mode');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.classList.remove('light-mode');
         }
 
         const currentLang = localStorage.getItem('user_lang') || 'tr';
@@ -472,7 +475,6 @@
             ]
         },
         en: {
-            // (İngilizce çeviriler buraya aynı mantıkla eklenebilir)
             page_title: "Spiritual Kaaba Construction Tracker", app_title: "🕋 Spiritual Kaaba Building",
             cal_toggle: "📅 Open / Close Calendar", open_btn: "Open", close_btn: "Close", tasks_header: "Daily Spiritual Deeds",
             footer_brand: "Kaaba Building", month_name: "August",
@@ -538,15 +540,23 @@
     let activeMonth = 8;
 
     function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        document.getElementById('themeToggleBtn').innerText = isLight ? '☀️' : '🌙';
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        const isLight = document.documentElement.classList.toggle('light-mode');
+        if (isLight) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            document.getElementById('themeToggleBtn').innerText = '☀️';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            document.getElementById('themeToggleBtn').innerText = '🌙';
+        }
     }
 
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
+    // Sayfa açılışında buton ikonunu doğru değere ayarla
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.getElementById('themeToggleBtn').innerText = '☀️';
+    } else {
+        document.getElementById('themeToggleBtn').innerText = '🌙';
     }
 
     function toggleModal(show) {
@@ -565,7 +575,7 @@
 
     function getData(key) {
         let data = JSON.parse(localStorage.getItem(key)) || [];
-        while(data.length < TOTAL_TASKS) data.push(false); // Yeni eklenenler için geriye dönük güvenlik
+        while(data.length < TOTAL_TASKS) data.push(false);
         return data;
     }
 
@@ -575,7 +585,7 @@
         for (let d = 1; d <= 31; d++) {
             const cell = document.createElement('div');
             cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `kaba_build_v2_${activeMonth}_${d}`; // Anahtar versiyonunu güncelledik (v2) ki eski veriyle çakışmasın
+            const key = `kaba_build_v2_${activeMonth}_${d}`;
             const data = getData(key);
             const count = data.filter(Boolean).length;
             
@@ -612,17 +622,16 @@
         const scene = document.getElementById('sceneContainer');
         const islandTop = document.getElementById('islandTop');
         
-        // Zemin Kurak / Altın Parlaklık ve Zirve Animasyonu Kontrolleri
         islandTop.classList.remove('kurak', 'golden');
         scene.classList.remove('zirve');
 
         if (count === 0) {
             islandTop.classList.add('kurak');
         } else if (count >= 11) {
-            islandTop.classList.add('golden'); // Aşama 11 ve 12: Altın Zemin
+            islandTop.classList.add('golden');
         }
         if (count === 12) {
-            scene.classList.add('zirve'); // Aşama 12: Kuşlar, Bulutlar, Işık Huzmeleri
+            scene.classList.add('zirve');
         }
 
         const svg = document.getElementById('mainKabaSvg');
@@ -636,10 +645,8 @@
 
         let defsHTML = svg.querySelector('defs').outerHTML;
         let svgContent = '';
-        let quoteText = langData.quotes[Math.min(count, 12)]; // Güvenlik çemberi
+        let quoteText = langData.quotes[Math.min(count, 12)];
 
-        // 13 Aşamalı (0-12) İzometrik Kâbe Evrimi
-        // Sınırlandırma ile (0 ile 10 arası klasik Kabe inşaat aşamaları, 11 ve 12 ise arka plan ve ekstra nur)
         let visualCount = Math.min(count, 10); 
 
         if (visualCount === 0) {
@@ -710,34 +717,27 @@
                 <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
                 <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
         } else if (visualCount === 10) { 
-            // 10. aşama ve yukarısı (11 ve 12) için aynı ana Kabe yapısı çizilir
             svgContent = `
-                <!-- Nûr Huzmeleri (Sadece 11 ve 12'de daha parlak) -->
                 <polygon points="100,20 60,98 140,98" fill="url(#goldGrad)" opacity="${count >= 11 ? '0.6' : '0.25'}"/>
                 <polygon points="100,10 40,160 160,160" fill="#fef08a" opacity="${count >= 11 ? '0.4' : '0.15'}"/>
                 
-                <!-- Mataf -->
                 <polygon points="100,175 162,144 100,113 38,144" fill="#ffffff"/>
                 <polygon points="52,141 100,164 100,160 52,137" fill="#e2e8f0"/>
                 <polygon points="100,164 148,141 148,137 100,160" fill="#cbd5e1"/>
                 
-                <!-- Kâbe -->
                 <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
                 <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
                 <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
                 <polygon points="55,108 100,130 100,134 55,112" fill="url(#goldGrad)"/>
                 <polygon points="100,130 145,108 145,112 100,134" fill="url(#goldGrad)"/>
                 
-                <!-- Hacerul Esved -->
                 <circle cx="100" cy="152" r="7" fill="#fef08a" opacity="${count >= 11 ? '0.9' : '0.6'}"/>
                 <circle cx="100" cy="152" r="4" fill="#e2e8f0"/>
                 <circle cx="100" cy="152" r="2" fill="#000000"/>
                 
-                <!-- Kapı ve Oluk -->
                 <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
                 <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>
                 
-                <!-- Tavan Nûr Halesi -->
                 <ellipse cx="100" cy="97" rx="22" ry="11" fill="#fef08a" opacity="${count >= 11 ? '0.8' : '0.4'}"/>`;
         }
 
