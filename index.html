@@ -6,7 +6,6 @@
     <meta http-equiv="Expires" content="0">
 
     <script>
-        // Tema, Özel Renk Paleti ve Dil Kontrolü (sayfa çizilmeden önce çalışır)
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
@@ -36,7 +35,6 @@
             --modal-body: #cbd5e1;
         }
 
-        /* DÜZELTME: Tema sınıfı <html> üzerinde olduğu için seçici html.light-mode */
         html.light-mode, html[data-theme="light"] {
             --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
             --card-bg: rgba(255, 255, 255, 0.75);
@@ -104,7 +102,6 @@
             user-select: none; -webkit-user-select: none;
         }
 
-        /* Gökyüzü (gerçek saate göre değişir) */
         .sky { position: absolute; inset: 0; transition: background 2s ease; }
         .sky.day   { background: linear-gradient(to bottom, #2f86d6 0%, #7cc4f2 55%, #dff3ff 100%); }
         .sky.dawn  { background: linear-gradient(to bottom, #2b3a67 0%, #b9738c 45%, #ffc99a 100%); }
@@ -140,44 +137,43 @@
         .cloud3 { width: 140px; height: 30px; top: 8%;  left: -180px; animation: moveCloud 64s linear infinite 26s; }
         @keyframes moveCloud { to { transform: translateX(760px); } }
 
-        /* 3B sahne */
         .stage {
             position: absolute; inset: 0; perspective: 1150px; perspective-origin: 50% 38%;
             touch-action: pan-y; cursor: grab; overflow: hidden;
         }
         .stage.dragging { cursor: grabbing; }
 
-        .world, .world * { transform-style: preserve-3d; }
+        .world, .world * { transform-style: preserve-3d; -webkit-transform-style: preserve-3d; }
         .world { position: absolute; left: 50%; top: 66%; width: 0; height: 0; will-change: transform; }
-        .world .face, .world .flat { transform-style: flat; }
+        .world .face, .world .flat { transform-style: flat; -webkit-transform-style: flat; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 
         :root {
             --W: 170px; --D: 146px; --H: 174px;
             --PL: 11px; --PW: 196px; --PD: 172px;
         }
 
-        /* Zemin */
-        .flat { position: absolute; backface-visibility: visible; }
+        /* Zemin (Safari yırtılmasını önlemek için 1200px'e düşürüldü) */
+        .flat { position: absolute; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
         .ground-dirt {
-            width: 2400px; height: 2400px; left: -1200px; top: -1200px; border-radius: 50%;
+            width: 1200px; height: 1200px; left: -600px; top: -600px; border-radius: 50%;
             transform: rotateX(90deg);
             background:
-              radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0 520px, rgba(40,28,10,.25) 1150px),
+              radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0 260px, rgba(40,28,10,.25) 575px),
               repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.025) 0 3px, rgba(0,0,0,.03) 3px 7px),
               radial-gradient(circle at 50% 50%, #a58c63 0, #8a7352 50%, #6d5a3d 100%);
         }
         .ground-marble {
-            width: 2400px; height: 2400px; left: -1200px; top: -1200px; border-radius: 50%;
+            width: 1200px; height: 1200px; left: -600px; top: -600px; border-radius: 50%;
             transform: translateY(-0.6px) rotateX(90deg); opacity: 0; transition: opacity 1.6s ease;
             background:
-              radial-gradient(circle at 50% 50%, transparent 0 128px, rgba(120,95,50,.16) 128px 133px, transparent 133px 330px, rgba(120,95,50,.18) 330px 336px, transparent 336px 560px, rgba(120,95,50,.12) 560px 566px, transparent 566px),
+              radial-gradient(circle at 50% 50%, transparent 0 64px, rgba(120,95,50,.16) 64px 66px, transparent 66px 165px, rgba(120,95,50,.18) 165px 168px, transparent 168px 280px, rgba(120,95,50,.12) 280px 283px, transparent 283px),
               repeating-radial-gradient(circle at 50% 50%, rgba(0,0,0,.055) 0 1px, transparent 1px 26px),
               repeating-conic-gradient(from 0deg at 50% 50%, rgba(0,0,0,.035) 0 0.7deg, transparent 0.7deg 7.5deg),
               radial-gradient(circle at 50% 50%, #f6f3ec 0, #ebe6da 40%, #d9d2c0 100%);
         }
         .world.has-marble .ground-marble { opacity: 1; }
         .ground-tint {
-            width: 2400px; height: 2400px; left: -1200px; top: -1200px; border-radius: 50%;
+            width: 1200px; height: 1200px; left: -600px; top: -600px; border-radius: 50%;
             transform: translateY(-1.2px) rotateX(90deg); background: #050a1e; opacity: var(--night, 0); pointer-events: none;
         }
         .ground-glow {
@@ -195,7 +191,6 @@
         }
         .world.has-plinth .outline { opacity: 0; }
 
-        /* Yüzeyler */
         .face { position: absolute; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; transform-origin: 50% 100%; }
         .shade { position: absolute; inset: 0; background: var(--shade-color, #000); opacity: 0; pointer-events: none; z-index: 20; }
         .d-f > .shade { opacity: var(--s-f, 0); }
@@ -212,7 +207,6 @@
             box-shadow: inset 0 0 14px rgba(0,0,0,.5);
         }
 
-        /* Temel kaidesi (Şadırvan) */
         .plinth { position: absolute; left: 0; top: 0; --pl: 0; }
         .plinth .face { background: linear-gradient(180deg, #8a847b, #5e5952); box-shadow: inset 0 0 6px rgba(0,0,0,.5); }
         .plinth .marble { position: absolute; inset: 0; opacity: 0; transition: opacity 1.6s ease; background: linear-gradient(180deg, #fbf8f1 0%, #e6dfd0 70%, #cfc6b2 100%); box-shadow: inset 0 -2px 0 rgba(212,170,60,.9); }
@@ -226,7 +220,6 @@
         .ptop { width: var(--PW); height: var(--PD); left: calc(var(--PW) / -2); top: calc(var(--PD) / -2); transform-origin: 50% 50%; transform: translateY(calc(var(--PL) * -1)) rotateX(90deg); opacity: 0; background: linear-gradient(135deg, #7d776e, #5d5851); }
         .plinth.built .ptop { opacity: 1; }
 
-        /* Kâbe gövdesi */
         .kaaba { position: absolute; left: 0; top: 0; --p: 0; transform: translateY(calc(var(--PL) * -1)); }
         .kaaba .wf, .kaaba .wb { width: var(--W); height: var(--H); left: calc(var(--W) / -2); top: calc(var(--H) * -1); }
         .kaaba .wr, .kaaba .wl { width: var(--D); height: var(--H); left: calc(var(--D) / -2); top: calc(var(--H) * -1); }
@@ -242,7 +235,6 @@
         }
         .world.has-roof .roof { opacity: 1; }
 
-        /* Kisve (siyah örtü) - yukarıdan aşağı iner */
         .kisve {
             position: absolute; inset: 0; clip-path: inset(0 0 100% 0); transition: clip-path 2.2s cubic-bezier(.3,.7,.2,1);
             background:
@@ -254,7 +246,6 @@
         }
         .world.has-kisve .kisve { clip-path: inset(0 0 0 0); }
 
-        /* Hızam (altın şerit) */
         .hizam {
             position: absolute; left: 0; right: 0; top: 29%; height: 10%; z-index: 3; opacity: 0; transition: opacity 1.6s ease;
             background: linear-gradient(180deg, #7a5a12 0, #e8c459 12%, #fbe9a0 48%, #d6aa3a 84%, #6e4f0e 100%);
@@ -274,7 +265,6 @@
         .gp2 { right: 8%; top: 44%; width: 36%; height: 15%; }
         .gp3 { left: 12%; top: 64%; width: 76%; height: 12%; }
 
-        /* Altın kapı */
         .door {
             position: absolute; left: 52%; bottom: 17%; width: 14%; height: 25%; z-index: 4; opacity: 0; transition: opacity 1.4s ease;
             background: linear-gradient(135deg, #f7dd86 0%, #c9992c 45%, #8a6414 100%);
@@ -284,7 +274,6 @@
         .door i:nth-child(1) { top: 8%; } .door i:nth-child(2) { top: 38%; } .door i:nth-child(3) { top: 68%; }
         .world.has-door .door { opacity: 1; }
 
-        /* Hacerülesved (gümüş çerçeveli) */
         .hajar {
             position: absolute; right: 2px; bottom: 11%; width: 19px; height: 25px; z-index: 5; opacity: 0; transition: opacity 1.2s ease;
             border-radius: 50% 50% 46% 46% / 40% 40% 60% 60%;
@@ -294,7 +283,6 @@
         }
         .world.has-hajar .hajar { opacity: 1; }
 
-        /* Mizab (altın oluk) */
         .mizab { position: absolute; left: 0; top: 0; transform: translateY(calc(var(--H) * -1 - var(--PL) + 4px)); }
         .mizab .mz {
             position: absolute; backface-visibility: visible;
@@ -305,7 +293,6 @@
         .mz-s2 { width: 40px; height: 7px; left: calc(var(--W) / -2 - 38px); top: -7px; transform: translateZ(-9px); }
         .world.has-door .mz { opacity: 1; }
 
-        /* Çevre: revaklar ve minareler */
         .arc {
             position: absolute; left: 0; top: 0; backface-visibility: hidden; overflow: hidden;
             background-color: #d9cdb2;
@@ -326,7 +313,6 @@
         .mn-roof { position: absolute; backface-visibility: hidden; background: linear-gradient(180deg, #5f8f86, #3d6a63); clip-path: polygon(50% 0, 0 100%, 100% 100%); }
         .mn-crescent { position: absolute; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #e6c15a; border-right-color: transparent; transform: rotate(40deg); }
 
-        /* Tavaf eden kalabalık */
         .crowd, .flock { position: absolute; left: 0; top: 0; display: none; }
         .world.has-crowd .crowd { display: block; }
         .ring { position: absolute; left: 0; top: 0; animation: spin linear infinite; }
@@ -341,7 +327,6 @@
         }
         .pln.b { transform: rotateY(90deg); }
 
-        /* Güvercinler */
         .world.has-peak .flock { display: block; }
         .flock-ring { position: absolute; left: 0; top: 0; animation: spinRev linear infinite; }
         @keyframes spinRev { to { transform: rotateY(-360deg); } }
@@ -354,7 +339,6 @@
         .dove .wing.b { transform: rotateY(90deg); }
         @keyframes flap { from { scale: 1 1; } to { scale: 1 .3; } }
 
-        /* Sahne kontrolleri */
         .controls { position: absolute; right: 10px; bottom: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 5; }
         [dir="rtl"] .controls { right: auto; left: 10px; }
         .ctrl-btn {
@@ -370,7 +354,6 @@
         }
         .hint.hide { opacity: 0; }
 
-        /* ===================== TAKVİM ===================== */
         .calendar-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 14px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: .9rem; cursor: pointer; }
         [dir="rtl"] .calendar-header { flex-direction: row-reverse; }
@@ -394,7 +377,6 @@
         .bar { width: 70%; height: 3px; border-radius: 3px; background: rgba(148,163,184,.35); overflow: hidden; }
         .bar > i { display: block; height: 100%; background: #34d399; }
 
-        /* ===================== GÖREVLER ===================== */
         .tasks-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
         .tasks-title { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 4px; }
         [dir="rtl"] .tasks-title { flex-direction: row-reverse; }
@@ -411,7 +393,6 @@
         footer { text-align: center; font-size: .72rem; color: var(--text-muted); margin-top: 4px; }
         footer span { color: #f59e0b; font-weight: 600; }
 
-        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100; }
         .modal-overlay.show { display: flex; }
         .modal-content { background: var(--bg-gradient); color: var(--text-color); padding: 24px; border-radius: 16px; width: 90%; max-width: 400px; position: relative; border: 1px solid var(--border-glass); box-shadow: 0 20px 40px rgba(0,0,0,.5); }
@@ -521,7 +502,6 @@
 
 <footer>Ayetin Vakti Ekosistemi • <span data-i18n="footer_brand">Kâbe İnşası</span></footer>
 
-<!-- Bilgi Modalı -->
 <div class="modal-overlay" id="infoModal" onclick="if (event.target === this) toggleModal(false)">
     <div class="modal-content" role="dialog" aria-modal="true">
         <button class="modal-close" onclick="toggleModal(false)" aria-label="×">×</button>
@@ -535,7 +515,6 @@
 </div>
 
 <script>
-    // ===================== DİL SÖZLÜĞÜ =====================
     const translations = {
         tr: {
             page_title: "Manevi Kâbe İnşa Takibi",
@@ -628,7 +607,7 @@
             task_7_name: "📿 صليت السنن", task_7_desc: "اتباع هدي النبي",
             task_8_name: "📖 قراءة القرآن", task_8_desc: "تنوير القلب بالكلمات الإلهية",
             task_9_name: "🤲 الدعاء والصلاة على النبي", task_9_desc: "إكرام النبي صلى الله عليه وسلم",
-            task_10_name: "🤝 الإحسان وحسن الخلق", task_10_desc: "المعاملة الطيبة والابتسامة",
+            task_10_name: "ﻹحسان وحسن الخلق", task_10_desc: "المعاملة الطيبة والابتسامة",
             task_11_name: "🛡️ غض البصر وقوة الإرادة", task_11_desc: "حماية العين والقلب",
             task_12_name: "💝 الصدقة والمساعدة", task_12_desc: "إظهار الجود من القلب",
             modal_title: "ما هي صلاة 5-5؟",
@@ -655,7 +634,6 @@
     const intlLoc = { tr: 'tr-TR', en: 'en-US', ar: 'ar-u-ca-gregory-nu-latn' }[lang];
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // ===================== TEMA / MODAL =====================
     function updateThemeIcon() {
         const isLight = document.documentElement.classList.contains('light-mode');
         document.getElementById('themeToggleBtn').innerText = isLight ? '☀️' : '🌙';
@@ -671,13 +649,11 @@
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleModal(false); });
 
-    // ===================== TARİH / KAYIT =====================
     function dayStart(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
     let today = dayStart(new Date());
     let sel = new Date(today);
     let viewY = sel.getFullYear(), viewM = sel.getMonth();
 
-    // Eski (Ağustos 2026) kayıtları korumak için 2026 yılında eski anahtar biçimi kullanılır
     function keyFor(y, m, d) {
         return y === 2026 ? `kaba_build_v2_${m + 1}_${d}` : `kaba_build_v3_${y}_${m + 1}_${d}`;
     }
@@ -686,15 +662,14 @@
         try {
             const a = JSON.parse(localStorage.getItem(keyFor(y, m, d)));
             if (Array.isArray(a)) out = a.map(Boolean);
-        } catch (e) { /* bozuk kayıt: boş say */ }
+        } catch (e) { }
         while (out.length < TOTAL) out.push(false);
         return out.slice(0, TOTAL);
     }
     function saveData(y, m, d, data) {
-        try { localStorage.setItem(keyFor(y, m, d), JSON.stringify(data)); } catch (e) { /* kota */ }
+        try { localStorage.setItem(keyFor(y, m, d), JSON.stringify(data)); } catch (e) { }
     }
 
-    // ===================== GÖREV LİSTESİ =====================
     function buildTasks() {
         const list = document.getElementById('tasksList');
         let html = '';
@@ -708,12 +683,11 @@
         list.addEventListener('change', onToggle);
     }
 
-    // ===================== TAKVİM =====================
     function renderCalendar() {
         const grid = document.getElementById('daysGrid');
         const first = new Date(viewY, viewM, 1);
         const daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
-        const offset = (first.getDay() + 6) % 7;     // hafta Pazartesi ile başlar
+        const offset = (first.getDay() + 6) % 7;
 
         document.getElementById('monthTitle').textContent =
             new Intl.DateTimeFormat(intlLoc, { month: 'long', year: 'numeric' }).format(first);
@@ -773,7 +747,6 @@
         renderStage(data.filter(Boolean).length, true);
     }
 
-    // ===================== 3B SAHNE: OLUŞTURMA =====================
     const world = document.getElementById('world');
     const kaabaEl = document.getElementById('kaaba');
     const plinthEl = document.getElementById('plinth');
@@ -867,7 +840,6 @@
         document.getElementById('stars').innerHTML = html;
     }
 
-    // ===================== GÖKYÜZÜ (gerçek saate göre) =====================
     let ambient = 0.5;
     function updateSky() {
         const now = new Date();
@@ -880,7 +852,7 @@
         const sky = document.getElementById('sky');
         sky.className = 'sky ' + phase;
         const orb = document.getElementById('sunMoon');
-        const t = (phase === 'night') ? (((h - 19.75 + 24) % 24) / 9.25) : ((h - 5) / 14.75);   // 0..1
+        const t = (phase === 'night') ? (((h - 19.75 + 24) % 24) / 9.25) : ((h - 5) / 14.75);
         const tt = Math.min(1, Math.max(0, t));
         orb.style.left = (12 + 76 * tt) + '%';
         orb.style.top = (62 - 48 * Math.sin(Math.PI * tt)) + '%';
@@ -891,12 +863,13 @@
         dirty = true;
     }
 
-    // ===================== AŞAMALAR =====================
     let curP = 0, curPl = 0, tweenRaf = 0;
     const FLAGS = [['has-plinth', 1], ['has-roof', 4], ['has-hajar', 5], ['has-door', 6], ['has-kisve', 7],
                    ['has-hizam', 8], ['has-marble', 9], ['has-crowd', 10], ['has-glow', 11], ['has-peak', 12]];
 
     function applyGeom(p, pl) {
+        // Safari (WebKit) için scaleY sıfıra yakınken oluşacak render bozulmasını önlemek amacıyla display kontrolü:
+        kaabaEl.style.display = p > 0.01 ? 'block' : 'none';
         kaabaEl.style.setProperty('--p', Math.max(p, 0.001).toFixed(4));
         plinthEl.style.setProperty('--pl', Math.max(pl, 0.001).toFixed(4));
         plinthEl.classList.toggle('built', pl >= 0.999);
@@ -929,7 +902,6 @@
         tweenRaf = requestAnimationFrame(step);
     }
 
-    // ===================== KAMERA VE IŞIKLANDIRMA =====================
     let yaw = -32, pitch = 26, zoom = 1, tPitch = 26, tZoom = 1, vyaw = 0;
     let auto = !reduced, dragging = false, lastInteract = 0, dirty = true;
     const LIGHT = (() => { const v = [-0.5, -0.8, 0.45], m = Math.hypot(...v); return v.map(x => x / m); })();
@@ -1010,7 +982,6 @@
         setTimeout(() => hint.classList.add('hide'), 6000);
     }
 
-    // ===================== BAŞLATMA =====================
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -1030,7 +1001,6 @@
         renderCalendar(); loadSelected();
         requestAnimationFrame(frame);
 
-        // Gün değişince (uygulama açık kalmışsa) bugüne geç
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) return;
             const nowDay = dayStart(new Date());
