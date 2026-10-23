@@ -6,7 +6,7 @@
     <meta http-equiv="Expires" content="0">
 
     <script>
-        // Tema, Özel Renk Paleti ve Dil Kontrolü
+        // Tema, Özel Renk Paleti ve Dil Kontrolü (sayfa çizilmeden önce çalışır)
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
@@ -14,15 +14,11 @@
             document.documentElement.classList.add('light-mode');
         } else {
             document.documentElement.setAttribute('data-theme', 'dark');
-            document.documentElement.classList.remove('light-mode');
         }
 
         const currentLang = localStorage.getItem('user_lang') || 'tr';
-        if (currentLang === 'ar') {
-            document.documentElement.setAttribute('dir', 'rtl');
-        } else {
-            document.documentElement.setAttribute('dir', 'ltr');
-        }
+        document.documentElement.setAttribute('lang', currentLang);
+        document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
     </script>
 
     <meta charset="UTF-8">
@@ -36,13 +32,18 @@
             --card-bg: rgba(255, 255, 255, 0.08);
             --border-glass: rgba(255, 255, 255, 0.15);
             --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --modal-body: #cbd5e1;
         }
 
-        body.light-mode, [data-theme="light"] {
+        /* DÜZELTME: Tema sınıfı <html> üzerinde olduğu için seçici html.light-mode */
+        html.light-mode, html[data-theme="light"] {
             --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
             --card-bg: rgba(255, 255, 255, 0.75);
             --border-glass: rgba(0, 0, 0, 0.1);
             --text-color: #1e293b;
+            --text-muted: #64748b;
+            --modal-body: #475569;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,6 +51,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
@@ -60,186 +62,28 @@
             transition: background 0.4s ease, color 0.4s ease;
         }
 
-        .container {
-            width: 100%;
-            max-width: 460px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
+        .container { width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 14px; }
 
-        .top-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 4px 8px;
-        }
-
+        .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; }
         [dir="rtl"] .top-nav { flex-direction: row-reverse; }
-
-        .nav-actions {
-            display: flex;
-            gap: 8px;
-        }
+        .nav-actions { display: flex; gap: 8px; }
 
         .icon-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--card-bg); backdrop-filter: blur(12px);
             border: 1px solid var(--border-glass);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: transform 0.2s ease;
-            text-decoration: none;
-            color: var(--text-color);
-            font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease; text-decoration: none;
+            color: var(--text-color); font-size: 1.1rem;
         }
-
         .icon-btn:hover { transform: scale(1.08); }
 
-        .app-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            background: linear-gradient(to right, #f59e0b, #10b981);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-        }
+        .app-title { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.5px; color: #f59e0b; text-align: center; }
 
-        .scene-container {
-            width: 100%;
-            height: 380px;
-            background: linear-gradient(to bottom, #0284c7 0%, #38bdf8 40%, #bae6fd 75%, #e2e8f0 100%);
-            border-radius: 24px;
-            border: 1px solid var(--border-glass);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* God Rays / Işık Huzmeleri */
-        .god-rays {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(from 0deg, transparent 0deg, rgba(255,215,0,0.2) 15deg, transparent 30deg, rgba(255,215,0,0.2) 45deg, transparent 60deg, rgba(255,215,0,0.2) 75deg, transparent 90deg, rgba(255,215,0,0.2) 105deg, transparent 120deg, rgba(255,215,0,0.2) 135deg, transparent 150deg, rgba(255,215,0,0.2) 165deg, transparent 180deg, rgba(255,215,0,0.2) 195deg, transparent 210deg, rgba(255,215,0,0.2) 225deg, transparent 240deg, rgba(255,215,0,0.2) 255deg, transparent 270deg, rgba(255,215,0,0.2) 285deg, transparent 300deg, rgba(255,215,0,0.2) 315deg, transparent 330deg, rgba(255,215,0,0.2) 345deg, transparent 360deg);
-            transform-origin: center center;
-            animation: spinRays 25s linear infinite;
-            z-index: 1;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1.5s ease;
-            margin-top: -100%; margin-left: -100%;
-        }
-        .scene-container.zirve .god-rays { opacity: 1; }
-        @keyframes spinRays { 100% { transform: rotate(360deg); } }
-
-        /* Clouds / Bulutlar */
-        .cloud {
-            position: absolute;
-            background: rgba(255,255,255,0.9);
-            border-radius: 50px;
-            filter: blur(1px);
-            opacity: 0;
-            transition: opacity 1s ease;
-            z-index: 2;
-        }
-        .scene-container.zirve .cloud { opacity: 1; }
-        .cloud1 { width: 120px; height: 35px; top: 15%; left: -150px; animation: moveCloud 20s linear infinite; }
-        .cloud2 { width: 90px; height: 28px; top: 30%; left: -100px; animation: moveCloud 28s linear infinite 8s; }
-        @keyframes moveCloud { 100% { transform: translateX(600px); } }
-
-        /* Birds / Kuşlar */
-        .bird {
-            position: absolute;
-            font-size: 1.2rem;
-            opacity: 0;
-            z-index: 15;
-            color: #1e293b;
-        }
-        .scene-container.zirve .bird { opacity: 0.8; }
-        .bird1 { top: 25%; left: -30px; animation: flyBird1 12s linear infinite; }
-        .bird2 { top: 35%; left: -50px; animation: flyBird2 15s linear infinite 4s; }
-        @keyframes flyBird1 {
-            0% { transform: translate(0, 0) scale(0.6) rotate(10deg); }
-            50% { transform: translate(250px, -40px) scale(0.8) rotate(0deg); }
-            100% { transform: translate(500px, -20px) scale(0.5) rotate(5deg); }
-        }
-        @keyframes flyBird2 {
-            0% { transform: translate(0, 0) scale(0.5) rotate(-5deg); }
-            50% { transform: translate(200px, -60px) scale(0.9) rotate(-15deg); }
-            100% { transform: translate(500px, -40px) scale(0.4) rotate(-5deg); }
-        }
-
-        .floating-island {
-            width: 290px;
-            height: 290px;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: rotateX(20deg) rotateZ(-10deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: floatIsland 4.5s ease-in-out infinite alternate;
-            z-index: 10;
-        }
-
-        @keyframes floatIsland {
-            0% { transform: translateY(0px) rotateX(20deg) rotateZ(-10deg); }
-            100% { transform: translateY(-8px) rotateX(23deg) rotateZ(-8deg); }
-        }
-
-        .island-top {
-            position: absolute;
-            width: 270px;
-            height: 230px;
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-            clip-path: polygon(30% 15%, 70% 10%, 92% 35%, 88% 75%, 65% 92%, 30% 88%, 12% 65%, 15% 30%);
-            transform: translateY(35px);
-            box-shadow: inset 0 -15px 25px rgba(0,0,0,0.3);
-            transition: all 1s ease;
-        }
-
-        .island-top.kurak { background: linear-gradient(135deg, #d97706 0%, #78350f 100%); }
-        .island-top.golden {
-            background: linear-gradient(135deg, #fef08a 0%, #eab308 50%, #854d0e 100%);
-            box-shadow: 0 0 50px rgba(250, 204, 21, 0.8), inset 0 -15px 30px rgba(133, 77, 14, 0.8), inset 0 0 25px #fef08a;
-        }
-
-        .island-bottom {
-            position: absolute;
-            width: 270px;
-            height: 230px;
-            background: #271302;
-            clip-path: polygon(30% 15%, 70% 10%, 92% 35%, 88% 75%, 65% 92%, 30% 88%, 12% 65%, 15% 30%);
-            transform: translateY(70px) scale(0.92);
-            filter: brightness(0.55);
-            box-shadow: 0 40px 70px rgba(0,0,0,0.8);
-            transition: all 1s ease;
-        }
-        .island-top.golden + .island-bottom { filter: brightness(1); background: #854d0e; box-shadow: 0 40px 80px rgba(234, 179, 8, 0.5); }
-
-        .kaba-container {
-            position: absolute;
-            bottom: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-        }
-
-        svg.main-kaba-svg { width: 240px; height: 240px; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .kaba-pop { animation: kabaAnim 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-        @keyframes kabaAnim { 0% { transform: scale(0.8); opacity: 0.5; } 70% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0 4px; gap: 8px; }
+        .date-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+        .progress-badge { font-size: 0.75rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 3px 10px; border-radius: 20px; color: #34d399; white-space: nowrap; }
 
         .quote-box {
             background: var(--card-bg); backdrop-filter: blur(12px);
@@ -249,145 +93,419 @@
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 8px 32px rgba(0,0,0,0.2); line-height: 1.35;
         }
+        html.light-mode .quote-box { color: #047857; }
 
-        .calendar-card {
-            background: var(--card-bg); backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass); border-radius: 14px;
-            padding: 10px 14px; display: flex; flex-direction: column;
-            gap: 8px; cursor: pointer;
+        /* ===================== 3B SAHNE ===================== */
+        .scene-container {
+            width: 100%; height: 440px; border-radius: 24px;
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            position: relative; overflow: hidden; background: #2f8fd8;
+            user-select: none; -webkit-user-select: none;
         }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.9rem; }
+
+        /* Gökyüzü (gerçek saate göre değişir) */
+        .sky { position: absolute; inset: 0; transition: background 2s ease; }
+        .sky.day   { background: linear-gradient(to bottom, #2f86d6 0%, #7cc4f2 55%, #dff3ff 100%); }
+        .sky.dawn  { background: linear-gradient(to bottom, #2b3a67 0%, #b9738c 45%, #ffc99a 100%); }
+        .sky.dusk  { background: linear-gradient(to bottom, #1d2b53 0%, #b8506e 50%, #ffae72 100%); }
+        .sky.night { background: linear-gradient(to bottom, #030715 0%, #0a1a3b 60%, #183059 100%); }
+        .stars { position: absolute; inset: 0; opacity: 0; transition: opacity 2s ease; }
+        .sky.night .stars, .sky.dusk .stars, .sky.dawn .stars { opacity: 1; }
+        .sky.dusk .stars, .sky.dawn .stars { opacity: 0.35; }
+        .star { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; animation: twinkle 3s ease-in-out infinite alternate; }
+        @keyframes twinkle { from { opacity: 0.3; } to { opacity: 1; } }
+        .sun-moon { position: absolute; width: 54px; height: 54px; border-radius: 50%; transform: translate(-50%, -50%); }
+        .sky.day .sun-moon, .sky.dawn .sun-moon, .sky.dusk .sun-moon { background: radial-gradient(circle, #fffbe0 0 25%, rgba(255,236,150,.85) 45%, rgba(255,210,100,0) 72%); width: 90px; height: 90px; }
+        .sky.night .sun-moon { background: radial-gradient(circle at 38% 38%, #ffffff 0 40%, #dfe6f2 70%, #b7c2d6 100%); box-shadow: 0 0 30px 8px rgba(200,215,255,.35); width: 34px; height: 34px; }
+
+        .god-rays {
+            position: absolute; top: 50%; left: 50%; width: 200%; height: 200%;
+            margin-top: -100%; margin-left: -100%;
+            background: repeating-conic-gradient(from 0deg, rgba(255,215,0,0.22) 0deg 8deg, transparent 8deg 30deg);
+            animation: spinRays 40s linear infinite;
+            opacity: 0; pointer-events: none; transition: opacity 1.8s ease;
+        }
+        .scene-container.peak .god-rays { opacity: 1; }
+        @keyframes spinRays { to { transform: rotate(360deg); } }
+
+        .cloud { position: absolute; background: rgba(255,255,255,0.92); border-radius: 50px; filter: blur(1.5px); opacity: 0; transition: opacity 1.5s ease; }
+        .cloud::before, .cloud::after { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+        .cloud::before { width: 55%; height: 140%; left: 12%; top: -55%; }
+        .cloud::after  { width: 40%; height: 110%; right: 14%; top: -35%; }
+        .scene-container.peak .cloud { opacity: 0.9; }
+        .sky.night .cloud { filter: brightness(.35) blur(1.5px); }
+        .cloud1 { width: 120px; height: 28px; top: 14%; left: -160px; animation: moveCloud 38s linear infinite; }
+        .cloud2 { width: 90px;  height: 22px; top: 26%; left: -120px; animation: moveCloud 52s linear infinite 12s; }
+        .cloud3 { width: 140px; height: 30px; top: 8%;  left: -180px; animation: moveCloud 64s linear infinite 26s; }
+        @keyframes moveCloud { to { transform: translateX(760px); } }
+
+        /* 3B sahne */
+        .stage {
+            position: absolute; inset: 0; perspective: 1150px; perspective-origin: 50% 38%;
+            touch-action: pan-y; cursor: grab; overflow: hidden;
+        }
+        .stage.dragging { cursor: grabbing; }
+
+        .world, .world * { transform-style: preserve-3d; }
+        .world { position: absolute; left: 50%; top: 66%; width: 0; height: 0; will-change: transform; }
+        .world .face, .world .flat { transform-style: flat; }
+
+        :root {
+            --W: 170px; --D: 146px; --H: 174px;
+            --PL: 11px; --PW: 196px; --PD: 172px;
+        }
+
+        /* Zemin */
+        .flat { position: absolute; backface-visibility: visible; }
+        .ground-dirt {
+            width: 2400px; height: 2400px; left: -1200px; top: -1200px; border-radius: 50%;
+            transform: rotateX(90deg);
+            background:
+              radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0 520px, rgba(40,28,10,.25) 1150px),
+              repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.025) 0 3px, rgba(0,0,0,.03) 3px 7px),
+              radial-gradient(circle at 50% 50%, #a58c63 0, #8a7352 50%, #6d5a3d 100%);
+        }
+        .ground-marble {
+            width: 2400px; height: 2400px; left: -1200px; top: -1200px; border-radius: 50%;
+            transform: translateY(-0.6px) rotateX(90deg); opacity: 0; transition: opacity 1.6s ease;
+            background:
+              radial-gradient(circle at 50% 50%, transparent 0 128px, rgba(120,95,50,.16) 128px 133px, transparent 133px 330px, rgba(120,95,50,.18) 330px 336px, transparent 336px 560px, rgba(120,95,50,.12) 560px 566px, transparent 566px),
+              repeating-radial-gradient(circle at 50% 50%, rgba(0,0,0,.055) 0 1px, transparent 1px 26px),
+              repeating-conic-gradient(from 0deg at 50% 50%, rgba(0,0,0,.035) 0 0.7deg, transparent 0.7deg 7.5deg),
+              radial-gradient(circle at 50% 50%, #f6f3ec 0, #ebe6da 40%, #d9d2c0 100%);
+        }
+        .world.has-marble .ground-marble { opacity: 1; }
+        .ground-tint {
+            width: 2400px; height: 2400px; left: -1200px; top: -1200px; border-radius: 50%;
+            transform: translateY(-1.2px) rotateX(90deg); background: #050a1e; opacity: var(--night, 0); pointer-events: none;
+        }
+        .ground-glow {
+            width: 900px; height: 900px; left: -450px; top: -450px; border-radius: 50%;
+            transform: translateY(-1.8px) rotateX(90deg); opacity: 0; transition: opacity 1.6s ease;
+            background: radial-gradient(circle at 50% 50%, rgba(255,222,120,.95) 0, rgba(255,205,80,.6) 22%, rgba(255,190,60,.25) 50%, rgba(255,190,60,0) 72%);
+            mix-blend-mode: screen;
+        }
+        .world.has-glow .ground-glow { opacity: 1; animation: glowPulse 4.5s ease-in-out infinite alternate; }
+        @keyframes glowPulse { from { filter: brightness(.85); } to { filter: brightness(1.25); } }
+        .outline {
+            width: var(--PW); height: var(--PD); left: calc(var(--PW) / -2); top: calc(var(--PD) / -2);
+            transform: translateY(-1px) rotateX(90deg); border: 2px dashed rgba(255,236,170,.9); border-radius: 4px;
+            background: rgba(255,230,150,.10); transition: opacity 1s ease;
+        }
+        .world.has-plinth .outline { opacity: 0; }
+
+        /* Yüzeyler */
+        .face { position: absolute; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; transform-origin: 50% 100%; }
+        .shade { position: absolute; inset: 0; background: var(--shade-color, #000); opacity: 0; pointer-events: none; z-index: 20; }
+        .d-f > .shade { opacity: var(--s-f, 0); }
+        .d-b > .shade { opacity: var(--s-b, 0); }
+        .d-l > .shade { opacity: var(--s-l, 0); }
+        .d-r > .shade { opacity: var(--s-r, 0); }
+        .d-t > .shade { opacity: var(--s-t, 0); }
+
+        .stone {
+            background:
+              repeating-linear-gradient(0deg, rgba(0,0,0,.34) 0 2px, transparent 2px calc(var(--H) / 9)),
+              radial-gradient(rgba(255,255,255,.07) 1px, transparent 1.4px) 0 0 / 7px 7px,
+              linear-gradient(180deg, #6a655f 0%, #504b46 100%);
+            box-shadow: inset 0 0 14px rgba(0,0,0,.5);
+        }
+
+        /* Temel kaidesi (Şadırvan) */
+        .plinth { position: absolute; left: 0; top: 0; --pl: 0; }
+        .plinth .face { background: linear-gradient(180deg, #8a847b, #5e5952); box-shadow: inset 0 0 6px rgba(0,0,0,.5); }
+        .plinth .marble { position: absolute; inset: 0; opacity: 0; transition: opacity 1.6s ease; background: linear-gradient(180deg, #fbf8f1 0%, #e6dfd0 70%, #cfc6b2 100%); box-shadow: inset 0 -2px 0 rgba(212,170,60,.9); }
+        .world.has-marble .plinth .marble { opacity: 1; }
+        .pf, .pb { width: var(--PW); height: var(--PL); left: calc(var(--PW) / -2); top: calc(var(--PL) * -1); }
+        .pr, .pl { width: var(--PD); height: var(--PL); left: calc(var(--PD) / -2); top: calc(var(--PL) * -1); }
+        .pf { transform: translateZ(calc(var(--PD) / 2)) scaleY(var(--pl)); }
+        .pb { transform: rotateY(180deg) translateZ(calc(var(--PD) / 2)) scaleY(var(--pl)); }
+        .pr { transform: rotateY(90deg) translateZ(calc(var(--PW) / 2)) scaleY(var(--pl)); }
+        .pl { transform: rotateY(-90deg) translateZ(calc(var(--PW) / 2)) scaleY(var(--pl)); }
+        .ptop { width: var(--PW); height: var(--PD); left: calc(var(--PW) / -2); top: calc(var(--PD) / -2); transform-origin: 50% 50%; transform: translateY(calc(var(--PL) * -1)) rotateX(90deg); opacity: 0; background: linear-gradient(135deg, #7d776e, #5d5851); }
+        .plinth.built .ptop { opacity: 1; }
+
+        /* Kâbe gövdesi */
+        .kaaba { position: absolute; left: 0; top: 0; --p: 0; transform: translateY(calc(var(--PL) * -1)); }
+        .kaaba .wf, .kaaba .wb { width: var(--W); height: var(--H); left: calc(var(--W) / -2); top: calc(var(--H) * -1); }
+        .kaaba .wr, .kaaba .wl { width: var(--D); height: var(--H); left: calc(var(--D) / -2); top: calc(var(--H) * -1); }
+        .kaaba .wf { transform: translateZ(calc(var(--D) / 2)) scaleY(var(--p)); }
+        .kaaba .wb { transform: rotateY(180deg) translateZ(calc(var(--D) / 2)) scaleY(var(--p)); }
+        .kaaba .wr { transform: rotateY(90deg) translateZ(calc(var(--W) / 2)) scaleY(var(--p)); }
+        .kaaba .wl { transform: rotateY(-90deg) translateZ(calc(var(--W) / 2)) scaleY(var(--p)); }
+        .kaaba .roof {
+            width: var(--W); height: var(--D); left: calc(var(--W) / -2); top: calc(var(--D) / -2);
+            transform-origin: 50% 50%; transform: translateY(calc(var(--H) * -1)) rotateX(90deg);
+            background: linear-gradient(135deg, #4b4641, #383430); opacity: 0; transition: opacity .8s ease .9s;
+            box-shadow: inset 0 0 0 3px #2c2926;
+        }
+        .world.has-roof .roof { opacity: 1; }
+
+        /* Kisve (siyah örtü) - yukarıdan aşağı iner */
+        .kisve {
+            position: absolute; inset: 0; clip-path: inset(0 0 100% 0); transition: clip-path 2.2s cubic-bezier(.3,.7,.2,1);
+            background:
+              repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 1px, transparent 1px 3px),
+              repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 3px),
+              repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, rgba(0,0,0,.25) 9px 14px, rgba(255,255,255,.05) 14px 16px),
+              linear-gradient(180deg, #1c1c1e 0%, #0b0b0c 100%);
+            z-index: 2;
+        }
+        .world.has-kisve .kisve { clip-path: inset(0 0 0 0); }
+
+        /* Hızam (altın şerit) */
+        .hizam {
+            position: absolute; left: 0; right: 0; top: 29%; height: 10%; z-index: 3; opacity: 0; transition: opacity 1.6s ease;
+            background: linear-gradient(180deg, #7a5a12 0, #e8c459 12%, #fbe9a0 48%, #d6aa3a 84%, #6e4f0e 100%);
+            box-shadow: 0 0 0 1px rgba(60,40,0,.7), 0 1px 4px rgba(0,0,0,.6);
+            overflow: hidden; display: flex; align-items: center; justify-content: center; white-space: nowrap;
+            font-family: 'Amiri', 'Noto Naskh Arabic', 'Geeza Pro', 'Traditional Arabic', serif; font-size: 10px; color: #4a3200; letter-spacing: 0;
+        }
+        .world.has-hizam .hizam { opacity: 1; }
+        .gpanel {
+            position: absolute; z-index: 3; opacity: 0; transition: opacity 1.8s ease .3s;
+            border: 1.5px solid #dcb54b; background: rgba(220,181,75,.07);
+            box-shadow: inset 0 0 0 2px rgba(0,0,0,.65), 0 0 4px rgba(220,181,75,.4);
+        }
+        .gpanel::after { content: ''; position: absolute; inset: 3px; border: 1px dashed rgba(220,181,75,.7); }
+        .world.has-hizam .gpanel { opacity: 1; }
+        .gp1 { left: 8%;  top: 44%; width: 36%; height: 15%; }
+        .gp2 { right: 8%; top: 44%; width: 36%; height: 15%; }
+        .gp3 { left: 12%; top: 64%; width: 76%; height: 12%; }
+
+        /* Altın kapı */
+        .door {
+            position: absolute; left: 52%; bottom: 17%; width: 14%; height: 25%; z-index: 4; opacity: 0; transition: opacity 1.4s ease;
+            background: linear-gradient(135deg, #f7dd86 0%, #c9992c 45%, #8a6414 100%);
+            border: 2px solid #5e430b; border-radius: 2px 2px 0 0; box-shadow: 0 0 6px rgba(255,210,90,.55), inset 0 0 4px rgba(255,255,255,.4);
+        }
+        .door i { position: absolute; left: 12%; width: 76%; height: 24%; border: 1.5px solid rgba(94,67,11,.85); background: rgba(255,240,170,.2); box-shadow: inset 0 0 3px rgba(255,255,255,.4); }
+        .door i:nth-child(1) { top: 8%; } .door i:nth-child(2) { top: 38%; } .door i:nth-child(3) { top: 68%; }
+        .world.has-door .door { opacity: 1; }
+
+        /* Hacerülesved (gümüş çerçeveli) */
+        .hajar {
+            position: absolute; right: 2px; bottom: 11%; width: 19px; height: 25px; z-index: 5; opacity: 0; transition: opacity 1.2s ease;
+            border-radius: 50% 50% 46% 46% / 40% 40% 60% 60%;
+            background: radial-gradient(circle at 40% 38%, #4a4036 0, #1a1511 60%, #0a0806 100%);
+            border: 3px solid transparent;
+            box-shadow: 0 0 0 2.5px #c9ccd1, 0 0 0 4px #7d8189, 0 0 6px rgba(255,255,255,.35);
+        }
+        .world.has-hajar .hajar { opacity: 1; }
+
+        /* Mizab (altın oluk) */
+        .mizab { position: absolute; left: 0; top: 0; transform: translateY(calc(var(--H) * -1 - var(--PL) + 4px)); }
+        .mizab .mz {
+            position: absolute; backface-visibility: visible;
+            background: linear-gradient(90deg, #8b6513, #f7dd86 40%, #c9992c 70%, #7a5810); opacity: 0; transition: opacity 1.4s ease;
+        }
+        .mz-top { width: 40px; height: 18px; left: calc(var(--W) / -2 - 38px); top: -9px; transform: rotateX(90deg); }
+        .mz-s1 { width: 40px; height: 7px; left: calc(var(--W) / -2 - 38px); top: -7px; transform: translateZ(9px); }
+        .mz-s2 { width: 40px; height: 7px; left: calc(var(--W) / -2 - 38px); top: -7px; transform: translateZ(-9px); }
+        .world.has-door .mz { opacity: 1; }
+
+        /* Çevre: revaklar ve minareler */
+        .arc {
+            position: absolute; left: 0; top: 0; backface-visibility: hidden; overflow: hidden;
+            background-color: #d9cdb2;
+            background-image:
+              url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='44'><path d='M5 44V22a10 10 0 0 1 20 0V44z' fill='%2342382c'/><path d='M3 44V22a12 12 0 0 1 24 0V44' fill='none' stroke='%23b8a885' stroke-width='1.5'/></svg>"),
+              url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='44'><path d='M5 44V22a10 10 0 0 1 20 0V44z' fill='%2342382c'/><path d='M3 44V22a12 12 0 0 1 24 0V44' fill='none' stroke='%23b8a885' stroke-width='1.5'/></svg>");
+            background-repeat: repeat-x, repeat-x;
+            background-position: 0 0, 0 46px;
+            background-size: auto 44px, auto 44px;
+            border-top: 6px solid #c9a24a; box-shadow: inset 0 -8px 10px rgba(0,0,0,.25);
+        }
+        .arc::after { content: ''; position: absolute; inset: 0; background: rgba(120,140,170,.28); }
+        .mn-face { position: absolute; backface-visibility: hidden; overflow: hidden;
+            background:
+              linear-gradient(180deg, transparent 0 8%, #c9a24a 8% 9.2%, transparent 9.2% 30%, #c9a24a 30% 31.5%, transparent 31.5% 62%, #c9a24a 62% 63.5%, transparent 63.5% 100%),
+              repeating-linear-gradient(0deg, rgba(0,0,0,.08) 0 2px, transparent 2px 14px),
+              linear-gradient(90deg, #e8dfc9, #cfc4a8); }
+        .mn-roof { position: absolute; backface-visibility: hidden; background: linear-gradient(180deg, #5f8f86, #3d6a63); clip-path: polygon(50% 0, 0 100%, 100% 100%); }
+        .mn-crescent { position: absolute; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #e6c15a; border-right-color: transparent; transform: rotate(40deg); }
+
+        /* Tavaf eden kalabalık */
+        .crowd, .flock { position: absolute; left: 0; top: 0; display: none; }
+        .world.has-crowd .crowd { display: block; }
+        .ring { position: absolute; left: 0; top: 0; animation: spin linear infinite; }
+        @keyframes spin { to { transform: rotateY(360deg); } }
+        .person { position: absolute; left: 0; top: 0; }
+        .body { position: absolute; left: 0; top: 0; animation: bob .8s ease-in-out infinite alternate; }
+        @keyframes bob { from { transform: translateY(0); } to { transform: translateY(-1.6px); } }
+        .pln {
+            position: absolute; left: -3.5px; top: -22px; width: 7px; height: 22px; backface-visibility: visible;
+            border-radius: 3px 3px 1px 1px;
+            background: linear-gradient(180deg, #d8b48d 0 26%, var(--cloth, #f4f4f4) 26% 100%);
+        }
+        .pln.b { transform: rotateY(90deg); }
+
+        /* Güvercinler */
+        .world.has-peak .flock { display: block; }
+        .flock-ring { position: absolute; left: 0; top: 0; animation: spinRev linear infinite; }
+        @keyframes spinRev { to { transform: rotateY(-360deg); } }
+        .dove { position: absolute; left: 0; top: 0; }
+        .dove .wing {
+            position: absolute; left: -9px; top: -6px; width: 18px; height: 8px; backface-visibility: visible;
+            background: #fff; clip-path: polygon(0 10%, 50% 70%, 100% 10%, 100% 38%, 50% 100%, 0 38%);
+            filter: drop-shadow(0 1px 0 rgba(0,0,0,.25)); transform-origin: 50% 100%; animation: flap .55s ease-in-out infinite alternate;
+        }
+        .dove .wing.b { transform: rotateY(90deg); }
+        @keyframes flap { from { scale: 1 1; } to { scale: 1 .3; } }
+
+        /* Sahne kontrolleri */
+        .controls { position: absolute; right: 10px; bottom: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 5; }
+        [dir="rtl"] .controls { right: auto; left: 10px; }
+        .ctrl-btn {
+            width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35);
+            background: rgba(10,20,40,.45); backdrop-filter: blur(8px); color: #fff; font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .ctrl-btn.on { background: rgba(16,185,129,.65); }
+        .hint {
+            position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); z-index: 5; pointer-events: none;
+            background: rgba(10,20,40,.5); color: #fff; font-size: .72rem; padding: 5px 12px; border-radius: 14px;
+            transition: opacity 1s ease; white-space: nowrap;
+        }
+        .hint.hide { opacity: 0; }
+
+        /* ===================== TAKVİM ===================== */
+        .calendar-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 14px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: .9rem; cursor: pointer; }
         [dir="rtl"] .calendar-header { flex-direction: row-reverse; }
-        .drawer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-        .drawer.open { max-height: 160px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-height: 110px; overflow-y: auto; }
-        .day-cell { background: var(--card-bg); border: 1px solid var(--border-glass); border-radius: 6px; padding: 4px; text-align: center; font-size: 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .day-cell.active { background: rgba(16, 185, 129, 0.2); border-color: #10b981; }
-        .dot { width: 4px; height: 4px; border-radius: 50%; background: #64748b; }
-        .dot.done { background: #34d399; }
-
-        .tasks-card {
-            background: var(--card-bg); backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass); border-radius: 16px;
-            padding: 14px; display: flex; flex-direction: column;
-            gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        .drawer { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+        .drawer.open { max-height: 420px; padding-top: 8px; border-top: 1px solid var(--border-glass); }
+        .month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        [dir="rtl"] .month-nav { flex-direction: row-reverse; }
+        .month-title { font-weight: 700; font-size: .9rem; text-transform: capitalize; }
+        .nav-mini { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border-glass); background: var(--card-bg); color: var(--text-color); font-size: 1rem; cursor: pointer; }
+        .nav-mini:disabled { opacity: .3; cursor: default; }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .dow { text-align: center; font-size: .65rem; color: var(--text-muted); padding-bottom: 2px; }
+        .day-cell {
+            background: var(--card-bg); border: 1px solid var(--border-glass); border-radius: 8px; padding: 5px 2px 4px; text-align: center;
+            font-size: .78rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-color); font-family: inherit;
         }
-        .tasks-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 4px; }
+        .day-cell.active { background: rgba(16,185,129,.22); border-color: #10b981; }
+        .day-cell.today { box-shadow: 0 0 0 1.5px #f59e0b; }
+        .day-cell.future { opacity: .35; cursor: default; }
+        .day-cell.empty { visibility: hidden; }
+        .bar { width: 70%; height: 3px; border-radius: 3px; background: rgba(148,163,184,.35); overflow: hidden; }
+        .bar > i { display: block; height: 100%; background: #34d399; }
+
+        /* ===================== GÖREVLER ===================== */
+        .tasks-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+        .tasks-title { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 4px; }
         [dir="rtl"] .tasks-title { flex-direction: row-reverse; }
-
-        .task-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background: var(--card-bg); border: 1px solid var(--border-glass);
-            padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: 0.2s;
-        }
+        .task-item { display: flex; align-items: center; justify-content: space-between; background: var(--card-bg); border: 1px solid var(--border-glass); padding: 8px 12px; border-radius: 10px; cursor: pointer; transition: .2s; }
         .task-item:hover { border-color: var(--primary-light); }
         .task-info { display: flex; align-items: center; gap: 10px; width: 100%; }
         [dir="rtl"] .task-info { flex-direction: row-reverse; }
-        .task-checkbox { width: 18px; height: 18px; accent-color: #10b981; cursor: pointer; }
+        .task-checkbox { width: 18px; height: 18px; accent-color: #10b981; cursor: pointer; flex-shrink: 0; }
         .task-texts { display: flex; flex-direction: column; gap: 1px; width: 100%; }
         [dir="rtl"] .task-texts { text-align: right; }
-        .task-name { font-weight: 600; font-size: 0.85rem; }
-        .task-desc { font-size: 0.7rem; color: #94a3b8; }
+        .task-name { font-weight: 600; font-size: .85rem; }
+        .task-desc { font-size: .7rem; color: var(--text-muted); }
 
-        footer { text-align: center; font-size: 0.72rem; color: #64748b; margin-top: 4px; }
+        footer { text-align: center; font-size: .72rem; color: var(--text-muted); margin-top: 4px; }
         footer span { color: #f59e0b; font-weight: 600; }
 
-        /* Modal Stilleri */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
-            display: none; align-items: center; justify-content: center;
-            z-index: 100; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content {
-            background: var(--bg-gradient); color: var(--text-color);
-            padding: 24px; border-radius: 16px; width: 90%; max-width: 400px;
-            position: relative; border: 1px solid var(--border-glass);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-        body.light-mode .modal-content { background: #f8fafc; color: #1e293b; }
-        .modal-close {
-            position: absolute; top: 12px; right: 12px;
-            background: transparent; border: none; color: var(--text-color);
-            font-size: 1.5rem; cursor: pointer; opacity: 0.7; transition: 0.2s;
-        }
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100; }
+        .modal-overlay.show { display: flex; }
+        .modal-content { background: var(--bg-gradient); color: var(--text-color); padding: 24px; border-radius: 16px; width: 90%; max-width: 400px; position: relative; border: 1px solid var(--border-glass); box-shadow: 0 20px 40px rgba(0,0,0,.5); }
+        html.light-mode .modal-content { background: #f8fafc; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: transparent; border: none; color: var(--text-color); font-size: 1.5rem; cursor: pointer; opacity: .7; }
         .modal-close:hover { opacity: 1; }
         [dir="rtl"] .modal-close { right: auto; left: 12px; }
-        .modal-title { color: #10b981; margin-bottom: 12px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px;}
-        .modal-body { font-size: 0.9rem; line-height: 1.6; color: #cbd5e1; display: flex; flex-direction: column; gap: 12px; }
-        body.light-mode .modal-body { color: #475569; }
+        .modal-title { color: #10b981; margin-bottom: 12px; font-size: 1.2rem; font-weight: bold; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; }
+        .modal-body { font-size: .9rem; line-height: 1.6; color: var(--modal-body); display: flex; flex-direction: column; gap: 12px; }
         .modal-subtitle { color: #f59e0b; font-weight: bold; font-size: 1rem; margin-top: 8px; }
 
+        @media (prefers-reduced-motion: reduce) {
+            .ring, .flock-ring, .god-rays, .cloud, .body, .dove .wing, .ground-glow, .star { animation: none !important; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="top-nav">
-        <a href="http://ayetinvakti.github.io" class="icon-btn" title="Ana Menüye Dön">←</a>
+        <a href="https://ayetinvakti.github.io/" class="icon-btn" title="Ana Menüye Dön" aria-label="Ana Menüye Dön" data-i18n-title="back_title">←</a>
         <div class="app-title" data-i18n="app_title">🕋 Manevi Kâbe İnşası</div>
         <div class="nav-actions">
-            <button class="icon-btn" id="infoBtn" onclick="toggleModal(true)" title="Bilgi">❓</button>
-            <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir">🌙</button>
+            <button class="icon-btn" id="infoBtn" onclick="toggleModal(true)" title="Bilgi" aria-label="Bilgi" data-i18n-title="info_title">❓</button>
+            <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir" aria-label="Tema Değiştir" data-i18n-title="theme_title">🌙</button>
         </div>
     </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px;">
-        <span style="font-size: 0.8rem; font-weight: 600; color: #94a3b8;" id="currentDateLabel">📅 19 Ağustos 2026</span>
-        <span id="progressBadge" style="font-size: 0.75rem; font-weight: 700; background: rgba(16,185,129,0.2); padding: 3px 10px; border-radius: 20px; color: #34d399;">0 / 12 Tamamlandı</span>
+    <div class="info-row">
+        <span class="date-label" id="currentDateLabel"></span>
+        <span class="progress-badge" id="progressBadge">0 / 12</span>
     </div>
 
-    <div class="quote-box" id="quoteBox">"Hani İbrahim, İsmail ile birlikte evin (Kâbe'nin) temellerini yükseltiyordu..." (Bakara, 127)</div>
+    <div class="quote-box" id="quoteBox"></div>
 
     <div class="scene-container" id="sceneContainer">
-        <!-- Zirve Huzur Animasyonları -->
-        <div class="god-rays"></div>
-        <div class="cloud cloud1"></div>
-        <div class="cloud cloud2"></div>
-        <div class="bird bird1">🕊️</div>
-        <div class="bird bird2">🕊️</div>
+        <div class="sky day" id="sky">
+            <div class="stars" id="stars"></div>
+            <div class="sun-moon" id="sunMoon"></div>
+            <div class="god-rays"></div>
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            <div class="cloud cloud3"></div>
+        </div>
 
-        <div class="floating-island">
-            <div class="island-bottom" id="islandBottom"></div>
-            <div class="island-top kurak" id="islandTop"></div>
-            
-            <div class="kaba-container">
-                <svg id="mainKabaSvg" class="main-kaba-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#fef08a"/>
-                            <stop offset="50%" stop-color="#eab308"/>
-                            <stop offset="100%" stop-color="#854d0e"/>
-                        </linearGradient>
-                        <linearGradient id="stoneFront" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#78716c"/>
-                            <stop offset="100%" stop-color="#44403c"/>
-                        </linearGradient>
-                        <linearGradient id="stoneSide" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="#44403c"/>
-                            <stop offset="100%" stop-color="#1c1917"/>
-                        </linearGradient>
-                        <linearGradient id="kisveFront" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#262626"/>
-                            <stop offset="100%" stop-color="#0a0a0a"/>
-                        </linearGradient>
-                        <linearGradient id="kisveSide" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#171717"/>
-                            <stop offset="100%" stop-color="#000000"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
+        <div class="stage" id="stage">
+            <div class="world" id="world">
+                <div class="flat ground-dirt"></div>
+                <div class="flat ground-marble"></div>
+                <div class="flat ground-tint"></div>
+                <div class="flat ground-glow"></div>
+                <div class="flat outline"></div>
+
+                <div id="arcades"></div>
+                <div id="minarets"></div>
+
+                <div class="plinth" id="plinth">
+                    <div class="face pf d-f"><div class="marble"></div><div class="shade"></div></div>
+                    <div class="face pb d-b"><div class="marble"></div><div class="shade"></div></div>
+                    <div class="face pr d-r"><div class="marble"></div><div class="shade"></div></div>
+                    <div class="face pl d-l"><div class="marble"></div><div class="shade"></div></div>
+                    <div class="face ptop d-t"><div class="shade"></div></div>
+                </div>
+
+                <div class="kaaba" id="kaaba"></div>
+
+                <div class="mizab">
+                    <div class="mz mz-top"></div><div class="mz mz-s1"></div><div class="mz mz-s2"></div>
+                </div>
+
+                <div class="crowd" id="crowd"></div>
+                <div class="flock" id="flock"></div>
             </div>
         </div>
+
+        <div class="controls">
+            <button class="ctrl-btn on" id="btnAuto" title="Otomatik dönüş" aria-label="Otomatik dönüş" data-i18n-title="btn_auto">🔄</button>
+            <button class="ctrl-btn" id="btnView" title="Bakış açısı" aria-label="Bakış açısı" data-i18n-title="btn_view">📷</button>
+            <button class="ctrl-btn" id="btnZoom" title="Yakınlaştır" aria-label="Yakınlaştır" data-i18n-title="btn_zoom">🔍</button>
+        </div>
+        <div class="hint" id="hint" data-i18n="hint">↔ Döndürmek için sürükleyin</div>
     </div>
 
-    <div class="calendar-card" onclick="toggleDrawer()">
-        <div class="calendar-header">
+    <div class="calendar-card">
+        <div class="calendar-header" id="calToggle">
             <span data-i18n="cal_toggle">📅 Takvimi Aç / Kapat</span>
-            <span style="font-size: 0.75rem; color: #94a3b8;" id="drawerIcon">▼ <span data-i18n="open_btn">Aç</span></span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);" id="drawerIcon"></span>
         </div>
         <div class="drawer" id="calendarDrawer">
+            <div class="month-nav">
+                <button class="nav-mini" id="prevMonth" aria-label="‹">‹</button>
+                <span class="month-title" id="monthTitle"></span>
+                <button class="nav-mini" id="nextMonth" aria-label="›">›</button>
+            </div>
             <div class="days-grid" id="daysGrid"></div>
         </div>
     </div>
@@ -397,50 +515,36 @@
             <span data-i18n="tasks_header">Günün Manevi Amelleri</span>
             <span style="color: #34d399;" id="completionPercent">%0</span>
         </div>
-
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="0" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_1_name">🌅 Sabah Namazı</span><span class="task-desc" data-i18n="task_1_desc">Günün ilk nuru ve bereketi</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="1" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_2_name">☀️ Öğle Namazı</span><span class="task-desc" data-i18n="task_2_desc">Günün ortasında ruha huzur</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="2" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_3_name">🌤️ İkindi Namazı</span><span class="task-desc" data-i18n="task_3_desc">Zamanın kıymetine şahitlik</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="3" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_4_name">🌇 Akşam Namazı</span><span class="task-desc" data-i18n="task_4_desc">Günü şükürle tamamlama</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="4" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_5_name">🌙 Yatsı Namazı</span><span class="task-desc" data-i18n="task_5_desc">Gecenin sükûnetine teslimiyet</span></div></div></label>
-        
-        <!-- Yeni Eklenenler -->
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="5" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_6_name">🌌 Vitir Namazı</span><span class="task-desc" data-i18n="task_6_desc">Gecenin son mührü</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="6" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_7_name">📿 Sünnetleri Kıldım</span><span class="task-desc" data-i18n="task_7_desc">Peygamberimizin yolundan ayrılmamak</span></div></div></label>
-
-        <!-- Kaydırılanlar -->
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="7" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_8_name">📖 Kur'an Okuma / Dinleme</span><span class="task-desc" data-i18n="task_8_desc">İlahî kelam ile kalbi aydınlatma</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="8" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_9_name">🤲 Dua & Salavat Getirdim</span><span class="task-desc" data-i18n="task_9_desc">Peygamberimize (s.a.v) hürmet ve nida</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="9" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_10_name">🤝 İyilik Yapma & Güzel Ahlak</span><span class="task-desc" data-i18n="task_10_desc">İnsanlara tebessüm ve güzel muamele</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="10" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_11_name">🛡️ Harama Bakmadım & İrade</span><span class="task-desc" data-i18n="task_11_desc">Gözü ve kalbi kötülükten koruma</span></div></div></label>
-        <label class="task-item"><div class="task-info"><input type="checkbox" class="task-checkbox" data-idx="11" onchange="updateFarm()"><div class="task-texts"><span class="task-name" data-i18n="task_12_name">💝 Sadaka & Yardımlaşma</span><span class="task-desc" data-i18n="task_12_desc">Gönülden cömertlik gösterisi</span></div></div></label>
+        <div id="tasksList" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </div>
 </div>
 
 <footer>Ayetin Vakti Ekosistemi • <span data-i18n="footer_brand">Kâbe İnşası</span></footer>
 
 <!-- Bilgi Modalı -->
-<div class="modal-overlay" id="infoModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="toggleModal(false)">×</button>
+<div class="modal-overlay" id="infoModal" onclick="if (event.target === this) toggleModal(false)">
+    <div class="modal-content" role="dialog" aria-modal="true">
+        <button class="modal-close" onclick="toggleModal(false)" aria-label="×">×</button>
         <div class="modal-title" data-i18n="modal_title">5-5 Namaz Nedir?</div>
         <div class="modal-body">
-            <p data-i18n="modal_desc_1">İslam'ın şartı olan 5 Vakit Farz namaz ile birlikte, gününüzü nurlandıracak 5 vakit manevi ameli (Kur'an, Dua, Ahlak, İrade, Sadaka) temsil eder.</p>
+            <p data-i18n="modal_desc_1"></p>
             <div class="modal-subtitle" data-i18n="modal_subtitle">Bu Uygulamanın Amacı</div>
-            <p data-i18n="modal_desc_2">Gündelik ibadetlerimizi ve güzel ahlakı görselleştirerek, iç dünyamızdaki manevi Kâbemizi tuğla tuğla inşa etme motivasyonudur. Her amel, ruha atılan sağlam bir temeldir.</p>
+            <p data-i18n="modal_desc_2"></p>
         </div>
     </div>
 </div>
 
 <script>
-    // Dil Sözlüğü (12 Görev & 13 Aşama)
+    // ===================== DİL SÖZLÜĞÜ =====================
     const translations = {
         tr: {
             page_title: "Manevi Kâbe İnşa Takibi",
             app_title: "🕋 Manevi Kâbe İnşası",
-            cal_toggle: "📅 Takvimi Aç / Kapat",
-            open_btn: "Aç", close_btn: "Kapat",
-            tasks_header: "Günün Manevi Amelleri", footer_brand: "Kâbe İnşası",
+            back_title: "Ana Menüye Dön", info_title: "Bilgi", theme_title: "Tema Değiştir",
+            btn_auto: "Otomatik dönüş", btn_view: "Bakış açısı", btn_zoom: "Yakınlaştır",
+            hint: "↔ Döndürmek için sürükleyin",
+            cal_toggle: "📅 Takvimi Aç / Kapat", open_btn: "Aç", close_btn: "Kapat",
+            tasks_header: "Günün Manevi Amelleri", footer_brand: "Kâbe İnşası", completed: "Tamamlandı",
             task_1_name: "🌅 Sabah Namazı", task_1_desc: "Günün ilk nuru ve bereketi",
             task_2_name: "☀️ Öğle Namazı", task_2_desc: "Günün ortasında ruha huzur",
             task_3_name: "🌤️ İkindi Namazı", task_3_desc: "Zamanın kıymetine şahitlik",
@@ -453,31 +557,33 @@
             task_10_name: "🤝 İyilik Yapma & Güzel Ahlak", task_10_desc: "İnsanlara tebessüm ve güzel muamele",
             task_11_name: "🛡️ Harama Bakmadım & İrade", task_11_desc: "Gözü ve kalbi kötülükten koruma",
             task_12_name: "💝 Sadaka & Yardımlaşma", task_12_desc: "Gönülden cömertlik gösterisi",
-            month_name: "Ağustos",
             modal_title: "5-5 Namaz Nedir?",
-            modal_desc_1: "İslam'ın şartı olan 5 Vakit Farz namaz ile birlikte, gününüzü nurlandıracak 5 vakit manevi ameli (Kur'an, Dua, Ahlak, İrade, Sadaka) temsil eder. Ayrıca Vitir ve Sünnet namazları da manevi zirvenize katkı sağlar.",
+            modal_desc_1: "Günlük 12 görev: 5 vakit farz namaz, Vitir ve Sünnet namazları ile gününüzü nurlandıracak 5 manevi amel (Kur'an, Dua, Ahlak, İrade, Sadaka).",
             modal_subtitle: "Bu Uygulamanın Amacı",
             modal_desc_2: "Gündelik ibadetlerimizi ve güzel ahlakı görselleştirerek, iç dünyamızdaki manevi Kâbemizi tuğla tuğla inşa etme motivasyonudur. Her amel, ruha atılan sağlam bir temeldir.",
             quotes: [
                 "Hani İbrahim, İsmail ile birlikte evin (Kâbe'nin) temellerini yükseltiyordu... (Bakara, 127)",
-                "İlk tuğla konuldu! Bismillah... Temeller sadakatle yükselmeye başlıyor.",
-                "Dualar ve namazlarla Kâbe'nin taş duvarları filizleniyor.",
+                "İlk taş konuldu! Bismillah... Temeller sadakatle yükselmeye başlıyor.",
+                "Dualar ve namazlarla Kâbe'nin taş duvarları yükselmeye başlıyor.",
                 "Duvarlar yükseliyor! Manevi gayretin Kâbe'ye biçim veriyor.",
                 "Kâbe'nin dört duvarı yükseldi ve çatısı kapandı! Şükürler olsun.",
-                "Hacerül Esved taşı yerine yerleştirildi ve manevi ışığı saçılmaya başladı!",
+                "Hacerülesved taşı yerine yerleştirildi ve manevi ışığı saçılmaya başladı!",
                 "Altın Kapı ve Mîzab-ı Rahmet (Altın Oluk) Kâbe'ye eklendi.",
                 "Siyah Kisve örtüsü giydirildi. Mukaddes mekân zarafet kazandı.",
-                "Altın sırma işlemeler ve hatlar örtüyü süsledi.",
-                "Maşallah! Tavaf mermerleri (Mataf) ve Şazırvan tamamlandı.",
-                "ELHAMDÜLİLLAH! Kâbe tamamlandı, üzerinden nûrlar yükseliyor!",
-                "Pırıl Pırıl Zemin! Maneviyatın altın ışığı her yanı sardı, kalpler nura gark oldu.",
-                "ZİRVE HUZUR! Melekler şahitlik ediyor, gökyüzünde kuşlar uçuşuyor, bulutlar selâm duruyor!"
+                "Altın sırma işlemeler ve Hızam şeridi örtüyü süsledi.",
+                "Maşallah! Mataf mermerleri ve Şadırvan kaidesi tamamlandı.",
+                "ELHAMDÜLİLLAH! Kâbe tamamlandı, etrafında tavaf başladı!",
+                "Pırıl pırıl zemin! Maneviyatın altın ışığı her yanı sardı, kalpler nura gark oldu.",
+                "ZİRVE HUZUR! Gökyüzünde güvercinler uçuşuyor, bulutlar selâm duruyor!"
             ]
         },
         en: {
             page_title: "Spiritual Kaaba Construction Tracker", app_title: "🕋 Spiritual Kaaba Building",
-            cal_toggle: "📅 Open / Close Calendar", open_btn: "Open", close_btn: "Close", tasks_header: "Daily Spiritual Deeds",
-            footer_brand: "Kaaba Building", month_name: "August",
+            back_title: "Back to Menu", info_title: "Info", theme_title: "Toggle Theme",
+            btn_auto: "Auto-rotate", btn_view: "Camera angle", btn_zoom: "Zoom",
+            hint: "↔ Drag to rotate",
+            cal_toggle: "📅 Open / Close Calendar", open_btn: "Open", close_btn: "Close",
+            tasks_header: "Daily Spiritual Deeds", footer_brand: "Kaaba Building", completed: "Completed",
             task_1_name: "🌅 Fajr Prayer", task_1_desc: "First light and blessing of the day",
             task_2_name: "☀️ Dhuhr Prayer", task_2_desc: "Peace to the soul at midday",
             task_3_name: "🌤️ Asr Prayer", task_3_desc: "Witnessing the value of time",
@@ -491,22 +597,28 @@
             task_11_name: "🛡️ Guarded Vision & Willpower", task_11_desc: "Protecting eye and heart from harm",
             task_12_name: "💝 Charity & Helping Others", task_12_desc: "Display of heartfelt generosity",
             modal_title: "What is 5-5 Prayer?",
-            modal_desc_1: "It represents 5 Obligatory prayers and 5 spiritual deeds (Quran, Dua, Manners, Willpower, Charity). Witr and Sunnah prayers elevate you to the spiritual peak.",
+            modal_desc_1: "12 daily tasks: the 5 obligatory prayers, Witr and Sunnah prayers, and 5 spiritual deeds (Quran, Dua, Manners, Willpower, Charity).",
             modal_subtitle: "Purpose of this App",
-            modal_desc_2: "A motivation to visualize our daily worship and build our inner spiritual Kaaba brick by brick.",
+            modal_desc_2: "A motivation to visualize our daily worship and build our inner spiritual Kaaba brick by brick. Every deed is a solid foundation laid for the soul.",
             quotes: [
-                "And when Abraham was raising the foundations... (Al-Baqarah, 127)", "First brick laid! Bismillah...", "Stone walls grow with prayers.",
-                "Walls are rising! Your effort shapes the Kaaba.", "Four walls completed and roof closed!", "The Black Stone is set in place!",
-                "Golden Door and Mīzāb al-Rahmah added.", "The Black Kiswah drape is dressed.", "Golden calligraphy embellishes the Kiswah.",
-                "Mataf floor and Shadhrawan completed.", "ALHAMDULILLAH! Kaaba is completed!",
-                "Golden Ground! The golden light of spirituality surrounds everywhere.",
-                "PEAK PEACE! Angels bear witness, birds fly in the sky, clouds salute!"
+                "And when Abraham was raising the foundations of the House with Ishmael... (Al-Baqarah, 127)",
+                "The first stone is laid! Bismillah...", "Stone walls begin to rise with prayers.",
+                "Walls are rising! Your effort shapes the Kaaba.", "Four walls completed and the roof closed!",
+                "The Black Stone is set in place!", "The Golden Door and the Golden Spout (Mizab) are added.",
+                "The black Kiswah is draped over the Kaaba.", "Golden embroidery and the Hizam band adorn the Kiswah.",
+                "The Mataf marble and the base are completed.",
+                "ALHAMDULILLAH! The Kaaba is complete and the tawaf begins!",
+                "Radiant ground! The golden light of spirituality surrounds everything.",
+                "PEAK PEACE! Doves fly in the sky, the clouds bow in salutation!"
             ]
         },
         ar: {
             page_title: "متابعة بناء الكعبة الروحية", app_title: "🕋 بناء الكعبة الروحية",
-            cal_toggle: "📅 فتح / إغلاق التقويم", open_btn: "فتح", close_btn: "إغلاق", tasks_header: "الأعمال الروحية اليومية",
-            footer_brand: "بناء الكعبة", month_name: "أغسطس",
+            back_title: "العودة للقائمة", info_title: "معلومات", theme_title: "تغيير المظهر",
+            btn_auto: "دوران تلقائي", btn_view: "زاوية الرؤية", btn_zoom: "تكبير",
+            hint: "↔ اسحب للتدوير",
+            cal_toggle: "📅 فتح / إغلاق التقويم", open_btn: "فتح", close_btn: "إغلاق",
+            tasks_header: "الأعمال الروحية اليومية", footer_brand: "بناء الكعبة", completed: "مكتمل",
             task_1_name: "🌅 صلاة الفجر", task_1_desc: "نور اليوم الأول وبركته",
             task_2_name: "☀️ صلاة الظهر", task_2_desc: "راحة الروح في منتصف النهار",
             task_3_name: "🌤️ صلاة العصر", task_3_desc: "شهادة على قيمة الوقت",
@@ -514,246 +626,422 @@
             task_5_name: "🌙 صلاة العشاء", task_5_desc: "التسليم لسكينة الليل",
             task_6_name: "🌌 صلاة الوتر", task_6_desc: "خاتم الليل",
             task_7_name: "📿 صليت السنن", task_7_desc: "اتباع هدي النبي",
-            task_8_name: "📖 قراءة القرآن", task_8_desc: "تنير القلب بالكلمات الإلهية",
-            task_9_name: "🤲 الدعاء والصلوات", task_9_desc: "إكرام النبي صلى الله عليه وسلم",
-            task_10_name: "🤝 الاحسان", task_10_desc: "المعاملة الطيبة",
-            task_11_name: "🛡️ غض البصر", task_11_desc: "حماية العين والقلب",
-            task_12_name: "💝 الصدقة", task_12_desc: "إظهار الجود",
+            task_8_name: "📖 قراءة القرآن", task_8_desc: "تنوير القلب بالكلمات الإلهية",
+            task_9_name: "🤲 الدعاء والصلاة على النبي", task_9_desc: "إكرام النبي صلى الله عليه وسلم",
+            task_10_name: "🤝 الإحسان وحسن الخلق", task_10_desc: "المعاملة الطيبة والابتسامة",
+            task_11_name: "🛡️ غض البصر وقوة الإرادة", task_11_desc: "حماية العين والقلب",
+            task_12_name: "💝 الصدقة والمساعدة", task_12_desc: "إظهار الجود من القلب",
             modal_title: "ما هي صلاة 5-5؟",
-            modal_desc_1: "تمثل 5 صلوات مفروضة و 5 أعمال روحية...",
+            modal_desc_1: "12 مهمة يومية: الصلوات الخمس المفروضة، والوتر والسنن، وخمسة أعمال روحية (القرآن، الدعاء، الأخلاق، الإرادة، الصدقة).",
             modal_subtitle: "الغرض من هذا التطبيق",
-            modal_desc_2: "تحفيز لتصور عبادتنا اليومية وبناء كعبتنا الروحية الداخلية لبنة لبنة.",
+            modal_desc_2: "تحفيز لتصور عبادتنا اليومية وبناء كعبتنا الروحية الداخلية لبنة لبنة. كل عمل هو أساس متين يوضع للروح.",
             quotes: [
-                "وَإِذْ يَرْفَعُ إِبْرَاهِيمُ الْقَوَاعِدَ مِنَ الْبَيْتِ...", "وضعت اللبنة الأولى! بسم الله...", "تنمو الجدران الحجرية بالصلوات.",
-                "الجدران ترتفع!", "اكتملت الجدران الأربعة!", "تم وضع الحجر الأسود في مكانه!", "تمت إضافة الباب الذهبي وميزاب الرحمة.",
-                "تم إلباس كسوة الكعبة المشرفة السوداء.", "الخطوط الذهبية تزين كسوة الكعبة.", "اكتمل صحن المطاف المرمري.",
-                "الْحَمْدُ لِلَّهِ! اكتملت الكعبة المشرفة!", "أرضية ذهبية! نور الروحانية يحيط بكل مكان.", "ذروة السلام! الملائكة تشهد، الطيور تحلق، السحب تسلم!"
+                "وَإِذْ يَرْفَعُ إِبْرَاهِيمُ الْقَوَاعِدَ مِنَ الْبَيْتِ وَإِسْمَاعِيلُ... (البقرة، 127)",
+                "وُضع الحجر الأول! بسم الله...", "تبدأ الجدران الحجرية بالارتفاع بالصلوات.",
+                "الجدران ترتفع! جهدك الروحي يشكّل الكعبة.", "اكتملت الجدران الأربعة وأُغلق السقف!",
+                "وُضع الحجر الأسود في مكانه!", "أُضيف الباب الذهبي وميزاب الرحمة.",
+                "أُلبست الكعبة كسوتها السوداء.", "الحزام الذهبي والتطريز الذهبي يزينان الكسوة.",
+                "اكتمل صحن المطاف الرخامي والقاعدة.",
+                "الْحَمْدُ لِلَّهِ! اكتملت الكعبة وبدأ الطواف!",
+                "أرضية متلألئة! نور الروحانية الذهبي يحيط بكل مكان.",
+                "ذروة السلام! الحمام يحلّق في السماء والسحب تحيّي!"
             ]
         }
     };
 
-    const activeLang = localStorage.getItem('user_lang') || 'tr';
-    const langData = translations[activeLang] || translations['tr'];
-    const TOTAL_TASKS = 12;
+    const lang = translations[localStorage.getItem('user_lang')] ? localStorage.getItem('user_lang') : 'tr';
+    const L = translations[lang];
+    const TOTAL = 12;
+    const intlLoc = { tr: 'tr-TR', en: 'en-US', ar: 'ar-u-ca-gregory-nu-latn' }[lang];
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    let activeDay = 19;
-    let activeMonth = 8;
-
+    // ===================== TEMA / MODAL =====================
+    function updateThemeIcon() {
+        const isLight = document.documentElement.classList.contains('light-mode');
+        document.getElementById('themeToggleBtn').innerText = isLight ? '☀️' : '🌙';
+    }
     function toggleTheme() {
         const isLight = document.documentElement.classList.toggle('light-mode');
-        if (isLight) {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-            document.getElementById('themeToggleBtn').innerText = '☀️';
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            document.getElementById('themeToggleBtn').innerText = '🌙';
-        }
+        document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        updateThemeIcon();
     }
-
-    // Sayfa açılışında buton ikonunu doğru değere ayarla
-    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.getElementById('themeToggleBtn').innerText = '☀️';
-    } else {
-        document.getElementById('themeToggleBtn').innerText = '🌙';
-    }
-
     function toggleModal(show) {
-        const modal = document.getElementById('infoModal');
-        if (show) modal.classList.add('show');
-        else modal.classList.remove('show');
+        document.getElementById('infoModal').classList.toggle('show', !!show);
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleModal(false); });
+
+    // ===================== TARİH / KAYIT =====================
+    function dayStart(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+    let today = dayStart(new Date());
+    let sel = new Date(today);
+    let viewY = sel.getFullYear(), viewM = sel.getMonth();
+
+    // Eski (Ağustos 2026) kayıtları korumak için 2026 yılında eski anahtar biçimi kullanılır
+    function keyFor(y, m, d) {
+        return y === 2026 ? `kaba_build_v2_${m + 1}_${d}` : `kaba_build_v3_${y}_${m + 1}_${d}`;
+    }
+    function getData(y, m, d) {
+        let out = [];
+        try {
+            const a = JSON.parse(localStorage.getItem(keyFor(y, m, d)));
+            if (Array.isArray(a)) out = a.map(Boolean);
+        } catch (e) { /* bozuk kayıt: boş say */ }
+        while (out.length < TOTAL) out.push(false);
+        return out.slice(0, TOTAL);
+    }
+    function saveData(y, m, d, data) {
+        try { localStorage.setItem(keyFor(y, m, d), JSON.stringify(data)); } catch (e) { /* kota */ }
     }
 
-    function toggleDrawer() {
-        const drawer = document.getElementById('calendarDrawer');
-        const icon = document.getElementById('drawerIcon');
-        drawer.classList.toggle('open');
-        const isOpen = drawer.classList.contains('open');
-        icon.innerHTML = isOpen ? `▲ <span>${langData.close_btn}</span>` : `▼ <span>${langData.open_btn}</span>`;
+    // ===================== GÖREV LİSTESİ =====================
+    function buildTasks() {
+        const list = document.getElementById('tasksList');
+        let html = '';
+        for (let i = 0; i < TOTAL; i++) {
+            html += `<label class="task-item"><div class="task-info">
+                <input type="checkbox" class="task-checkbox" data-idx="${i}">
+                <div class="task-texts"><span class="task-name">${L['task_' + (i + 1) + '_name']}</span><span class="task-desc">${L['task_' + (i + 1) + '_desc']}</span></div>
+            </div></label>`;
+        }
+        list.innerHTML = html;
+        list.addEventListener('change', onToggle);
     }
 
-    function getData(key) {
-        let data = JSON.parse(localStorage.getItem(key)) || [];
-        while(data.length < TOTAL_TASKS) data.push(false);
-        return data;
-    }
-
-    function initCalendar() {
+    // ===================== TAKVİM =====================
+    function renderCalendar() {
         const grid = document.getElementById('daysGrid');
-        grid.innerHTML = '';
-        for (let d = 1; d <= 31; d++) {
-            const cell = document.createElement('div');
-            cell.className = `day-cell ${d === activeDay ? 'active' : ''}`;
-            const key = `kaba_build_v2_${activeMonth}_${d}`;
-            const data = getData(key);
-            const count = data.filter(Boolean).length;
-            
-            cell.innerHTML = `<span>${d}</span><div class="dot ${count > 0 ? 'done' : ''}"></div>`;
-            cell.onclick = (e) => { e.stopPropagation(); activeDay = d; initCalendar(); loadDay(); };
-            grid.appendChild(cell);
+        const first = new Date(viewY, viewM, 1);
+        const daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
+        const offset = (first.getDay() + 6) % 7;     // hafta Pazartesi ile başlar
+
+        document.getElementById('monthTitle').textContent =
+            new Intl.DateTimeFormat(intlLoc, { month: 'long', year: 'numeric' }).format(first);
+        document.getElementById('nextMonth').disabled = (viewY === today.getFullYear() && viewM === today.getMonth());
+
+        const wf = new Intl.DateTimeFormat(intlLoc, { weekday: 'short' });
+        let html = '';
+        for (let i = 0; i < 7; i++) html += `<div class="dow">${wf.format(new Date(2024, 0, 1 + i))}</div>`;
+        for (let i = 0; i < offset; i++) html += `<div class="day-cell empty"></div>`;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const date = new Date(viewY, viewM, d);
+            const future = date > today;
+            const count = future ? 0 : getData(viewY, viewM, d).filter(Boolean).length;
+            const isSel = date.getTime() === sel.getTime();
+            const isToday = date.getTime() === today.getTime();
+            html += `<button type="button" class="day-cell${isSel ? ' active' : ''}${isToday ? ' today' : ''}${future ? ' future' : ''}" data-d="${d}" ${future ? 'disabled' : ''}>
+                <span>${d}</span><div class="bar"><i style="width:${Math.round(count / TOTAL * 100)}%"></i></div></button>`;
         }
-        loadDay();
+        grid.innerHTML = html;
     }
 
-    function loadDay() {
-        document.getElementById('currentDateLabel').innerText = `📅 ${activeDay} ${langData.month_name} 2026`;
-        const key = `kaba_build_v2_${activeMonth}_${activeDay}`;
-        const data = getData(key);
-        const checkboxes = document.querySelectorAll('.task-checkbox');
-        checkboxes.forEach((cb, idx) => cb.checked = !!data[idx]);
-        renderKaba(data, false);
+    function setupCalendar() {
+        document.getElementById('daysGrid').addEventListener('click', e => {
+            const cell = e.target.closest('.day-cell');
+            if (!cell || cell.disabled || !cell.dataset.d) return;
+            sel = new Date(viewY, viewM, parseInt(cell.dataset.d, 10));
+            renderCalendar(); loadSelected();
+        });
+        document.getElementById('prevMonth').onclick = () => { viewM--; if (viewM < 0) { viewM = 11; viewY--; } renderCalendar(); };
+        document.getElementById('nextMonth').onclick = () => { viewM++; if (viewM > 11) { viewM = 0; viewY++; } renderCalendar(); };
+        document.getElementById('calToggle').onclick = () => {
+            const drawer = document.getElementById('calendarDrawer');
+            drawer.classList.toggle('open');
+            updateDrawerIcon();
+        };
+        updateDrawerIcon();
+    }
+    function updateDrawerIcon() {
+        const open = document.getElementById('calendarDrawer').classList.contains('open');
+        document.getElementById('drawerIcon').textContent = open ? `▲ ${L.close_btn}` : `▼ ${L.open_btn}`;
     }
 
-    function updateFarm() {
-        const checkboxes = document.querySelectorAll('.task-checkbox');
-        const data = Array.from(checkboxes).map(cb => cb.checked);
-        const key = `kaba_build_v2_${activeMonth}_${activeDay}`;
-        localStorage.setItem(key, JSON.stringify(data));
-        initCalendar();
-        renderKaba(data, true);
+    function loadSelected() {
+        const y = sel.getFullYear(), m = sel.getMonth(), d = sel.getDate();
+        document.getElementById('currentDateLabel').textContent = '📅 ' +
+            new Intl.DateTimeFormat(intlLoc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(sel);
+        const data = getData(y, m, d);
+        document.querySelectorAll('.task-checkbox').forEach((cb, i) => { cb.checked = !!data[i]; });
+        renderStage(data.filter(Boolean).length, false);
     }
 
-    function renderKaba(data, animate = true) {
-        const count = data.filter(Boolean).length;
-        document.getElementById('progressBadge').innerText = `${count} / ${TOTAL_TASKS} ${activeLang === 'ar' ? 'مكتمل' : (activeLang === 'en' ? 'Completed' : 'Tamamlandı')}`;
-        document.getElementById('completionPercent').innerText = `%${Math.round((count/TOTAL_TASKS)*100)}`;
-
-        const scene = document.getElementById('sceneContainer');
-        const islandTop = document.getElementById('islandTop');
-        
-        islandTop.classList.remove('kurak', 'golden');
-        scene.classList.remove('zirve');
-
-        if (count === 0) {
-            islandTop.classList.add('kurak');
-        } else if (count >= 11) {
-            islandTop.classList.add('golden');
-        }
-        if (count === 12) {
-            scene.classList.add('zirve');
-        }
-
-        const svg = document.getElementById('mainKabaSvg');
-        const quoteEl = document.getElementById('quoteBox');
-
-        if (animate) {
-            svg.classList.remove('kaba-pop');
-            void svg.offsetWidth;
-            svg.classList.add('kaba-pop');
-        }
-
-        let defsHTML = svg.querySelector('defs').outerHTML;
-        let svgContent = '';
-        let quoteText = langData.quotes[Math.min(count, 12)];
-
-        let visualCount = Math.min(count, 10); 
-
-        if (visualCount === 0) {
-            svgContent = `<polygon points="100,160 145,138 100,116 55,138" fill="rgba(0,0,0,0.2)" stroke="#78350f" stroke-dasharray="3,3" stroke-width="2"/>`;
-        } else if (visualCount === 1) {
-            svgContent = `
-                <polygon points="100,160 145,138 100,116 55,138" fill="#44403c"/>
-                <polygon points="55,138 100,160 100,152 55,130" fill="url(#stoneFront)"/>
-                <polygon points="100,160 145,138 145,130 100,152" fill="url(#stoneSide)"/>`;
-        } else if (visualCount === 2) {
-            svgContent = `
-                <polygon points="100,140 145,118 100,96 55,118" fill="#57534e"/>
-                <polygon points="55,118 100,140 100,160 55,138" fill="url(#stoneFront)"/>
-                <polygon points="100,140 145,118 145,138 100,160" fill="url(#stoneSide)"/>`;
-        } else if (visualCount === 3) {
-            svgContent = `
-                <polygon points="100,120 145,98 100,76 55,98" fill="#57534e"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>`;
-        } else if (visualCount === 4) {
-            svgContent = `
-                <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>`;
-        } else if (visualCount === 5) {
-            svgContent = `
-                <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>
-                <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>`;
-        } else if (visualCount === 6) {
-            svgContent = `
-                <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#stoneFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#stoneSide)"/>
-                <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (visualCount === 7) {
-            svgContent = `
-                <polygon points="100,120 145,98 100,76 55,98" fill="#171717"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (visualCount === 8) {
-            svgContent = `
-                <polygon points="100,120 145,98 100,76 55,98" fill="#171717"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <polygon points="55,108 100,130 100,134 55,112" fill="url(#goldGrad)"/>
-                <polygon points="100,130 145,108 145,112 100,134" fill="url(#goldGrad)"/>
-                <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (visualCount === 9) {
-            svgContent = `
-                <polygon points="100,175 162,144 100,113 38,144" fill="#f8fafc" opacity="0.85"/>
-                <polygon points="52,141 100,164 100,160 52,137" fill="#cbd5e1"/>
-                <polygon points="100,164 148,141 148,137 100,160" fill="#94a3b8"/>
-                <polygon points="100,120 145,98 100,76 55,98" fill="#171717"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <polygon points="55,108 100,130 100,134 55,112" fill="url(#goldGrad)"/>
-                <polygon points="100,130 145,108 145,112 100,134" fill="url(#goldGrad)"/>
-                <circle cx="100" cy="152" r="5" fill="#e2e8f0"/><circle cx="100" cy="152" r="3" fill="#09090b"/>
-                <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>`;
-        } else if (visualCount === 10) { 
-            svgContent = `
-                <polygon points="100,20 60,98 140,98" fill="url(#goldGrad)" opacity="${count >= 11 ? '0.6' : '0.25'}"/>
-                <polygon points="100,10 40,160 160,160" fill="#fef08a" opacity="${count >= 11 ? '0.4' : '0.15'}"/>
-                
-                <polygon points="100,175 162,144 100,113 38,144" fill="#ffffff"/>
-                <polygon points="52,141 100,164 100,160 52,137" fill="#e2e8f0"/>
-                <polygon points="100,164 148,141 148,137 100,160" fill="#cbd5e1"/>
-                
-                <polygon points="100,120 145,98 100,76 55,98" fill="#262626"/>
-                <polygon points="55,98 100,120 100,160 55,138" fill="url(#kisveFront)"/>
-                <polygon points="100,120 145,98 145,138 100,160" fill="url(#kisveSide)"/>
-                <polygon points="55,108 100,130 100,134 55,112" fill="url(#goldGrad)"/>
-                <polygon points="100,130 145,108 145,112 100,134" fill="url(#goldGrad)"/>
-                
-                <circle cx="100" cy="152" r="7" fill="#fef08a" opacity="${count >= 11 ? '0.9' : '0.6'}"/>
-                <circle cx="100" cy="152" r="4" fill="#e2e8f0"/>
-                <circle cx="100" cy="152" r="2" fill="#000000"/>
-                
-                <polygon points="68,114 80,120 80,146 68,140" fill="url(#goldGrad)"/>
-                <polygon points="85,93 89,91 89,86 85,88" fill="url(#goldGrad)"/>
-                
-                <ellipse cx="100" cy="97" rx="22" ry="11" fill="#fef08a" opacity="${count >= 11 ? '0.8' : '0.4'}"/>`;
-        }
-
-        svg.innerHTML = defsHTML + svgContent;
-        quoteEl.innerText = quoteText;
+    function onToggle() {
+        const data = Array.from(document.querySelectorAll('.task-checkbox')).map(cb => cb.checked);
+        saveData(sel.getFullYear(), sel.getMonth(), sel.getDate(), data);
+        renderCalendar();
+        renderStage(data.filter(Boolean).length, true);
     }
 
+    // ===================== 3B SAHNE: OLUŞTURMA =====================
+    const world = document.getElementById('world');
+    const kaabaEl = document.getElementById('kaaba');
+    const plinthEl = document.getElementById('plinth');
+    const stageEl = document.getElementById('stage');
+    const sceneEl = document.getElementById('sceneContainer');
+    const SHADE = '<div class="shade"></div>';
+    const HIZAM_TEXT = 'لا إله إلا الله محمد رسول الله ﷺ  ✦  ' .repeat(6);
+
+    function wallInner(withDoor) {
+        return `<div class="kisve"></div>
+            <div class="hizam">${HIZAM_TEXT}</div>
+            <div class="gpanel gp1"></div><div class="gpanel gp2"></div><div class="gpanel gp3"></div>
+            ${withDoor ? '<div class="door"><i></i><i></i><i></i></div><div class="hajar"></div>' : ''}
+            ${SHADE}`;
+    }
+
+    function buildKaaba() {
+        kaabaEl.innerHTML =
+            `<div class="face wf d-f stone">${wallInner(true)}</div>` +
+            `<div class="face wb d-b stone">${wallInner(false)}</div>` +
+            `<div class="face wr d-r stone">${wallInner(false)}</div>` +
+            `<div class="face wl d-l stone">${wallInner(false)}</div>` +
+            `<div class="face roof d-t">${SHADE}</div>`;
+    }
+
+    function buildArcades() {
+        const N = 40, R = 790, w = Math.ceil(2 * Math.PI * R / N) + 2;
+        let html = '';
+        for (let i = 0; i < N; i++) {
+            const a = (360 / N) * i;
+            html += `<div class="arc" style="width:${w}px;height:100px;left:${-w / 2}px;top:-100px;transform:rotateY(${a}deg) translateZ(${R}px) rotateY(180deg)"></div>`;
+        }
+        document.getElementById('arcades').innerHTML = html;
+    }
+
+    function buildMinarets() {
+        const angles = [24, 88, 148, 208, 268, 328], R = 835, SW = 18, SH = 330, RH = 62;
+        let html = '';
+        angles.forEach(a => {
+            const x = Math.sin(a * Math.PI / 180) * R, z = Math.cos(a * Math.PI / 180) * R;
+            let faces = '';
+            const dirs = ['d-f', 'd-r', 'd-b', 'd-l'];
+            for (let k = 0; k < 4; k++) {
+                faces += `<div class="mn-face ${dirs[k]}" style="width:${SW}px;height:${SH}px;left:${-SW / 2}px;top:${-SH}px;transform:rotateY(${k * 90}deg) translateZ(${SW / 2}px)">${SHADE}</div>`;
+                faces += `<div class="mn-roof ${dirs[k]}" style="width:${SW}px;height:${RH}px;left:${-SW / 2}px;top:${-SH - RH}px;transform-origin:50% 100%;transform:rotateY(${k * 90}deg) translateZ(${SW / 2}px) rotateX(${Math.atan((SW / 2) / RH) * 180 / Math.PI}deg)"></div>`;
+            }
+            faces += `<div class="mn-crescent" style="left:-4px;top:${-SH - RH - 11}px"></div><div class="mn-crescent" style="left:-4px;top:${-SH - RH - 11}px;transform:rotateY(90deg) rotate(40deg)"></div>`;
+            html += `<div style="position:absolute;left:0;top:0;transform:translate3d(${x}px,0,${z}px)">${faces}</div>`;
+        });
+        document.getElementById('minarets').innerHTML = html;
+    }
+
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+
+    function buildCrowd() {
+        const rings = [{ r: 185, n: 11, t: 46 }, { r: 232, n: 14, t: 58 }, { r: 285, n: 17, t: 72 }];
+        const cloths = ['#f6f6f6', '#f6f6f6', '#f6f6f6', '#f6f6f6', '#f2efe8', '#1f1f23', '#2b2430', '#3f3a52', '#5a4a3a'];
+        let html = '';
+        rings.forEach(ring => {
+            let people = '';
+            for (let i = 0; i < ring.n; i++) {
+                const a = (360 / ring.n) * i + rnd(-8, 8);
+                const r = ring.r + rnd(-14, 14);
+                const cloth = cloths[Math.floor(Math.random() * cloths.length)];
+                people += `<div class="person" style="transform:rotateY(${a}deg) translateZ(${r}px)"><div class="body" style="animation-delay:${(-Math.random() * 0.8).toFixed(2)}s;animation-duration:${rnd(0.65, 0.95).toFixed(2)}s"><div class="pln" style="--cloth:${cloth}"></div><div class="pln b" style="--cloth:${cloth}"></div></div></div>`;
+            }
+            html += `<div class="ring" style="animation-duration:${ring.t}s">${people}</div>`;
+        });
+        document.getElementById('crowd').innerHTML = html;
+    }
+
+    function buildFlock() {
+        const rings = [{ r: 240, h: 205, n: 4, t: 30 }, { r: 320, h: 255, n: 5, t: 40 }];
+        let html = '';
+        rings.forEach(ring => {
+            let birds = '';
+            for (let i = 0; i < ring.n; i++) {
+                const a = (360 / ring.n) * i + rnd(-15, 15);
+                birds += `<div class="dove" style="transform:rotateY(${a}deg) translate3d(0,${-(ring.h + rnd(-18, 18))}px,${ring.r}px)"><div class="wing" style="animation-delay:${(-Math.random() * .5).toFixed(2)}s"></div><div class="wing b" style="animation-delay:${(-Math.random() * .5).toFixed(2)}s"></div></div>`;
+            }
+            html += `<div class="flock-ring" style="animation-duration:${ring.t}s">${birds}</div>`;
+        });
+        document.getElementById('flock').innerHTML = html;
+    }
+
+    function buildStars() {
+        let html = '';
+        for (let i = 0; i < 50; i++) {
+            html += `<div class="star" style="left:${rnd(0, 100).toFixed(1)}%;top:${rnd(0, 58).toFixed(1)}%;animation-delay:${rnd(0, 3).toFixed(2)}s;width:${rnd(1.2, 2.6).toFixed(1)}px;height:${rnd(1.2, 2.6).toFixed(1)}px"></div>`;
+        }
+        document.getElementById('stars').innerHTML = html;
+    }
+
+    // ===================== GÖKYÜZÜ (gerçek saate göre) =====================
+    let ambient = 0.5;
+    function updateSky() {
+        const now = new Date();
+        const h = now.getHours() + now.getMinutes() / 60;
+        let phase = 'night', night = 0.55, amb = 0.28, shadeColor = '#050a22';
+        if (h >= 5 && h < 7.5) { phase = 'dawn'; night = 0.2; amb = 0.4; shadeColor = '#1a1030'; }
+        else if (h >= 7.5 && h < 17.5) { phase = 'day'; night = 0; amb = 0.5; shadeColor = '#000'; }
+        else if (h >= 17.5 && h < 19.75) { phase = 'dusk'; night = 0.22; amb = 0.38; shadeColor = '#1a0f28'; }
+
+        const sky = document.getElementById('sky');
+        sky.className = 'sky ' + phase;
+        const orb = document.getElementById('sunMoon');
+        const t = (phase === 'night') ? (((h - 19.75 + 24) % 24) / 9.25) : ((h - 5) / 14.75);   // 0..1
+        const tt = Math.min(1, Math.max(0, t));
+        orb.style.left = (12 + 76 * tt) + '%';
+        orb.style.top = (62 - 48 * Math.sin(Math.PI * tt)) + '%';
+
+        world.style.setProperty('--night', night);
+        world.style.setProperty('--shade-color', shadeColor);
+        ambient = amb;
+        dirty = true;
+    }
+
+    // ===================== AŞAMALAR =====================
+    let curP = 0, curPl = 0, tweenRaf = 0;
+    const FLAGS = [['has-plinth', 1], ['has-roof', 4], ['has-hajar', 5], ['has-door', 6], ['has-kisve', 7],
+                   ['has-hizam', 8], ['has-marble', 9], ['has-crowd', 10], ['has-glow', 11], ['has-peak', 12]];
+
+    function applyGeom(p, pl) {
+        kaabaEl.style.setProperty('--p', Math.max(p, 0.001).toFixed(4));
+        plinthEl.style.setProperty('--pl', Math.max(pl, 0.001).toFixed(4));
+        plinthEl.classList.toggle('built', pl >= 0.999);
+    }
+
+    function renderStage(count, animate) {
+        count = Math.max(0, Math.min(TOTAL, count));
+        const targetPl = count >= 1 ? 1 : 0;
+        const targetP = count >= 4 ? 1 : (count === 3 ? 0.68 : (count === 2 ? 0.34 : 0));
+
+        FLAGS.forEach(([c, n]) => world.classList.toggle(c, count >= n));
+        sceneEl.classList.toggle('peak', count >= 12);
+
+        document.getElementById('progressBadge').textContent = `${count} / ${TOTAL} ${L.completed}`;
+        document.getElementById('completionPercent').textContent = `%${Math.round(count / TOTAL * 100)}`;
+        document.getElementById('quoteBox').textContent = L.quotes[Math.min(count, 12)];
+
+        cancelAnimationFrame(tweenRaf);
+        if (!animate || reduced) {
+            curP = targetP; curPl = targetPl; applyGeom(curP, curPl); return;
+        }
+        const startP = curP, startPl = curPl, t0 = performance.now(), dur = 1400;
+        const step = now => {
+            const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+            curP = startP + (targetP - startP) * e;
+            curPl = startPl + (targetPl - startPl) * e;
+            applyGeom(curP, curPl);
+            if (k < 1) tweenRaf = requestAnimationFrame(step);
+        };
+        tweenRaf = requestAnimationFrame(step);
+    }
+
+    // ===================== KAMERA VE IŞIKLANDIRMA =====================
+    let yaw = -32, pitch = 26, zoom = 1, tPitch = 26, tZoom = 1, vyaw = 0;
+    let auto = !reduced, dragging = false, lastInteract = 0, dirty = true;
+    const LIGHT = (() => { const v = [-0.5, -0.8, 0.45], m = Math.hypot(...v); return v.map(x => x / m); })();
+    const NORMALS = { f: [0, 0, 1], b: [0, 0, -1], r: [1, 0, 0], l: [-1, 0, 0], t: [0, -1, 0] };
+    const lastShade = {};
+
+    function applyView() {
+        world.style.transform = `translateZ(0) scale(${zoom.toFixed(3)}) rotateX(${pitch.toFixed(2)}deg) rotateY(${yaw.toFixed(2)}deg)`;
+        const rad = Math.PI / 180;
+        const c = Math.cos(yaw * rad), s = Math.sin(yaw * rad), c2 = Math.cos(pitch * rad), s2 = Math.sin(pitch * rad);
+        for (const k in NORMALS) {
+            const n = NORMALS[k];
+            const x1 = n[0] * c + n[2] * s, y1 = n[1], z1 = -n[0] * s + n[2] * c;
+            const v = [x1, y1 * c2 - z1 * s2, y1 * s2 + z1 * c2];
+            const dot = v[0] * LIGHT[0] + v[1] * LIGHT[1] + v[2] * LIGHT[2];
+            const bright = ambient + (1 - ambient) * Math.max(0, dot);
+            const op = Math.min(0.82, Math.max(0, 1 - bright));
+            if (lastShade[k] === undefined || Math.abs(lastShade[k] - op) > 0.004) {
+                lastShade[k] = op;
+                world.style.setProperty('--s-' + k, op.toFixed(3));
+            }
+        }
+    }
+
+    let lastT = performance.now();
+    function frame(now) {
+        const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+        if (!dragging) {
+            if (Math.abs(vyaw) > 0.02) { yaw += vyaw * dt * 60; vyaw *= Math.pow(0.92, dt * 60); dirty = true; }
+            else if (auto && now - lastInteract > 1800) { yaw += 6 * dt; dirty = true; }
+        }
+        if (Math.abs(tPitch - pitch) > 0.05) { pitch += (tPitch - pitch) * Math.min(1, dt * 6); dirty = true; }
+        if (Math.abs(tZoom - zoom) > 0.002) { zoom += (tZoom - zoom) * Math.min(1, dt * 6); dirty = true; }
+        if (dirty) { applyView(); dirty = false; }
+        requestAnimationFrame(frame);
+    }
+
+    function setupInteraction() {
+        const pointers = new Map();
+        let pinchStart = 0, zoomStart = 1;
+        const hint = document.getElementById('hint');
+        const dist = () => { const a = [...pointers.values()]; return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); };
+
+        stageEl.addEventListener('pointerdown', e => {
+            stageEl.setPointerCapture(e.pointerId);
+            pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            if (pointers.size === 1) { dragging = true; stageEl.classList.add('dragging'); vyaw = 0; }
+            if (pointers.size === 2) { pinchStart = dist(); zoomStart = tZoom; }
+            hint.classList.add('hide'); lastInteract = performance.now();
+        });
+        stageEl.addEventListener('pointermove', e => {
+            const p = pointers.get(e.pointerId); if (!p) return;
+            const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+            if (pointers.size === 1) {
+                yaw += dx * 0.5; vyaw = dx * 0.5;
+                if (e.pointerType === 'mouse') { tPitch = pitch = Math.min(75, Math.max(6, pitch - dy * 0.3)); }
+                dirty = true;
+            } else if (pointers.size === 2 && pinchStart > 0) {
+                tZoom = zoom = Math.min(1.8, Math.max(0.6, zoomStart * dist() / pinchStart)); dirty = true;
+            }
+            lastInteract = performance.now();
+        });
+        const end = e => {
+            pointers.delete(e.pointerId);
+            if (pointers.size === 0) { dragging = false; stageEl.classList.remove('dragging'); lastInteract = performance.now(); }
+            if (pointers.size === 1) { dragging = true; }
+        };
+        stageEl.addEventListener('pointerup', end);
+        stageEl.addEventListener('pointercancel', end);
+
+        const views = [26, 42, 64, 14]; let vi = 0;
+        const zooms = [1, 1.3, 0.8]; let zi = 0;
+        const btnAuto = document.getElementById('btnAuto');
+        btnAuto.classList.toggle('on', auto);
+        btnAuto.onclick = () => { auto = !auto; btnAuto.classList.toggle('on', auto); lastInteract = 0; };
+        document.getElementById('btnView').onclick = () => { vi = (vi + 1) % views.length; tPitch = views[vi]; };
+        document.getElementById('btnZoom').onclick = () => { zi = (zi + 1) % zooms.length; tZoom = zooms[zi]; };
+        setTimeout(() => hint.classList.add('hide'), 6000);
+    }
+
+    // ===================== BAŞLATMA =====================
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (langData[key]) {
-                if (el.tagName === 'TITLE') document.title = langData[key];
-                else el.innerText = langData[key];
-            }
+            if (L[key]) { if (el.tagName === 'TITLE') document.title = L[key]; else el.textContent = L[key]; }
         });
-        initCalendar();
+        document.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const key = el.getAttribute('data-i18n-title');
+            if (L[key]) { el.title = L[key]; el.setAttribute('aria-label', L[key]); }
+        });
+        document.title = L.page_title;
+        updateThemeIcon();
+
+        buildTasks();
+        buildKaaba(); buildArcades(); buildMinarets(); buildCrowd(); buildFlock(); buildStars();
+        updateSky(); setInterval(updateSky, 60000);
+        setupCalendar(); setupInteraction();
+        renderCalendar(); loadSelected();
+        requestAnimationFrame(frame);
+
+        // Gün değişince (uygulama açık kalmışsa) bugüne geç
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) return;
+            const nowDay = dayStart(new Date());
+            if (nowDay.getTime() !== today.getTime()) {
+                const wasToday = sel.getTime() === today.getTime();
+                today = nowDay;
+                if (wasToday) { sel = new Date(today); viewY = sel.getFullYear(); viewM = sel.getMonth(); }
+                renderCalendar(); loadSelected();
+            }
+            updateSky();
+        });
     });
 </script>
 </body>
