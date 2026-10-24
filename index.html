@@ -6,6 +6,7 @@
     <meta http-equiv="Expires" content="0">
 
     <script>
+        // Tema, Özel Renk Paleti ve Dil Kontrolü (sayfa çizilmeden önce çalışır)
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (savedTheme === 'light' || (!savedTheme && !systemPrefersDark)) {
@@ -35,6 +36,7 @@
             --modal-body: #cbd5e1;
         }
 
+        /* DÜZELTME: Tema sınıfı <html> üzerinde olduğu için seçici html.light-mode */
         html.light-mode, html[data-theme="light"] {
             --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
             --card-bg: rgba(255, 255, 255, 0.75);
@@ -49,7 +51,6 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-gradient);
-            background-attachment: fixed;
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
@@ -102,6 +103,7 @@
             user-select: none; -webkit-user-select: none;
         }
 
+        /* Gökyüzü (gerçek saate göre değişir) */
         .sky { position: absolute; inset: 0; transition: background 2s ease; }
         .sky.day   { background: linear-gradient(to bottom, #2f86d6 0%, #7cc4f2 55%, #dff3ff 100%); }
         .sky.dawn  { background: linear-gradient(to bottom, #2b3a67 0%, #b9738c 45%, #ffc99a 100%); }
@@ -137,60 +139,58 @@
         .cloud3 { width: 140px; height: 30px; top: 8%;  left: -180px; animation: moveCloud 64s linear infinite 26s; }
         @keyframes moveCloud { to { transform: translateX(760px); } }
 
+        /* 3B sahne */
         .stage {
-            position: absolute; inset: 0; perspective: 1150px; perspective-origin: 50% 38%;
+            position: absolute; inset: 0; perspective: 1900px; perspective-origin: 50% 38%;
             touch-action: pan-y; cursor: grab; overflow: hidden;
         }
         .stage.dragging { cursor: grabbing; }
 
-        .world, .world * { transform-style: preserve-3d; -webkit-transform-style: preserve-3d; }
-        .world { position: absolute; left: 50%; top: 66%; width: 0; height: 0; will-change: transform; }
-        .world .face, .world .flat { transform-style: flat; -webkit-transform-style: flat; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+        .world, .world * { transform-style: preserve-3d; }
+        .world { position: absolute; left: 50%; top: 71%; width: 0; height: 0; will-change: transform; }
+        .world .face, .world .flat { transform-style: flat; }
 
         :root {
             --W: 170px; --D: 146px; --H: 174px;
             --PL: 11px; --PW: 196px; --PD: 172px;
         }
 
-        /* Zemin (Safari yırtılmasını önlemek için 1200px'e düşürüldü) */
-        .flat { position: absolute; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-        .ground-dirt {
-            width: 1200px; height: 1200px; left: -600px; top: -600px; border-radius: 50%;
-            transform: rotateX(90deg);
+        /* Zemin: 3B bağlamın dışında, kamera eğimine göre yassılan 2B elips (derinlik sıralaması sorunu yaşamamak için) */
+        .ground2d { position: absolute; left: 50%; top: 71%; width: 1500px; height: 1500px; border-radius: 50%; overflow: hidden; pointer-events: none; transform: translate(-50%, -50%) scaleY(.44); will-change: transform; }
+        .ground2d > div { position: absolute; inset: 0; border-radius: 50%; }
+        .g-dirt {
             background:
-              radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0 260px, rgba(40,28,10,.25) 575px),
+              radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 0 480px, rgba(40,28,10,.28) 750px),
               repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.025) 0 3px, rgba(0,0,0,.03) 3px 7px),
               radial-gradient(circle at 50% 50%, #a58c63 0, #8a7352 50%, #6d5a3d 100%);
         }
-        .ground-marble {
-            width: 1200px; height: 1200px; left: -600px; top: -600px; border-radius: 50%;
-            transform: translateY(-0.6px) rotateX(90deg); opacity: 0; transition: opacity 1.6s ease;
+        .g-marble {
+            opacity: 0; transition: opacity 1.6s ease;
             background:
-              radial-gradient(circle at 50% 50%, transparent 0 64px, rgba(120,95,50,.16) 64px 66px, transparent 66px 165px, rgba(120,95,50,.18) 165px 168px, transparent 168px 280px, rgba(120,95,50,.12) 280px 283px, transparent 283px),
-              repeating-radial-gradient(circle at 50% 50%, rgba(0,0,0,.055) 0 1px, transparent 1px 26px),
-              repeating-conic-gradient(from 0deg at 50% 50%, rgba(0,0,0,.035) 0 0.7deg, transparent 0.7deg 7.5deg),
-              radial-gradient(circle at 50% 50%, #f6f3ec 0, #ebe6da 40%, #d9d2c0 100%);
+              radial-gradient(circle at 50% 50%, transparent 0 128px, rgba(120,95,50,.2) 128px 134px, transparent 134px 330px, rgba(120,95,50,.22) 330px 337px, transparent 337px 560px, rgba(120,95,50,.16) 560px 567px, transparent 567px),
+              repeating-radial-gradient(circle at 50% 50%, rgba(0,0,0,.06) 0 1px, transparent 1px 26px),
+              radial-gradient(circle at 50% 50%, #f6f3ec 0, #ebe6da 45%, #d9d2c0 70%, #b9b19c 100%);
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 560px, rgba(0,0,0,.0) 600px);
+            mask-image: radial-gradient(circle at 50% 50%, #000 0 560px, rgba(0,0,0,.0) 600px);
         }
-        .world.has-marble .ground-marble { opacity: 1; }
-        .ground-tint {
-            width: 1200px; height: 1200px; left: -600px; top: -600px; border-radius: 50%;
-            transform: translateY(-1.2px) rotateX(90deg); background: #050a1e; opacity: var(--night, 0); pointer-events: none;
+        .stage.has-marble .g-marble { opacity: 1; }
+        .g-tint { background: #050a1e; opacity: var(--night, 0); }
+        .g-haze { background: radial-gradient(circle at 50% 50%, transparent 48%, var(--haze, #dcecf9) 100%); }
+        .g-glow {
+            opacity: 0; transition: opacity 1.6s ease;
+            background: radial-gradient(circle at 50% 50%, rgba(255,226,130,.55) 0, rgba(255,210,90,.32) 12%, rgba(255,195,70,.12) 24%, rgba(255,190,60,0) 36%);
         }
-        .ground-glow {
-            width: 900px; height: 900px; left: -450px; top: -450px; border-radius: 50%;
-            transform: translateY(-1.8px) rotateX(90deg); opacity: 0; transition: opacity 1.6s ease;
-            background: radial-gradient(circle at 50% 50%, rgba(255,222,120,.95) 0, rgba(255,205,80,.6) 22%, rgba(255,190,60,.25) 50%, rgba(255,190,60,0) 72%);
-            mix-blend-mode: screen;
-        }
-        .world.has-glow .ground-glow { opacity: 1; animation: glowPulse 4.5s ease-in-out infinite alternate; }
+        .stage.has-glow .g-glow { opacity: 1; animation: glowPulse 4.5s ease-in-out infinite alternate; }
         @keyframes glowPulse { from { filter: brightness(.85); } to { filter: brightness(1.25); } }
+        .flat { position: absolute; backface-visibility: visible; }
         .outline {
             width: var(--PW); height: var(--PD); left: calc(var(--PW) / -2); top: calc(var(--PD) / -2);
-            transform: translateY(-1px) rotateX(90deg); border: 2px dashed rgba(255,236,170,.9); border-radius: 4px;
+            transform: translateY(1px) rotateX(90deg); border: 2px dashed rgba(255,236,170,.9); border-radius: 4px;
             background: rgba(255,230,150,.10); transition: opacity 1s ease;
         }
         .world.has-plinth .outline { opacity: 0; }
 
+        /* Yüzeyler */
         .face { position: absolute; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; transform-origin: 50% 100%; }
         .shade { position: absolute; inset: 0; background: var(--shade-color, #000); opacity: 0; pointer-events: none; z-index: 20; }
         .d-f > .shade { opacity: var(--s-f, 0); }
@@ -207,6 +207,7 @@
             box-shadow: inset 0 0 14px rgba(0,0,0,.5);
         }
 
+        /* Temel kaidesi (Şadırvan) */
         .plinth { position: absolute; left: 0; top: 0; --pl: 0; }
         .plinth .face { background: linear-gradient(180deg, #8a847b, #5e5952); box-shadow: inset 0 0 6px rgba(0,0,0,.5); }
         .plinth .marble { position: absolute; inset: 0; opacity: 0; transition: opacity 1.6s ease; background: linear-gradient(180deg, #fbf8f1 0%, #e6dfd0 70%, #cfc6b2 100%); box-shadow: inset 0 -2px 0 rgba(212,170,60,.9); }
@@ -220,6 +221,7 @@
         .ptop { width: var(--PW); height: var(--PD); left: calc(var(--PW) / -2); top: calc(var(--PD) / -2); transform-origin: 50% 50%; transform: translateY(calc(var(--PL) * -1)) rotateX(90deg); opacity: 0; background: linear-gradient(135deg, #7d776e, #5d5851); }
         .plinth.built .ptop { opacity: 1; }
 
+        /* Kâbe gövdesi */
         .kaaba { position: absolute; left: 0; top: 0; --p: 0; transform: translateY(calc(var(--PL) * -1)); }
         .kaaba .wf, .kaaba .wb { width: var(--W); height: var(--H); left: calc(var(--W) / -2); top: calc(var(--H) * -1); }
         .kaaba .wr, .kaaba .wl { width: var(--D); height: var(--H); left: calc(var(--D) / -2); top: calc(var(--H) * -1); }
@@ -235,6 +237,7 @@
         }
         .world.has-roof .roof { opacity: 1; }
 
+        /* Kisve (siyah örtü) - yukarıdan aşağı iner */
         .kisve {
             position: absolute; inset: 0; clip-path: inset(0 0 100% 0); transition: clip-path 2.2s cubic-bezier(.3,.7,.2,1);
             background:
@@ -246,6 +249,7 @@
         }
         .world.has-kisve .kisve { clip-path: inset(0 0 0 0); }
 
+        /* Hızam (altın şerit) */
         .hizam {
             position: absolute; left: 0; right: 0; top: 29%; height: 10%; z-index: 3; opacity: 0; transition: opacity 1.6s ease;
             background: linear-gradient(180deg, #7a5a12 0, #e8c459 12%, #fbe9a0 48%, #d6aa3a 84%, #6e4f0e 100%);
@@ -265,6 +269,7 @@
         .gp2 { right: 8%; top: 44%; width: 36%; height: 15%; }
         .gp3 { left: 12%; top: 64%; width: 76%; height: 12%; }
 
+        /* Altın kapı */
         .door {
             position: absolute; left: 52%; bottom: 17%; width: 14%; height: 25%; z-index: 4; opacity: 0; transition: opacity 1.4s ease;
             background: linear-gradient(135deg, #f7dd86 0%, #c9992c 45%, #8a6414 100%);
@@ -274,6 +279,7 @@
         .door i:nth-child(1) { top: 8%; } .door i:nth-child(2) { top: 38%; } .door i:nth-child(3) { top: 68%; }
         .world.has-door .door { opacity: 1; }
 
+        /* Hacerülesved (gümüş çerçeveli) */
         .hajar {
             position: absolute; right: 2px; bottom: 11%; width: 19px; height: 25px; z-index: 5; opacity: 0; transition: opacity 1.2s ease;
             border-radius: 50% 50% 46% 46% / 40% 40% 60% 60%;
@@ -283,6 +289,7 @@
         }
         .world.has-hajar .hajar { opacity: 1; }
 
+        /* Mizab (altın oluk) */
         .mizab { position: absolute; left: 0; top: 0; transform: translateY(calc(var(--H) * -1 - var(--PL) + 4px)); }
         .mizab .mz {
             position: absolute; backface-visibility: visible;
@@ -293,6 +300,7 @@
         .mz-s2 { width: 40px; height: 7px; left: calc(var(--W) / -2 - 38px); top: -7px; transform: translateZ(-9px); }
         .world.has-door .mz { opacity: 1; }
 
+        /* Çevre: revaklar ve minareler */
         .arc {
             position: absolute; left: 0; top: 0; backface-visibility: hidden; overflow: hidden;
             background-color: #d9cdb2;
@@ -313,6 +321,7 @@
         .mn-roof { position: absolute; backface-visibility: hidden; background: linear-gradient(180deg, #5f8f86, #3d6a63); clip-path: polygon(50% 0, 0 100%, 100% 100%); }
         .mn-crescent { position: absolute; width: 8px; height: 8px; border-radius: 50%; border: 2px solid #e6c15a; border-right-color: transparent; transform: rotate(40deg); }
 
+        /* Tavaf eden kalabalık */
         .crowd, .flock { position: absolute; left: 0; top: 0; display: none; }
         .world.has-crowd .crowd { display: block; }
         .ring { position: absolute; left: 0; top: 0; animation: spin linear infinite; }
@@ -327,6 +336,7 @@
         }
         .pln.b { transform: rotateY(90deg); }
 
+        /* Güvercinler */
         .world.has-peak .flock { display: block; }
         .flock-ring { position: absolute; left: 0; top: 0; animation: spinRev linear infinite; }
         @keyframes spinRev { to { transform: rotateY(-360deg); } }
@@ -339,6 +349,7 @@
         .dove .wing.b { transform: rotateY(90deg); }
         @keyframes flap { from { scale: 1 1; } to { scale: 1 .3; } }
 
+        /* Sahne kontrolleri */
         .controls { position: absolute; right: 10px; bottom: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 5; }
         [dir="rtl"] .controls { right: auto; left: 10px; }
         .ctrl-btn {
@@ -354,6 +365,7 @@
         }
         .hint.hide { opacity: 0; }
 
+        /* ===================== TAKVİM ===================== */
         .calendar-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 14px; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: .9rem; cursor: pointer; }
         [dir="rtl"] .calendar-header { flex-direction: row-reverse; }
@@ -377,6 +389,7 @@
         .bar { width: 70%; height: 3px; border-radius: 3px; background: rgba(148,163,184,.35); overflow: hidden; }
         .bar > i { display: block; height: 100%; background: #34d399; }
 
+        /* ===================== GÖREVLER ===================== */
         .tasks-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-glass); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
         .tasks-title { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 4px; }
         [dir="rtl"] .tasks-title { flex-direction: row-reverse; }
@@ -393,6 +406,7 @@
         footer { text-align: center; font-size: .72rem; color: var(--text-muted); margin-top: 4px; }
         footer span { color: #f59e0b; font-weight: 600; }
 
+        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100; }
         .modal-overlay.show { display: flex; }
         .modal-content { background: var(--bg-gradient); color: var(--text-color); padding: 24px; border-radius: 16px; width: 90%; max-width: 400px; position: relative; border: 1px solid var(--border-glass); box-shadow: 0 20px 40px rgba(0,0,0,.5); }
@@ -439,11 +453,8 @@
         </div>
 
         <div class="stage" id="stage">
+            <div class="ground2d" id="ground2d"><div class="g-dirt"></div><div class="g-marble"></div><div class="g-tint"></div><div class="g-glow"></div><div class="g-haze"></div></div>
             <div class="world" id="world">
-                <div class="flat ground-dirt"></div>
-                <div class="flat ground-marble"></div>
-                <div class="flat ground-tint"></div>
-                <div class="flat ground-glow"></div>
                 <div class="flat outline"></div>
 
                 <div id="arcades"></div>
@@ -502,6 +513,7 @@
 
 <footer>Ayetin Vakti Ekosistemi • <span data-i18n="footer_brand">Kâbe İnşası</span></footer>
 
+<!-- Bilgi Modalı -->
 <div class="modal-overlay" id="infoModal" onclick="if (event.target === this) toggleModal(false)">
     <div class="modal-content" role="dialog" aria-modal="true">
         <button class="modal-close" onclick="toggleModal(false)" aria-label="×">×</button>
@@ -515,6 +527,7 @@
 </div>
 
 <script>
+    // ===================== DİL SÖZLÜĞÜ =====================
     const translations = {
         tr: {
             page_title: "Manevi Kâbe İnşa Takibi",
@@ -607,7 +620,7 @@
             task_7_name: "📿 صليت السنن", task_7_desc: "اتباع هدي النبي",
             task_8_name: "📖 قراءة القرآن", task_8_desc: "تنوير القلب بالكلمات الإلهية",
             task_9_name: "🤲 الدعاء والصلاة على النبي", task_9_desc: "إكرام النبي صلى الله عليه وسلم",
-            task_10_name: "ﻹحسان وحسن الخلق", task_10_desc: "المعاملة الطيبة والابتسامة",
+            task_10_name: "🤝 الإحسان وحسن الخلق", task_10_desc: "المعاملة الطيبة والابتسامة",
             task_11_name: "🛡️ غض البصر وقوة الإرادة", task_11_desc: "حماية العين والقلب",
             task_12_name: "💝 الصدقة والمساعدة", task_12_desc: "إظهار الجود من القلب",
             modal_title: "ما هي صلاة 5-5؟",
@@ -634,6 +647,7 @@
     const intlLoc = { tr: 'tr-TR', en: 'en-US', ar: 'ar-u-ca-gregory-nu-latn' }[lang];
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // ===================== TEMA / MODAL =====================
     function updateThemeIcon() {
         const isLight = document.documentElement.classList.contains('light-mode');
         document.getElementById('themeToggleBtn').innerText = isLight ? '☀️' : '🌙';
@@ -649,11 +663,13 @@
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleModal(false); });
 
+    // ===================== TARİH / KAYIT =====================
     function dayStart(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
     let today = dayStart(new Date());
     let sel = new Date(today);
     let viewY = sel.getFullYear(), viewM = sel.getMonth();
 
+    // Eski (Ağustos 2026) kayıtları korumak için 2026 yılında eski anahtar biçimi kullanılır
     function keyFor(y, m, d) {
         return y === 2026 ? `kaba_build_v2_${m + 1}_${d}` : `kaba_build_v3_${y}_${m + 1}_${d}`;
     }
@@ -662,14 +678,15 @@
         try {
             const a = JSON.parse(localStorage.getItem(keyFor(y, m, d)));
             if (Array.isArray(a)) out = a.map(Boolean);
-        } catch (e) { }
+        } catch (e) { /* bozuk kayıt: boş say */ }
         while (out.length < TOTAL) out.push(false);
         return out.slice(0, TOTAL);
     }
     function saveData(y, m, d, data) {
-        try { localStorage.setItem(keyFor(y, m, d), JSON.stringify(data)); } catch (e) { }
+        try { localStorage.setItem(keyFor(y, m, d), JSON.stringify(data)); } catch (e) { /* kota */ }
     }
 
+    // ===================== GÖREV LİSTESİ =====================
     function buildTasks() {
         const list = document.getElementById('tasksList');
         let html = '';
@@ -683,11 +700,12 @@
         list.addEventListener('change', onToggle);
     }
 
+    // ===================== TAKVİM =====================
     function renderCalendar() {
         const grid = document.getElementById('daysGrid');
         const first = new Date(viewY, viewM, 1);
         const daysInMonth = new Date(viewY, viewM + 1, 0).getDate();
-        const offset = (first.getDay() + 6) % 7;
+        const offset = (first.getDay() + 6) % 7;     // hafta Pazartesi ile başlar
 
         document.getElementById('monthTitle').textContent =
             new Intl.DateTimeFormat(intlLoc, { month: 'long', year: 'numeric' }).format(first);
@@ -747,11 +765,13 @@
         renderStage(data.filter(Boolean).length, true);
     }
 
+    // ===================== 3B SAHNE: OLUŞTURMA =====================
     const world = document.getElementById('world');
     const kaabaEl = document.getElementById('kaaba');
     const plinthEl = document.getElementById('plinth');
     const stageEl = document.getElementById('stage');
     const sceneEl = document.getElementById('sceneContainer');
+    const groundEl = document.getElementById('ground2d');
     const SHADE = '<div class="shade"></div>';
     const HIZAM_TEXT = 'لا إله إلا الله محمد رسول الله ﷺ  ✦  ' .repeat(6);
 
@@ -773,7 +793,7 @@
     }
 
     function buildArcades() {
-        const N = 40, R = 790, w = Math.ceil(2 * Math.PI * R / N) + 2;
+        const N = 36, R = 640, w = Math.ceil(2 * Math.PI * R / N) + 2;
         let html = '';
         for (let i = 0; i < N; i++) {
             const a = (360 / N) * i;
@@ -783,7 +803,7 @@
     }
 
     function buildMinarets() {
-        const angles = [24, 88, 148, 208, 268, 328], R = 835, SW = 18, SH = 330, RH = 62;
+        const angles = [92, 148, 212, 268], R = 700, SW = 18, SH = 330, RH = 62;
         let html = '';
         angles.forEach(a => {
             const x = Math.sin(a * Math.PI / 180) * R, z = Math.cos(a * Math.PI / 180) * R;
@@ -840,36 +860,36 @@
         document.getElementById('stars').innerHTML = html;
     }
 
+    // ===================== GÖKYÜZÜ (gerçek saate göre) =====================
     let ambient = 0.5;
     function updateSky() {
         const now = new Date();
         const h = now.getHours() + now.getMinutes() / 60;
-        let phase = 'night', night = 0.55, amb = 0.28, shadeColor = '#050a22';
-        if (h >= 5 && h < 7.5) { phase = 'dawn'; night = 0.2; amb = 0.4; shadeColor = '#1a1030'; }
-        else if (h >= 7.5 && h < 17.5) { phase = 'day'; night = 0; amb = 0.5; shadeColor = '#000'; }
-        else if (h >= 17.5 && h < 19.75) { phase = 'dusk'; night = 0.22; amb = 0.38; shadeColor = '#1a0f28'; }
+        let phase = 'night', night = 0.55, amb = 0.28, shadeColor = '#050a22', haze = '#10213f';
+        if (h >= 5 && h < 7.5) { phase = 'dawn'; night = 0.2; amb = 0.4; shadeColor = '#1a1030'; haze = '#d9a58a'; }
+        else if (h >= 7.5 && h < 17.5) { phase = 'day'; night = 0; amb = 0.5; shadeColor = '#000'; haze = '#d6e9f8'; }
+        else if (h >= 17.5 && h < 19.75) { phase = 'dusk'; night = 0.22; amb = 0.38; shadeColor = '#1a0f28'; haze = '#d08c7e'; }
 
         const sky = document.getElementById('sky');
         sky.className = 'sky ' + phase;
         const orb = document.getElementById('sunMoon');
-        const t = (phase === 'night') ? (((h - 19.75 + 24) % 24) / 9.25) : ((h - 5) / 14.75);
+        const t = (phase === 'night') ? (((h - 19.75 + 24) % 24) / 9.25) : ((h - 5) / 14.75);   // 0..1
         const tt = Math.min(1, Math.max(0, t));
         orb.style.left = (12 + 76 * tt) + '%';
         orb.style.top = (62 - 48 * Math.sin(Math.PI * tt)) + '%';
 
-        world.style.setProperty('--night', night);
+        world.style.setProperty('--night', night); stageEl.style.setProperty('--night', night); stageEl.style.setProperty('--haze', haze);
         world.style.setProperty('--shade-color', shadeColor);
         ambient = amb;
         dirty = true;
     }
 
+    // ===================== AŞAMALAR =====================
     let curP = 0, curPl = 0, tweenRaf = 0;
     const FLAGS = [['has-plinth', 1], ['has-roof', 4], ['has-hajar', 5], ['has-door', 6], ['has-kisve', 7],
                    ['has-hizam', 8], ['has-marble', 9], ['has-crowd', 10], ['has-glow', 11], ['has-peak', 12]];
 
     function applyGeom(p, pl) {
-        // Safari (WebKit) için scaleY sıfıra yakınken oluşacak render bozulmasını önlemek amacıyla display kontrolü:
-        kaabaEl.style.display = p > 0.01 ? 'block' : 'none';
         kaabaEl.style.setProperty('--p', Math.max(p, 0.001).toFixed(4));
         plinthEl.style.setProperty('--pl', Math.max(pl, 0.001).toFixed(4));
         plinthEl.classList.toggle('built', pl >= 0.999);
@@ -880,7 +900,7 @@
         const targetPl = count >= 1 ? 1 : 0;
         const targetP = count >= 4 ? 1 : (count === 3 ? 0.68 : (count === 2 ? 0.34 : 0));
 
-        FLAGS.forEach(([c, n]) => world.classList.toggle(c, count >= n));
+        FLAGS.forEach(([c, n]) => { world.classList.toggle(c, count >= n); stageEl.classList.toggle(c, count >= n); });
         sceneEl.classList.toggle('peak', count >= 12);
 
         document.getElementById('progressBadge').textContent = `${count} / ${TOTAL} ${L.completed}`;
@@ -902,20 +922,22 @@
         tweenRaf = requestAnimationFrame(step);
     }
 
-    let yaw = -32, pitch = 26, zoom = 1, tPitch = 26, tZoom = 1, vyaw = 0;
+    // ===================== KAMERA VE IŞIKLANDIRMA =====================
+    let yaw = -32, pitch = 20, zoom = 1, tPitch = 20, tZoom = 1, vyaw = 0;
     let auto = !reduced, dragging = false, lastInteract = 0, dirty = true;
     const LIGHT = (() => { const v = [-0.5, -0.8, 0.45], m = Math.hypot(...v); return v.map(x => x / m); })();
     const NORMALS = { f: [0, 0, 1], b: [0, 0, -1], r: [1, 0, 0], l: [-1, 0, 0], t: [0, -1, 0] };
     const lastShade = {};
 
     function applyView() {
-        world.style.transform = `translateZ(0) scale(${zoom.toFixed(3)}) rotateX(${pitch.toFixed(2)}deg) rotateY(${yaw.toFixed(2)}deg)`;
+        world.style.transform = `translateZ(0) scale(${zoom.toFixed(3)}) rotateX(${(-pitch).toFixed(2)}deg) rotateY(${yaw.toFixed(2)}deg)`;
+        groundEl.style.transform = `translate(-50%, -50%) scale(${zoom.toFixed(3)}) scaleY(${Math.max(0.16, Math.sin(pitch * Math.PI / 180)).toFixed(3)})`;
         const rad = Math.PI / 180;
         const c = Math.cos(yaw * rad), s = Math.sin(yaw * rad), c2 = Math.cos(pitch * rad), s2 = Math.sin(pitch * rad);
         for (const k in NORMALS) {
             const n = NORMALS[k];
             const x1 = n[0] * c + n[2] * s, y1 = n[1], z1 = -n[0] * s + n[2] * c;
-            const v = [x1, y1 * c2 - z1 * s2, y1 * s2 + z1 * c2];
+            const v = [x1, y1 * c2 + z1 * s2, -y1 * s2 + z1 * c2];   // kamera yukarıdan bakar: rotateX(-pitch)
             const dot = v[0] * LIGHT[0] + v[1] * LIGHT[1] + v[2] * LIGHT[2];
             const bright = ambient + (1 - ambient) * Math.max(0, dot);
             const op = Math.min(0.82, Math.max(0, 1 - bright));
@@ -972,7 +994,7 @@
         stageEl.addEventListener('pointerup', end);
         stageEl.addEventListener('pointercancel', end);
 
-        const views = [26, 42, 64, 14]; let vi = 0;
+        const views = [20, 38, 62, 9]; let vi = 0;
         const zooms = [1, 1.3, 0.8]; let zi = 0;
         const btnAuto = document.getElementById('btnAuto');
         btnAuto.classList.toggle('on', auto);
@@ -982,6 +1004,7 @@
         setTimeout(() => hint.classList.add('hide'), 6000);
     }
 
+    // ===================== BAŞLATMA =====================
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -1001,6 +1024,7 @@
         renderCalendar(); loadSelected();
         requestAnimationFrame(frame);
 
+        // Gün değişince (uygulama açık kalmışsa) bugüne geç
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) return;
             const nowDay = dayStart(new Date());
