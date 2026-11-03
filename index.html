@@ -441,6 +441,27 @@
         footer { text-align: center; font-size: .72rem; color: var(--text-muted); margin-top: 4px; }
         footer span { color: #f59e0b; font-weight: 600; }
 
+        /* ===================== AYLIK İNŞA / RAPOR ===================== */
+        .month-card, .report-card { background: var(--card-bg); backdrop-filter: blur(12px); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+        .mc-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+        [dir="rtl"] .mc-top { flex-direction: row-reverse; }
+        .mc-title { font-size: .8rem; font-weight: 700; color: var(--text-muted); text-transform: capitalize; }
+        .mc-right { display: flex; align-items: baseline; gap: 8px; }
+        .mc-pct { font-size: 1.4rem; font-weight: 800; color: var(--accent-color); }
+        .mc-gain { font-size: .78rem; font-weight: 700; color: #f59e0b; opacity: 0; transform: translateY(4px); transition: opacity .3s ease, transform .5s ease; }
+        .mc-gain.show { opacity: 1; transform: translateY(-2px); }
+        .xp { height: 12px; border-radius: 12px; background: rgba(148,163,184,.3); overflow: hidden; }
+        .xp > i { display: block; height: 100%; width: 0; border-radius: 12px; background: linear-gradient(90deg, var(--accent-color), #f59e0b); transition: width .9s cubic-bezier(.2,.8,.2,1); }
+        .mc-sub { display: flex; justify-content: space-between; gap: 8px; font-size: .72rem; color: var(--text-muted); }
+        [dir="rtl"] .mc-sub { flex-direction: row-reverse; }
+        .report-card { padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+        .rep-title { font-size: .75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700; }
+        .rep-note { font-size: .68rem; color: var(--text-muted); margin-bottom: 4px; }
+        .rep-row { display: grid; grid-template-columns: minmax(0, 1fr) 64px auto; align-items: center; gap: 8px; font-size: .78rem; padding: 3px 0; }
+        .rep-row .bar { width: 100%; height: 5px; }
+        .rep-facts { display: flex; flex-direction: column; gap: 5px; font-size: .78rem; border-top: 1px solid var(--border-color); margin-top: 6px; padding-top: 8px; }
+        .rep-link { display: inline-block; margin-top: 8px; color: var(--accent-color); font-weight: 600; font-size: .8rem; text-decoration: none; }
+
         /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100; }
         .modal-overlay.show { display: flex; }
@@ -454,6 +475,7 @@
 
         @media (prefers-reduced-motion: reduce) {
             .ring, .flock-ring, .god-rays, .cloud, .body, .dove .wing, .ground-glow, .star { animation: none !important; }
+            .xp > i, .mc-gain { transition: none !important; }
         }
     </style>
 </head>
@@ -475,6 +497,15 @@
     </div>
 
     <div class="quote-box" id="quoteBox"></div>
+
+    <div class="month-card" aria-live="polite">
+        <div class="mc-top">
+            <span class="mc-title" id="mcTitle"></span>
+            <span class="mc-right"><span class="mc-gain" id="mcGain"></span><span class="mc-pct" id="mcPct">%0</span></span>
+        </div>
+        <div class="xp" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i id="xpFill"></i></div>
+        <div class="mc-sub"><span id="mcPace"></span><span id="mcLeft"></span></div>
+    </div>
 
     <div class="scene-container" id="sceneContainer">
         <div class="sky day" id="sky">
@@ -543,6 +574,11 @@
         </div>
         <div id="tasksList" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </div>
+
+    <div class="report-card">
+        <div class="rep-title" id="reportTitle"></div>
+        <div id="reportBody"></div>
+    </div>
 </div>
 
 <footer>Ayetin Vakti Ekosistemi • <span data-i18n="footer_brand">Kâbe İnşası</span></footer>
@@ -570,7 +606,7 @@
             btn_auto: "Otomatik dönüş", btn_view: "Bakış açısı", btn_zoom: "Yakınlaştır",
             hint: "↔ Döndürmek için sürükleyin",
             cal_toggle: "📅 Takvimi Aç / Kapat", open_btn: "Aç", close_btn: "Kapat",
-            tasks_header: "Günün Manevi Amelleri", footer_brand: "Kâbe İnşası", completed: "Tamamlandı",
+            tasks_header: "Günün Namazları", footer_brand: "Kâbe İnşası", completed: "Tamamlandı",
             task_1_name: "🌅 Sabah Namazı", task_1_desc: "Günün ilk nuru ve bereketi",
             task_2_name: "☀️ Öğle Namazı", task_2_desc: "Günün ortasında ruha huzur",
             task_3_name: "🌤️ İkindi Namazı", task_3_desc: "Zamanın kıymetine şahitlik",
@@ -578,15 +614,8 @@
             task_5_name: "🌙 Yatsı Namazı", task_5_desc: "Gecenin sükûnetine teslimiyet",
             task_6_name: "🌌 Vitir Namazı", task_6_desc: "Gecenin son mührü",
             task_7_name: "📿 Sünnetleri Kıldım", task_7_desc: "Peygamberimizin yolundan ayrılmamak",
-            task_8_name: "📖 Kur'an Okuma / Dinleme", task_8_desc: "İlahî kelam ile kalbi aydınlatma",
-            task_9_name: "🤲 Dua & Salavat Getirdim", task_9_desc: "Peygamberimize (s.a.v) hürmet ve nida",
-            task_10_name: "🤝 İyilik Yapma & Güzel Ahlak", task_10_desc: "İnsanlara tebessüm ve güzel muamele",
-            task_11_name: "🛡️ Harama Bakmadım & İrade", task_11_desc: "Gözü ve kalbi kötülükten koruma",
-            task_12_name: "💝 Sadaka & Yardımlaşma", task_12_desc: "Gönülden cömertlik gösterisi",
             modal_title: "5-5 Namaz Nedir?",
-            modal_desc_1: "Günlük 12 görev: 5 vakit farz namaz, Vitir ve Sünnet namazları ile gününüzü nurlandıracak 5 manevi amel (Kur'an, Dua, Ahlak, İrade, Sadaka).",
             modal_subtitle: "Bu Uygulamanın Amacı",
-            modal_desc_2: "Gündelik ibadetlerimizi ve güzel ahlakı görselleştirerek, iç dünyamızdaki manevi Kâbemizi tuğla tuğla inşa etme motivasyonudur. Her amel, ruha atılan sağlam bir temeldir.",
             quotes: [
                 "Hani İbrahim, İsmail ile birlikte evin (Kâbe'nin) temellerini yükseltiyordu... (Bakara, 127)",
                 "İlk taş konuldu! Bismillah... Temeller sadakatle yükselmeye başlıyor.",
@@ -609,7 +638,7 @@
             btn_auto: "Auto-rotate", btn_view: "Camera angle", btn_zoom: "Zoom",
             hint: "↔ Drag to rotate",
             cal_toggle: "📅 Open / Close Calendar", open_btn: "Open", close_btn: "Close",
-            tasks_header: "Daily Spiritual Deeds", footer_brand: "Kaaba Building", completed: "Completed",
+            tasks_header: "Daily Prayers", footer_brand: "Kaaba Building", completed: "Completed",
             task_1_name: "🌅 Fajr Prayer", task_1_desc: "First light and blessing of the day",
             task_2_name: "☀️ Dhuhr Prayer", task_2_desc: "Peace to the soul at midday",
             task_3_name: "🌤️ Asr Prayer", task_3_desc: "Witnessing the value of time",
@@ -617,15 +646,8 @@
             task_5_name: "🌙 Isha Prayer", task_5_desc: "Surrender to night's serenity",
             task_6_name: "🌌 Witr Prayer", task_6_desc: "The final seal of the night",
             task_7_name: "📿 Prayed Sunnahs", task_7_desc: "Following the path of the Prophet",
-            task_8_name: "📖 Quran Reading / Listening", task_8_desc: "Enlightening the heart with divine words",
-            task_9_name: "🤲 Dua & Salawat", task_9_desc: "Honoring the Prophet (pbuh)",
-            task_10_name: "🤝 Kindness & Good Manners", task_10_desc: "Smiling and being gentle to people",
-            task_11_name: "🛡️ Guarded Vision & Willpower", task_11_desc: "Protecting eye and heart from harm",
-            task_12_name: "💝 Charity & Helping Others", task_12_desc: "Display of heartfelt generosity",
             modal_title: "What is 5-5 Prayer?",
-            modal_desc_1: "12 daily tasks: the 5 obligatory prayers, Witr and Sunnah prayers, and 5 spiritual deeds (Quran, Dua, Manners, Willpower, Charity).",
             modal_subtitle: "Purpose of this App",
-            modal_desc_2: "A motivation to visualize our daily worship and build our inner spiritual Kaaba brick by brick. Every deed is a solid foundation laid for the soul.",
             quotes: [
                 "And when Abraham was raising the foundations of the House with Ishmael... (Al-Baqarah, 127)",
                 "The first stone is laid! Bismillah...", "Stone walls begin to rise with prayers.",
@@ -644,7 +666,7 @@
             btn_auto: "دوران تلقائي", btn_view: "زاوية الرؤية", btn_zoom: "تكبير",
             hint: "↔ اسحب للتدوير",
             cal_toggle: "📅 فتح / إغلاق التقويم", open_btn: "فتح", close_btn: "إغلاق",
-            tasks_header: "الأعمال الروحية اليومية", footer_brand: "بناء الكعبة", completed: "مكتمل",
+            tasks_header: "صلوات اليوم", footer_brand: "بناء الكعبة", completed: "مكتمل",
             task_1_name: "🌅 صلاة الفجر", task_1_desc: "نور اليوم الأول وبركته",
             task_2_name: "☀️ صلاة الظهر", task_2_desc: "راحة الروح في منتصف النهار",
             task_3_name: "🌤️ صلاة العصر", task_3_desc: "شهادة على قيمة الوقت",
@@ -652,15 +674,8 @@
             task_5_name: "🌙 صلاة العشاء", task_5_desc: "التسليم لسكينة الليل",
             task_6_name: "🌌 صلاة الوتر", task_6_desc: "خاتم الليل",
             task_7_name: "📿 صليت السنن", task_7_desc: "اتباع هدي النبي",
-            task_8_name: "📖 قراءة القرآن", task_8_desc: "تنوير القلب بالكلمات الإلهية",
-            task_9_name: "🤲 الدعاء والصلاة على النبي", task_9_desc: "إكرام النبي صلى الله عليه وسلم",
-            task_10_name: "🤝 الإحسان وحسن الخلق", task_10_desc: "المعاملة الطيبة والابتسامة",
-            task_11_name: "🛡️ غض البصر وقوة الإرادة", task_11_desc: "حماية العين والقلب",
-            task_12_name: "💝 الصدقة والمساعدة", task_12_desc: "إظهار الجود من القلب",
             modal_title: "ما هي صلاة 5-5؟",
-            modal_desc_1: "12 مهمة يومية: الصلوات الخمس المفروضة، والوتر والسنن، وخمسة أعمال روحية (القرآن، الدعاء، الأخلاق، الإرادة، الصدقة).",
             modal_subtitle: "الغرض من هذا التطبيق",
-            modal_desc_2: "تحفيز لتصور عبادتنا اليومية وبناء كعبتنا الروحية الداخلية لبنة لبنة. كل عمل هو أساس متين يوضع للروح.",
             quotes: [
                 "وَإِذْ يَرْفَعُ إِبْرَاهِيمُ الْقَوَاعِدَ مِنَ الْبَيْتِ وَإِسْمَاعِيلُ... (البقرة، 127)",
                 "وُضع الحجر الأول! بسم الله...", "تبدأ الجدران الحجرية بالارتفاع بالصلوات.",
@@ -677,7 +692,49 @@
 
     const lang = translations[localStorage.getItem('user_lang')] ? localStorage.getItem('user_lang') : 'tr';
     const L = translations[lang];
-    const TOTAL = 12;
+    const TOTAL = 7;                          // 5 farz + Vitir + Sünnetler
+    const WEIGHTS = [3, 3, 3, 3, 3, 2, 1];    // farz 3, Vitir 2, Sünnet 1 puan
+    const MAXD = WEIGHTS.reduce((a, b) => a + b, 0);
+    const dayPts = a => a.reduce((t, v, i) => t + (v ? WEIGHTS[i] : 0), 0);
+    const EXTRA = {
+        tr: {
+            month_build: "Kâbe İnşası", pace: "Tempo", left_days: "Ayın bitmesine", day_unit: "gün", month_done: "Ay tamamlandı",
+            rep_title_now: "Ay Gözlemi", rep_title_done: "Ay Sonu Raporu",
+            rep_note_now: "Bugün hariç, tamamlanan günlere göre", rep_note_done: "Ayın tüm günlerine göre",
+            rep_empty: "Henüz tamamlanmış gün yok. Yarından itibaren gözlem burada görünecek.",
+            rep_streak: "En uzun seri (5 vaktin hepsi)", rep_perfect: "5 vaktin tamamlandığı gün",
+            rep_most: "En çok işaretlenmeyen farz", rep_all: "İşaretlenmeyen farz yok, Maşallah!",
+            rep_best_week: "En güçlü hafta", rep_weak_week: "En zayıf hafta", week: "Hafta", rep_prev: "Geçen ay",
+            rep_kaza: "İşaretlenmeyen vakitler için Kaza Namazı sayfası →",
+            modal_desc_1: "Her ay yeni bir Kâbe inşa edersin. Günlük 7 namaz işaretlenir: 5 vakit farz (3 puan), Vitir (2 puan) ve Sünnetler (1 puan). Ayın tamamına göre yüzden kaç puan topladığın, Kâbe'nin ne kadar yükseldiğini belirler.",
+            modal_desc_2: "Gündelik ibadetlerimizi görselleştirerek manevi Kâbemizi tuğla tuğla inşa etme motivasyonudur. Ay sonunda hangi vakti ne kadar kıldığını, hangisinin işaretlenmediğini gözlemleyip gelişirsin. Kur'an, dua ve güzel ahlak gibi diğer ameller için ileride ayrı bir defter açılacak."
+        },
+        en: {
+            month_build: "Kaaba Building", pace: "Pace", left_days: "Days left in month", day_unit: "days", month_done: "Month completed",
+            rep_title_now: "Month Insights", rep_title_done: "End-of-Month Report",
+            rep_note_now: "Completed days only, today excluded", rep_note_done: "Based on all days of the month",
+            rep_empty: "No completed day yet. Insights will appear here from tomorrow.",
+            rep_streak: "Longest streak (all 5 prayers)", rep_perfect: "Days with all 5 prayers",
+            rep_most: "Most unmarked obligatory prayer", rep_all: "No unmarked obligatory prayer, Mashallah!",
+            rep_best_week: "Strongest week", rep_weak_week: "Weakest week", week: "Week", rep_prev: "Last month",
+            rep_kaza: "Qada prayer page for unmarked prayers →",
+            modal_desc_1: "Each month you build a new Kaaba. 7 daily prayers are tracked: the 5 obligatory prayers (3 points), Witr (2 points) and Sunnah prayers (1 point). The share of the month's total points you earn decides how high the Kaaba rises.",
+            modal_desc_2: "A motivation to visualize our daily worship and build our inner Kaaba brick by brick. At month's end you can see how much of each prayer you performed and which were left unmarked. Other deeds such as Quran, dua and good manners will get their own page later."
+        },
+        ar: {
+            month_build: "بناء الكعبة", pace: "الوتيرة", left_days: "المتبقي من الشهر", day_unit: "يوم", month_done: "اكتمل الشهر",
+            rep_title_now: "ملاحظات الشهر", rep_title_done: "تقرير نهاية الشهر",
+            rep_note_now: "الأيام المكتملة فقط دون اليوم", rep_note_done: "حسب جميع أيام الشهر",
+            rep_empty: "لا يوجد يوم مكتمل بعد. ستظهر الملاحظات هنا ابتداءً من الغد.",
+            rep_streak: "أطول سلسلة (الصلوات الخمس كلها)", rep_perfect: "أيام اكتملت فيها الصلوات الخمس",
+            rep_most: "أكثر فرض غير مسجَّل", rep_all: "لا يوجد فرض غير مسجَّل، ما شاء الله!",
+            rep_best_week: "أقوى أسبوع", rep_weak_week: "أضعف أسبوع", week: "الأسبوع", rep_prev: "الشهر الماضي",
+            rep_kaza: "صفحة قضاء الصلاة للصلوات غير المسجَّلة ←",
+            modal_desc_1: "في كل شهر تبني كعبة جديدة. تُسجَّل 7 صلوات يوميًا: الفرائض الخمس (3 نقاط) والوتر (نقطتان) والسنن (نقطة). نسبة نقاطك من مجموع الشهر تحدد ارتفاع الكعبة.",
+            modal_desc_2: "تحفيز لتصور عبادتنا اليومية وبناء كعبتنا الروحية لبنة لبنة. في نهاية الشهر ترى كم أدّيت من كل صلاة وما لم يُسجَّل. وستُفتح لاحقًا صفحة مستقلة لبقية الأعمال كالقرآن والدعاء وحسن الخلق."
+        }
+    };
+    Object.assign(L, EXTRA[lang]);
     const intlLoc = { tr: 'tr-TR', en: 'en-US', ar: 'ar-u-ca-gregory-nu-latn' }[lang];
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -759,11 +816,11 @@
         for (let d = 1; d <= daysInMonth; d++) {
             const date = new Date(viewY, viewM, d);
             const future = date > today;
-            const count = future ? 0 : getData(viewY, viewM, d).filter(Boolean).length;
+            const count = future ? 0 : dayPts(getData(viewY, viewM, d));
             const isSel = date.getTime() === sel.getTime();
             const isToday = date.getTime() === today.getTime();
             html += `<button type="button" class="day-cell${isSel ? ' active' : ''}${isToday ? ' today' : ''}${future ? ' future' : ''}" data-d="${d}" ${future ? 'disabled' : ''}>
-                <span>${d}</span><div class="bar"><i style="width:${Math.round(count / TOTAL * 100)}%"></i></div></button>`;
+                <span>${d}</span><div class="bar"><i style="width:${Math.round(count / MAXD * 100)}%"></i></div></button>`;
         }
         grid.innerHTML = html;
     }
@@ -795,14 +852,105 @@
             new Intl.DateTimeFormat(intlLoc, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(sel);
         const data = getData(y, m, d);
         document.querySelectorAll('.task-checkbox').forEach((cb, i) => { cb.checked = !!data[i]; });
-        renderStage(data.filter(Boolean).length, false);
+        renderDay(data); renderMonth(false);
     }
 
     function onToggle() {
         const data = Array.from(document.querySelectorAll('.task-checkbox')).map(cb => cb.checked);
         saveData(sel.getFullYear(), sel.getMonth(), sel.getDate(), data);
         renderCalendar();
-        renderStage(data.filter(Boolean).length, true);
+        renderDay(data); renderMonth(true);
+    }
+
+    // ===================== AYLIK İNŞA (XP) VE AY RAPORU =====================
+    function fmt(n) { return new Intl.NumberFormat(intlLoc, { maximumFractionDigits: 1 }).format(n); }
+
+    function monthStats(y, m) {
+        const dim = new Date(y, m + 1, 0).getDate();
+        const s = { dim, pts: 0, max: dim * MAXD, doneDays: 0, pacePts: 0, counts: Array(TOTAL).fill(0), best: 0, perfect: 0, weeks: [] };
+        let run = 0;
+        for (let d = 1; d <= dim; d++) {
+            const date = new Date(y, m, d);
+            if (date > today) break;
+            const a = getData(y, m, d), p = dayPts(a), five = a.slice(0, 5).every(Boolean);
+            s.pts += p;
+            if (five) { run++; s.best = Math.max(s.best, run); s.perfect++; }
+            else if (date < today) run = 0;
+            if (date < today) {                      // bugün henüz bitmediği için gözleme katılmaz
+                s.doneDays++; s.pacePts += p;
+                a.forEach((v, i) => { if (v) s.counts[i]++; });
+                const w = s.weeks[Math.floor((d - 1) / 7)] || (s.weeks[Math.floor((d - 1) / 7)] = { p: 0, n: 0 });
+                w.p += p; w.n++;
+            }
+        }
+        s.paceMax = s.doneDays * MAXD;
+        return s;
+    }
+
+    function renderDay(data) {
+        document.getElementById('progressBadge').textContent = `${data.filter(Boolean).length} / ${TOTAL} ${L.completed}`;
+        document.getElementById('completionPercent').textContent = `%${Math.round(dayPts(data) / MAXD * 100)}`;
+    }
+
+    let lastKey = '', lastPts = 0, gainTimer;
+    function renderMonth(animate) {
+        const y = sel.getFullYear(), m = sel.getMonth(), s = monthStats(y, m);
+        const pct = s.pts / s.max * 100, key = y + '-' + m;
+        const isCur = y === today.getFullYear() && m === today.getMonth();
+        document.getElementById('mcTitle').textContent =
+            new Intl.DateTimeFormat(intlLoc, { month: 'long', year: 'numeric' }).format(new Date(y, m, 1)) + ' • ' + L.month_build;
+        document.getElementById('mcPct').textContent = '%' + fmt(pct);
+        document.getElementById('xpFill').style.width = pct.toFixed(2) + '%';
+        document.getElementById('mcPace').textContent = `${L.pace}: ` + (s.paceMax ? '%' + fmt(s.pacePts / s.paceMax * 100) : '—');
+        document.getElementById('mcLeft').textContent = isCur ? `${L.left_days}: ${s.dim - today.getDate()} ${L.day_unit}` : L.month_done;
+
+        const g = document.getElementById('mcGain');
+        if (animate && key === lastKey && s.pts !== lastPts) {
+            const dlt = (s.pts - lastPts) / s.max * 100;
+            g.textContent = (dlt > 0 ? '+' : '−') + '%' + fmt(Math.abs(dlt));
+            g.classList.add('show'); clearTimeout(gainTimer);
+            gainTimer = setTimeout(() => g.classList.remove('show'), 1600);
+        }
+        lastKey = key; lastPts = s.pts;
+
+        // Kâbe aşaması aylık yüzdeye bağlı; en küçük ilerleme bile ilk taşı koyar
+        renderStage(s.pts <= 0 ? 0 : Math.max(1, Math.min(12, Math.floor(pct / 100 * 12 + 1e-9))), animate);
+        renderReport(s, y, m, isCur);
+    }
+
+    function renderReport(s, y, m, isCur) {
+        const el = document.getElementById('reportBody'), dn = s.doneDays;
+        document.getElementById('reportTitle').textContent = isCur ? L.rep_title_now : L.rep_title_done;
+        if (!dn) { el.innerHTML = `<div class="rep-note">${L.rep_empty}</div>`; return; }
+
+        let h = `<div class="rep-note">${isCur ? L.rep_note_now : L.rep_note_done}</div>`;
+        for (let i = 0; i < TOTAL; i++) {
+            const c = s.counts[i];
+            h += `<div class="rep-row"><span>${L['task_' + (i + 1) + '_name']}</span><div class="bar"><i style="width:${Math.round(c / dn * 100)}%"></i></div><b>${c}/${dn}</b></div>`;
+        }
+
+        const facts = [`🔥 ${L.rep_streak}: <b>${s.best}</b> ${L.day_unit}`, `✅ ${L.rep_perfect}: <b>${s.perfect}</b>`];
+        let worst = -1, miss = 0;
+        for (let i = 0; i < 5; i++) { const mi = dn - s.counts[i]; if (mi > miss) { miss = mi; worst = i; } }
+        facts.push(worst >= 0 ? `⚠️ ${L.rep_most}: <b>${L['task_' + (worst + 1) + '_name']}</b> (${miss})` : `🌟 ${L.rep_all}`);
+
+        const ws = s.weeks.map((w, k) => ({ k: k + 1, v: w.p / (w.n * MAXD) * 100, n: w.n })).filter(w => w.n >= 3);
+        if (ws.length >= 2) {
+            const hi = ws.reduce((a, b) => b.v > a.v ? b : a), lo = ws.reduce((a, b) => b.v < a.v ? b : a);
+            if (hi.k !== lo.k) {
+                facts.push(`🏆 ${L.rep_best_week}: <b>${L.week} ${hi.k}</b> (%${fmt(hi.v)})`);
+                facts.push(`🌱 ${L.rep_weak_week}: <b>${L.week} ${lo.k}</b> (%${fmt(lo.v)})`);
+            }
+        }
+
+        const ps = monthStats(m === 0 ? y - 1 : y, m === 0 ? 11 : m - 1);
+        if (ps.pts > 0) {
+            const prev = ps.pts / ps.max * 100, df = s.pacePts / s.paceMax * 100 - prev;
+            facts.push(`📈 ${L.rep_prev}: %${fmt(prev)} ${df >= 0 ? '▲' : '▼'} %${fmt(Math.abs(df))}`);
+        }
+        h += `<div class="rep-facts">${facts.map(f => `<div>${f}</div>`).join('')}</div>`;
+        if (worst >= 0) h += `<a class="rep-link" href="https://ayetinvakti.github.io/kaza-namazi/">${L.rep_kaza}</a>`;
+        el.innerHTML = h;
     }
 
     // ===================== 3B SAHNE: OLUŞTURMA =====================
@@ -936,15 +1084,13 @@
     }
 
     function renderStage(count, animate) {
-        count = Math.max(0, Math.min(TOTAL, count));
+        count = Math.max(0, Math.min(12, count));
         const targetPl = count >= 1 ? 1 : 0;
         const targetP = count >= 4 ? 1 : (count === 3 ? 0.68 : (count === 2 ? 0.34 : 0));
 
         FLAGS.forEach(([c, n]) => { world.classList.toggle(c, count >= n); stageEl.classList.toggle(c, count >= n); });
         sceneEl.classList.toggle('peak', count >= 12);
 
-        document.getElementById('progressBadge').textContent = `${count} / ${TOTAL} ${L.completed}`;
-        document.getElementById('completionPercent').textContent = `%${Math.round(count / TOTAL * 100)}`;
         document.getElementById('quoteBox').textContent = L.quotes[Math.min(count, 12)];
 
         cancelAnimationFrame(tweenRaf);
