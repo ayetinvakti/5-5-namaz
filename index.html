@@ -101,8 +101,9 @@
         .container { width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 14px; }
 
         .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; }
-        [dir="rtl"] .top-nav { flex-direction: row-reverse; }
         .nav-actions { display: flex; gap: 8px; }
+        /* Başlık satırı: çubuğun altında, ortalı */
+        .page-head { display: flex; align-items: center; justify-content: center; padding: 2px 8px; }
 
         .icon-btn {
             width: 44px; height: 44px; border-radius: 50%;
@@ -484,13 +485,18 @@
 
 <div class="container">
     <div class="top-nav">
-        <a href="https://ayetinvakti.github.io/" class="icon-btn" title="Ana Menüye Dön" aria-label="Ana Menüye Dön" data-i18n-title="back_title">←</a>
-        <button class="icon-btn" data-drawer-toggle aria-label="Menü">☰</button>
-        <div class="app-title" data-i18n="app_title">🕋 Manevi Kâbe İnşası</div>
+        <div class="nav-actions">
+            <a href="https://ayetinvakti.github.io/" class="icon-btn" title="Ana Menüye Dön" aria-label="Ana Menüye Dön" data-i18n-title="back_title">←</a>
+            <button class="icon-btn" data-drawer-toggle aria-label="Menü" aria-controls="avmDrawer">☰</button>
+        </div>
         <div class="nav-actions">
             <button class="icon-btn" id="infoBtn" onclick="toggleModal(true)" title="Bilgi" aria-label="Bilgi" data-i18n-title="info_title">❓</button>
             <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir" aria-label="Tema Değiştir" data-i18n-title="theme_title">🌙</button>
         </div>
+    </div>
+
+    <div class="page-head">
+        <h1 class="app-title" data-i18n="app_title">🕋 Manevi Kâbe İnşası</h1>
     </div>
 
     <div class="info-row">
