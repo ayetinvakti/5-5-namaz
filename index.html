@@ -102,8 +102,8 @@
 
         .top-nav { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; }
         .nav-actions { display: flex; gap: 8px; }
-        /* Başlık satırı: çubuğun altında, ortalı */
-        .page-head { display: flex; align-items: center; justify-content: center; padding: 2px 8px; }
+        /* Başlık görsel olarak gizli (ekran okuyucu ve SEO için h1 kalır) */
+        .page-head { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
         .icon-btn {
             width: 44px; height: 44px; border-radius: 50%;
