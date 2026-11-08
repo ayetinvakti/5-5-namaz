@@ -1229,9 +1229,13 @@
                 today = nowDay;
                 if (wasToday) { sel = new Date(today); viewY = sel.getFullYear(); viewM = sel.getMonth(); }
                 renderCalendar(); loadSelected();
+            } else {
+                renderCalendar(); loadSelected();   // ana sayfadaki mini kartta yapılan işaretler yansısın
             }
             updateSky();
         });
+        window.addEventListener('storage', e => { if (e.key && e.key.indexOf('kaba_build_') === 0) { renderCalendar(); loadSelected(); } });
+        window.addEventListener('pageshow', e => { if (e.persisted) { renderCalendar(); loadSelected(); } });
     });
 </script>
 </body>
