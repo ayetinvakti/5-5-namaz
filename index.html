@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="https://ayetinvakti.github.io/finish.js?v=3"></script>
     <script src="https://ayetinvakti.github.io/menu.js" defer></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -486,12 +487,12 @@
 <div class="container">
     <div class="top-nav">
         <div class="nav-actions">
-            <a href="https://ayetinvakti.github.io/" class="icon-btn" title="Ana Menüye Dön" aria-label="Ana Menüye Dön" data-i18n-title="back_title">←</a>
-            <button class="icon-btn" data-drawer-toggle aria-label="Menü" aria-controls="avmDrawer">☰</button>
+            <a href="https://ayetinvakti.github.io/" class="icon-btn fin-btn" title="Ana Menüye Dön" aria-label="Ana Menüye Dön" data-i18n-title="back_title">←</a>
+            <button class="icon-btn fin-btn" data-drawer-toggle aria-label="Menü" aria-controls="avmDrawer">☰</button>
         </div>
         <div class="nav-actions">
-            <button class="icon-btn" id="infoBtn" onclick="toggleModal(true)" title="Bilgi" aria-label="Bilgi" data-i18n-title="info_title">❓</button>
-            <button class="icon-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir" aria-label="Tema Değiştir" data-i18n-title="theme_title">🌙</button>
+            <button class="icon-btn fin-btn" id="infoBtn" onclick="toggleModal(true)" title="Bilgi" aria-label="Bilgi" data-i18n-title="info_title">❓</button>
+            <button class="icon-btn fin-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Tema Değiştir" aria-label="Tema Değiştir" data-i18n-title="theme_title">🌙</button>
         </div>
     </div>
 
@@ -504,9 +505,9 @@
         <span class="progress-badge" id="progressBadge">0 / 12</span>
     </div>
 
-    <div class="quote-box" id="quoteBox"></div>
+    <div class="quote-box fin-card" id="quoteBox"></div>
 
-    <div class="month-card" aria-live="polite">
+    <div class="month-card fin-card" aria-live="polite">
         <div class="mc-top">
             <span class="mc-title" id="mcTitle"></span>
             <span class="mc-right"><span class="mc-gain" id="mcGain"></span><span class="mc-pct" id="mcPct">%0</span></span>
@@ -560,22 +561,22 @@
         <div class="hint" id="hint" data-i18n="hint">↔ Döndürmek için sürükleyin</div>
     </div>
 
-    <div class="calendar-card">
+    <div class="calendar-card fin-card">
         <div class="calendar-header" id="calToggle">
             <span data-i18n="cal_toggle">📅 Takvimi Aç / Kapat</span>
             <span style="font-size: 0.75rem; color: var(--text-muted);" id="drawerIcon"></span>
         </div>
         <div class="drawer" id="calendarDrawer">
             <div class="month-nav">
-                <button class="nav-mini" id="prevMonth" aria-label="‹">‹</button>
+                <button class="nav-mini fin-btn" id="prevMonth" aria-label="‹">‹</button>
                 <span class="month-title" id="monthTitle"></span>
-                <button class="nav-mini" id="nextMonth" aria-label="›">›</button>
+                <button class="nav-mini fin-btn" id="nextMonth" aria-label="›">›</button>
             </div>
             <div class="days-grid" id="daysGrid"></div>
         </div>
     </div>
 
-    <div class="tasks-card">
+    <div class="tasks-card fin-card">
         <div class="tasks-title">
             <span data-i18n="tasks_header">Günün Manevi Amelleri</span>
             <span style="color: var(--accent-color);" id="completionPercent">%0</span>
@@ -583,7 +584,7 @@
         <div id="tasksList" style="display: flex; flex-direction: column; gap: 8px;"></div>
     </div>
 
-    <div class="report-card">
+    <div class="report-card fin-card">
         <div class="rep-title" id="reportTitle"></div>
         <div id="reportBody"></div>
     </div>
