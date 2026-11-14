@@ -435,6 +435,25 @@
         @media (hover: hover) { .task-item:hover { border-color: var(--accent-color); } }
         .task-info { display: flex; align-items: center; gap: 10px; width: 100%; }
         [dir="rtl"] .task-info { flex-direction: row-reverse; }
+        /* ===== Nazik hatırlatma kartı ===== */
+        .rm-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--accent-color) 45%, transparent); background: color-mix(in srgb, var(--accent-color) 10%, var(--card-bg)); backdrop-filter: blur(12px); animation: rmIn .5s ease both; }
+        .rm-card[hidden] { display: none; }
+        .rm-ico { font-size: 1.5rem; line-height: 1.2; }
+        .rm-body { flex: 1; min-width: 0; }
+        .rm-title { font-size: .7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: var(--accent-color); }
+        .rm-msg { font-size: .88rem; font-weight: 600; margin: 3px 0 2px; }
+        .rm-miss { font-size: .72rem; color: var(--text-muted); }
+        .rm-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+        .rm-btn { font: inherit; font-size: .78rem; font-weight: 700; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--accent-color); background: transparent; color: var(--accent-color); cursor: pointer; touch-action: manipulation; }
+        .rm-btn.primary { background: var(--accent-color); color: var(--bg-color); }
+        .rm-off { font: inherit; font-size: .68rem; color: var(--text-muted); background: none; border: none; text-decoration: underline; cursor: pointer; margin-inline-start: auto; padding: 4px; }
+        .rm-switch { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-weight: 600; font-size: .9rem; cursor: pointer; }
+        .rm-switch input { width: 18px; height: 18px; accent-color: var(--accent-color); }
+        .rm-switch-desc { font-size: .78rem; opacity: .8; margin-top: 4px; }
+        .task-item.rm-flash { animation: rmFlash 1.6s ease 2; }
+        @keyframes rmIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        @keyframes rmFlash { 50% { border-color: var(--accent-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 30%, transparent); } }
+        @media (prefers-reduced-motion: reduce) { .rm-card, .task-item.rm-flash { animation: none; } }
         .task-checkbox { width: 18px; height: 18px; accent-color: var(--accent-color); cursor: pointer; flex-shrink: 0; }
         .task-info { cursor: pointer; }
         .sn-chip { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; margin-inline-start: 8px; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--border-color); color: var(--text-muted); font-size: .7rem; font-weight: 600; cursor: pointer; transition: .2s; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; position: relative; }
@@ -510,6 +529,20 @@
     <div class="info-row">
         <span class="date-label" id="currentDateLabel"></span>
         <span class="progress-badge" id="progressBadge">0 / 12</span>
+    </div>
+
+    <div class="rm-card" id="rmCard" role="status" aria-live="polite" hidden>
+        <div class="rm-ico" id="rmIco" aria-hidden="true">🌙</div>
+        <div class="rm-body">
+            <div class="rm-title" id="rmTitle"></div>
+            <div class="rm-msg" id="rmMsg"></div>
+            <div class="rm-miss" id="rmMiss"></div>
+            <div class="rm-actions">
+                <button type="button" class="rm-btn primary" id="rmGo"></button>
+                <button type="button" class="rm-btn" id="rmLater"></button>
+                <button type="button" class="rm-off" id="rmOff"></button>
+            </div>
+        </div>
     </div>
 
     <div class="quote-box fin-card" id="quoteBox"></div>
@@ -608,6 +641,8 @@
             <p data-i18n="modal_desc_1"></p>
             <div class="modal-subtitle" data-i18n="modal_subtitle">Bu Uygulamanın Amacı</div>
             <p data-i18n="modal_desc_2"></p>
+            <label class="rm-switch"><input type="checkbox" id="rmSwitch"><span data-i18n="rm_switch">Nazik hatırlatmalar</span></label>
+            <div class="rm-switch-desc" data-i18n="rm_switch_desc"></div>
         </div>
     </div>
 </div>
@@ -724,6 +759,7 @@
             month_build: "Kâbe İnşası", pace: "Tempo", left_days: "Ayın bitmesine", day_unit: "gün", month_done: "Ay tamamlandı",
             rep_title_now: "Ay Gözlemi", rep_title_done: "Ay Sonu Raporu",
             rep_note_now: "Bugün hariç, tamamlanan günlere göre", rep_note_done: "Ayın tüm günlerine göre",
+            rm_title: "Nazik hatırlatma", rm_eve: ["Bugünün namazlarını işaretlemeyi unutmuş olabilirsin 🌙", "Gün bitmeden defterine bir göz atsana 🌿", "Kılıp da işaretlemediklerin varsa tam zamanı ✨"], rm_morn: ["Günaydın ☀️ Dünün defterinde boş kalanlar var, tamamlamak ister misin?", "Hayırlı sabahlar 🌅 Dün kılıp işaretlemediğin vakit varsa şimdi ekleyebilirsin"], rm_miss: "İşaretsiz görünenler", rm_go_eve: "İşaretle", rm_go_morn: "Dünü aç", rm_later: "Sonra", rm_off: "Hatırlatmayı kapat", rm_switch: "Nazik hatırlatmalar", rm_switch_desc: "Akşam 21:30'dan sonra bugünün (Yatsı için 23:00'ten sonra), sabahları ise dünün işaretlenmemiş vakitlerini hatırlatır. Günde en fazla bir kez çıkar. Sayfa açıkken görünen bir karttır, telefon bildirimi değildir.",
             rep_empty: "Henüz tamamlanmış gün yok. Yarından itibaren gözlem burada görünecek.",
             rep_streak: "En uzun seri (5 vaktin hepsi)", rep_perfect: "5 vaktin tamamlandığı gün",
             rep_most: "En çok işaretlenmeyen farz", rep_most_sunnah: "En çok işaretlenmeyen sünnet", rep_all: "İşaretlenmeyen farz yok, Maşallah!",
@@ -736,6 +772,7 @@
             month_build: "Kaaba Building", pace: "Pace", left_days: "Days left in month", day_unit: "days", month_done: "Month completed",
             rep_title_now: "Month Insights", rep_title_done: "End-of-Month Report",
             rep_note_now: "Completed days only, today excluded", rep_note_done: "Based on all days of the month",
+            rm_title: "A gentle reminder", rm_eve: ["You might have forgotten to mark today's prayers 🌙", "Take a quick look at your ledger before the day ends 🌿", "If you prayed but haven't marked it yet, now is the time ✨"], rm_morn: ["Good morning ☀️ Yesterday's ledger has a few blanks. Want to complete it?", "Blessed morning 🌅 If you prayed yesterday but didn't mark it, you can add it now"], rm_miss: "Unmarked", rm_go_eve: "Mark now", rm_go_morn: "Open yesterday", rm_later: "Later", rm_off: "Turn off reminders", rm_switch: "Gentle reminders", rm_switch_desc: "After 9:30 PM it reminds you of today's unmarked prayers (Isha after 11 PM), and in the morning of yesterday's. Shown at most once a day. It is a card inside the page, not a phone notification.",
             rep_empty: "No completed day yet. Insights will appear here from tomorrow.",
             rep_streak: "Longest streak (all 5 prayers)", rep_perfect: "Days with all 5 prayers",
             rep_most: "Most unmarked obligatory prayer", rep_most_sunnah: "Most unmarked sunnah", rep_all: "No unmarked obligatory prayer, Mashallah!",
@@ -748,6 +785,7 @@
             month_build: "بناء الكعبة", pace: "الوتيرة", left_days: "المتبقي من الشهر", day_unit: "يوم", month_done: "اكتمل الشهر",
             rep_title_now: "ملاحظات الشهر", rep_title_done: "تقرير نهاية الشهر",
             rep_note_now: "الأيام المكتملة فقط دون اليوم", rep_note_done: "حسب جميع أيام الشهر",
+            rm_title: "تذكير لطيف", rm_eve: ["ربما نسيتَ تسجيل صلوات اليوم 🌙", "ألقِ نظرة على دفترك قبل أن ينتهي اليوم 🌿", "إن كنتَ صلّيتَ ولم تسجّل بعد، فهذا وقته ✨"], rm_morn: ["صباح الخير ☀️ في دفتر الأمس خانات فارغة، هل تودّ إكمالها؟", "صباح مبارك 🌅 إن صلّيتَ أمس ولم تسجّل، يمكنك إضافتها الآن"], rm_miss: "غير المسجَّل", rm_go_eve: "سجّل الآن", rm_go_morn: "افتح الأمس", rm_later: "لاحقًا", rm_off: "إيقاف التذكير", rm_switch: "التذكيرات اللطيفة", rm_switch_desc: "بعد 9:30 مساءً يذكّرك بصلوات اليوم غير المسجَّلة (العشاء بعد 11 مساءً)، وفي الصباح بصلوات الأمس. يظهر مرة واحدة يوميًا على الأكثر. هو بطاقة داخل الصفحة وليس إشعارًا على الهاتف.",
             rep_empty: "لا يوجد يوم مكتمل بعد. ستظهر الملاحظات هنا ابتداءً من الغد.",
             rep_streak: "أطول سلسلة (الصلوات الخمس كلها)", rep_perfect: "أيام اكتملت فيها الصلوات الخمس",
             rep_most: "أكثر فرض غير مسجَّل", rep_most_sunnah: "أكثر سنة غير مسجَّلة", rep_all: "لا يوجد فرض غير مسجَّل، ما شاء الله!",
@@ -882,6 +920,7 @@
         document.querySelectorAll('.task-checkbox').forEach(cb => { cb.checked = !!data[+cb.dataset.idx]; });
         syncChips();
         renderDay(data); renderMonth(false);
+        checkReminder();
     }
 
     function syncChips() { document.querySelectorAll('.sn-chip').forEach(c => c.classList.toggle('on', c.querySelector('input').checked)); }
@@ -892,6 +931,7 @@
         saveData(sel.getFullYear(), sel.getMonth(), sel.getDate(), data);
         renderCalendar();
         renderDay(data); renderMonth(true);
+        checkReminder();
     }
 
     // ===================== AYLIK İNŞA (XP) VE AY RAPORU =====================
@@ -1226,6 +1266,78 @@
         setTimeout(() => hint.classList.add('hide'), 6000);
     }
 
+
+    // ===================== NAZİK HATIRLATMA =====================
+    // Sunucusuz sayfa olduğu için gerçek push yok: sayfa açıkken/öne gelince çıkan küçük bir karttır.
+    const RM_EVENING = 21 * 60 + 30, RM_LATE = 23 * 60, RM_MORN_FROM = 5 * 60, RM_MORN_TO = 12 * 60;
+    function rmOn() { try { return localStorage.getItem('kaba_rm_on') !== '0'; } catch (e) { return true; } }
+    function rmSeen() { try { return JSON.parse(localStorage.getItem('kaba_rm_seen')) || {}; } catch (e) { return {}; } }
+    function rmMark(kind, dk) { const o = rmSeen(); o[kind] = dk; try { localStorage.setItem('kaba_rm_seen', JSON.stringify(o)); } catch (e) { /* kota */ } }
+    function dkey(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+    function hasHistory() {
+        try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf('kaba_build_') === 0) return true; } } catch (e) { /* yok say */ }
+        return false;
+    }
+    function rmNames(data, n) {
+        const out = [];
+        for (let i = 0; i < n; i++) if (!data[i]) out.push(L['task_' + (i + 1) + '_name'].replace(/^\S+\s+/, ''));
+        return out;
+    }
+    let rmCtx = null;
+    function checkReminder() {
+        const card = document.getElementById('rmCard'); if (!card) return;
+        rmCtx = null;
+        if (rmOn()) {
+            const now = new Date(), mins = now.getHours() * 60 + now.getMinutes(), td = dayStart(now), seen = rmSeen();
+            if (mins >= RM_EVENING) {
+                // Akşam: Sabah–Akşam eksikse; Yatsı için gün sonuna (23:00) kadar beklenir
+                if (seen.evening !== dkey(td)) {
+                    const miss = rmNames(getData(td.getFullYear(), td.getMonth(), td.getDate()), mins >= RM_LATE ? 5 : 4);
+                    if (miss.length) rmCtx = { kind: 'evening', miss, dk: dkey(td), day: td };
+                }
+            } else if (mins >= RM_MORN_FROM && mins < RM_MORN_TO && seen.morning !== dkey(td) && hasHistory()) {
+                const y = new Date(td.getFullYear(), td.getMonth(), td.getDate() - 1);
+                const miss = rmNames(getData(y.getFullYear(), y.getMonth(), y.getDate()), 5);
+                if (miss.length) rmCtx = { kind: 'morning', miss, dk: dkey(td), day: y };
+            }
+        }
+        card.hidden = !rmCtx;
+        if (!rmCtx) return;
+        const msgs = rmCtx.kind === 'evening' ? L.rm_eve : L.rm_morn;
+        document.getElementById('rmIco').textContent = rmCtx.kind === 'evening' ? '🌙' : '☀️';
+        document.getElementById('rmTitle').textContent = L.rm_title;
+        document.getElementById('rmMsg').textContent = msgs[new Date().getDate() % msgs.length];
+        document.getElementById('rmMiss').textContent = `${L.rm_miss}: ${rmCtx.miss.join(', ')}`;
+        document.getElementById('rmGo').textContent = rmCtx.kind === 'evening' ? L.rm_go_eve : L.rm_go_morn;
+        document.getElementById('rmLater').textContent = L.rm_later;
+        document.getElementById('rmOff').textContent = L.rm_off;
+    }
+    function setupReminder() {
+        const sw = document.getElementById('rmSwitch');
+        sw.checked = rmOn();
+        sw.addEventListener('change', () => {
+            try { localStorage.setItem('kaba_rm_on', sw.checked ? '1' : '0'); } catch (e) { /* kota */ }
+            checkReminder();
+        });
+        document.getElementById('rmLater').onclick = () => { if (rmCtx) rmMark(rmCtx.kind, rmCtx.dk); checkReminder(); };
+        document.getElementById('rmOff').onclick = () => {
+            try { localStorage.setItem('kaba_rm_on', '0'); } catch (e) { /* kota */ }
+            sw.checked = false; checkReminder();
+        };
+        document.getElementById('rmGo').onclick = () => {
+            if (!rmCtx) return;
+            const c = rmCtx; rmMark(c.kind, c.dk);
+            sel = new Date(c.day); viewY = sel.getFullYear(); viewM = sel.getMonth();
+            renderCalendar(); loadSelected();
+            const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+            document.querySelector('.tasks-card').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+            const first = Array.from(document.querySelectorAll('.task-item')).find(r => { const cb = r.querySelector('.task-checkbox'); return cb && +cb.dataset.idx < 5 && !cb.checked; });
+            if (first) { first.classList.add('rm-flash'); setTimeout(() => first.classList.remove('rm-flash'), 3400); }
+        };
+        checkReminder();
+        setInterval(checkReminder, 60000);
+    }
+
     // ===================== BAŞLATMA =====================
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -1243,7 +1355,7 @@
         buildTasks();
         buildKaaba(); buildArcades(); buildMinarets(); buildCrowd(); buildFlock(); buildStars();
         updateSky(); setInterval(updateSky, 60000);
-        setupCalendar(); setupInteraction();
+        setupCalendar(); setupInteraction(); setupReminder();
         renderCalendar(); loadSelected();
         requestAnimationFrame(frame);
 
